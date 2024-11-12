@@ -1,5 +1,5 @@
 <?php
-  $hostname = "localhost";
+  $hostname = "mysql.hostinger.com";
   $username = "new";
   $password = "Root_root01";
   $dbname = "u412427249_capstone";
