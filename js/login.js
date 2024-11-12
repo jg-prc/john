@@ -17,11 +17,19 @@ form.addEventListener("submit", async (e) => {
 				body: formData,
 			});
 
-			const data = await response.json(); // Parse JSON response
+			const responseText = await response.text(); // Get raw response text for debugging
+			let data;
+			try {
+				data = JSON.parse(responseText); // Attempt to parse JSON
+			} catch (jsonError) {
+				console.error("JSON Parsing Error:", jsonError, "Response text:", responseText);
+				Swal.fire("Error", "Unexpected response format from server", "error");
+				return;
+			}
 
+			// Now handle the JSON response
 			if (data.status === "success") {
 				Swal.fire("Success", "Login successful", "success").then(() => {
-
 					// Redirect based on the role
 					if (data.role === "admin") {
 						window.location.href = "dashboard.php";
@@ -39,6 +47,7 @@ form.addEventListener("submit", async (e) => {
 	}
 });
 
+// Validation functions
 function validateInput(input, errorMessage) {
 	const value = input.value.trim();
 	if (value === "") {
