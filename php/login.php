@@ -2,19 +2,16 @@
 session_start();
 header('Content-Type: application/json');
 
-  $hostname = "mysql.hostinger.com";
-  $username = "new";
-  $password = "Root_root01";
-  $dbname = "u412427249_capstone";
+$hostname = "mysql.hostinger.com";
+$username = "new";
+$password = "Root_root01";
+$dbname = "u412427249_capstone";
 
-  $conn = mysqli_connect($hostname, $username, $password, $dbname);
-  if(!$conn){
-    echo "Database connection error: ".mysqli_connect_error();
-  }
-
-
-
-
+$conn = mysqli_connect($hostname, $username, $password, $dbname);
+if (!$conn) {
+    echo json_encode(["status" => "error", "message" => "Database connection error: " . mysqli_connect_error()]);
+    exit;
+}
 
 // Enable error reporting for debugging (remove in production)
 ini_set('display_errors', 1);
@@ -23,11 +20,6 @@ error_reporting(E_ALL);
 
 $email = mysqli_real_escape_string($conn, $_POST['email']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
-
-if (!$conn) {
-    echo json_encode(["status" => "error", "message" => "Database connection failed: " . mysqli_connect_error()]);
-    exit;
-}
 
 $sql = mysqli_query($conn, "
     SELECT user_id AS id, email, password, status, 'user' AS role FROM user WHERE email = '{$email}'
