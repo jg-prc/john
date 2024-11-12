@@ -66,7 +66,7 @@
 				display: flex;
 				justify-content: center;
 				font-size: 64px;
-				color: blue;
+				color: ;
 			}
 			form {
 				padding: 0 37px;
