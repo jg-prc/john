@@ -1,8 +1,11 @@
 <?php
-$conn = mysqli_connect("mysql.hostinger.com", "new", "Root_root01", "u412427249_capstone");
-if (!$conn) {
-    echo "Failed to connect to MySQL: " . mysqli_connect_error();
-} else {
-    echo "Connected successfully!";
-}
+  $hostname = "localhost";
+  $username = "new";
+  $password = "";
+  $dbname = "u412427249_capstone";
+
+  $conn = mysqli_connect($hostname, $username, $password, $dbname);
+  if(!$conn){
+    echo "Database connection error: ".mysqli_connect_error();
+  }
 ?>
