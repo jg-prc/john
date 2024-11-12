@@ -2,11 +2,13 @@
 session_start();
 header('Content-Type: application/json');
 
+// Database connection details
 $hostname = "mysql.hostinger.com";
 $username = "new";
 $password = "Root_root01";
 $dbname = "u412427249_capstone";
 
+// Establish database connection
 $conn = mysqli_connect($hostname, $username, $password, $dbname);
 if (!$conn) {
     echo json_encode(["status" => "error", "message" => "Database connection error: " . mysqli_connect_error()]);
@@ -18,9 +20,16 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Check if POST data is set
+if (!isset($_POST['email']) || !isset($_POST['password'])) {
+    echo json_encode(["status" => "error", "message" => "Email or password not provided."]);
+    exit;
+}
+
 $email = mysqli_real_escape_string($conn, $_POST['email']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
 
+// Prepare SQL query
 $sql = mysqli_query($conn, "
     SELECT user_id AS id, email, password, status, 'user' AS role FROM user WHERE email = '{$email}'
     UNION ALL
@@ -53,4 +62,5 @@ if (mysqli_num_rows($sql) > 0) {
 } else {
     echo json_encode(["status" => "error", "message" => "This email doesn't exist!"]);
 }
+
 ?>
