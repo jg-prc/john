@@ -3,33 +3,49 @@ session_start();
 header('Content-Type: application/json');
 include_once "config.php";
 
+// Enable error reporting for debugging (remove in production)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $email = mysqli_real_escape_string($conn, $_POST['email']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
 
+if (!$conn) {
+    echo json_encode(["status" => "error", "message" => "Database connection failed: " . mysqli_connect_error()]);
+    exit;
+}
+
 $sql = mysqli_query($conn, "
-	SELECT user_id AS id, email, password, status, 'user' AS role FROM user WHERE email = '{$email}'
-	UNION ALL
-	SELECT admin_id AS id, email, password, status, 'admin' AS role FROM admin WHERE email = '{$email}'
+    SELECT user_id AS id, email, password, status, 'user' AS role FROM user WHERE email = '{$email}'
+    UNION ALL
+    SELECT admin_id AS id, email, password, status, 'admin' AS role FROM admin WHERE email = '{$email}'
 ");
 
-// Check if the query executed and returned results
-if ($sql && mysqli_num_rows($sql) > 0) {
-	$row = mysqli_fetch_assoc($sql);
+if (!$sql) {
+    echo json_encode(["status" => "error", "message" => "SQL query failed: " . mysqli_error($conn)]);
+    exit;
+}
 
-	// Check if the account is active
-	if ($row['status'] === 'active') {
-		// Verify the password
-		if (password_verify($password, $row['password'])) {
-			$_SESSION['unique_id'] = $row['id'];
-			$_SESSION['role'] = $row['role'];
-			echo json_encode(["status" => "success", "role" => $row['role"]]);
-		} else {
-			echo json_encode(["status" => "error", "message" => "Incorrect Password!"]);
-		}
-	} else {
-		echo json_encode(["status" => "error", "message" => "Your account has been deactivated."]);
-	}
+// Check if the query returned any results
+if (mysqli_num_rows($sql) > 0) {
+    $row = mysqli_fetch_assoc($sql);
+
+    // Check if the account is active
+    if ($row['status'] === 'active') {
+        // Verify the password using the hashed password stored in the database
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['unique_id'] = $row['id'];
+            $_SESSION['role'] = $row['role'];
+
+            echo json_encode(["status" => "success", "role" => $row['role']]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Incorrect Password!"]);
+        }
+    } else {
+        echo json_encode(["status" => "error", "message" => "Your account has been deactivated."]);
+    }
 } else {
-	echo json_encode(["status" => "error", "message" => "This email doesn't exist!"]);
+    echo json_encode(["status" => "error", "message" => "This email doesn't exist!"]);
 }
 ?>
