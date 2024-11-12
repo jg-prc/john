@@ -1,9 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'user') {
-		header("Location: index.php");
-		exit();
-	}
+
 
 	date_default_timezone_set('Asia/Manila');
 
