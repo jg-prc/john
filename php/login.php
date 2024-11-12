@@ -1,7 +1,7 @@
 <?php
   $hostname = "localhost";
   $username = "new";
-  $password = "";
+  $password = "Root_root01";
   $dbname = "u412427249_capstone";
 
   $conn = mysqli_connect($hostname, $username, $password, $dbname);
