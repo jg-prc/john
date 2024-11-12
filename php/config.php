@@ -1,6 +1,6 @@
 <?php
   $hostname = "localhost";
-  $username = "root";
+  $username = "new";
   $password = "";  // Ensure this is correct
   $dbname = "capstone";
 
