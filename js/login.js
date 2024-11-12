@@ -17,15 +17,18 @@ form.addEventListener("submit", async (e) => {
 				body: formData,
 			});
 
-			const responseText = await response.text(); // Get raw response text for debugging
-			let data;
-			try {
-				data = JSON.parse(responseText); // Attempt to parse JSON
-			} catch (jsonError) {
-				console.error("JSON Parsing Error:", jsonError, "Response text:", responseText);
-				Swal.fire("Error", "Unexpected response format from server", "error");
-				return;
-			}
+const responseText = await response.text(); // Get raw response text
+console.log("Raw response:", responseText);
+
+let data;
+try {
+    data = JSON.parse(responseText); // Parse JSON response
+} catch (error) {
+    console.error("Error parsing JSON:", error, responseText);
+    Swal.fire("Error", "Invalid server response.", "error");
+    return;
+}
+
 
 			// Now handle the JSON response
 			if (data.status === "success") {
