@@ -1,0 +1,378 @@
+<?php
+	session_start();
+
+	if (!isset($_SESSION['unique_id']) && $_SESSION['role'] !== 'admin') {
+		header("Location: login.php");
+		exit();
+	}
+?>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+		<link rel="stylesheet" href="css/sidebar.css">
+		<link rel="stylesheet" href="css/dashboard.css">
+		<title>Responsive Layout</title>
+		<style>
+
+		</style>
+	</head>
+	<body>
+		<?php
+			include_once "sidebar.php";
+		?>
+		<div class="container">
+			<div class="header-container">
+				<div class="logo-content">
+					<img src="php/image/logo.png" alt="profileImg">
+				</div>
+				<div class="details">
+					<h2>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</h2>
+					<i>San Jose, Camarines Sur</i>
+				</div>
+			</div>
+			<div class="button-container">
+				<button>
+					<a href="?type=">
+						<i class="fas fa-triangle-exclamation"></i>
+						<p>Over All Incident</p>
+					</a>
+				</button>
+				<button>
+					<a href="?type=Vehicular%20Accident">
+						<i class="fas fa-car-crash" id="vehicular"></i>
+						<p>Vehicular Accident</p>
+					</a>
+				</button>
+				<button>
+					<a href="?type=Fire%20Incident">
+						<i class="fas fa-fire" id="fire"></i>
+						<p>Fire Incident</p>
+					</a>
+				</button>
+				<button>
+					<a href="?type=Flood%20Incident">
+						<i class="fas fa-house-flood-water" id="flood"></i>
+						<p>Flood Incident</p>
+					</a>
+				</button>
+				<button>
+					<a href="?type=Landslide%20Incident">
+						<i class="fas fa-hill-rockslide" id="landslide"></i>
+						<p>Landslide Incident</p>
+					</a>
+				</button>
+			</div>
+			<?php
+				include_once "map.php";
+			?>
+			<div id="text-slider" class="splide">
+				<div class="splide__track">
+					<ul class="splide__list">
+
+						<?php
+							include_once "php/config.php";
+
+							$type = isset($_GET['type']) ? $_GET['type'] : '';
+							$date = isset($_GET['date']) ? $_GET['date'] : '';
+
+							$dateQuery = "SELECT * FROM incident_report WHERE 1 = 1";
+
+							if (!empty($type)) {
+								$dateQuery .= " AND incident_type = '" . $conn->real_escape_string($type) . "'";
+							}
+
+							if (!empty($date)) {
+								$dateQuery .= " AND event_at = '" . $conn->real_escape_string($date) . "'";
+							}
+
+							$result = $conn->query($dateQuery);
+
+							if ($result->num_rows > 0) {
+								while ($row = $result->fetch_assoc()) {
+									$icon = '';
+									switch ($row['incident_type']) {
+										case 'Vehicular Accident':
+											$icon = '<i class="fas fa-car-crash"></i>';
+											break;
+										case 'Fire Incident':
+											$icon = '<i class="fas fa-fire"></i>';
+											break;
+										case 'Flood Incident':
+											$icon = '<i class="fas fa-house-flood-water"></i>';
+											break;
+										case 'Landslide Incident':
+											$icon = '<i class="fas fa-hill-rockslide"></i>';
+											break;
+									}
+									$statusClass = '';
+									switch ($row['status']) {
+										case 'pending':
+											$statusClass = 'pending';
+											break;
+										case 'resolved':
+											$statusClass = 'resolved';
+											break;
+										case 'ongoing':
+											$statusClass = 'ongoing';
+											break;
+									}
+
+									$eventDateTime = new DateTime($row['time']);
+									$formattedTime = $eventDateTime->format('g:i a');
+
+						?>
+						<li class="splide__slide">
+							<?php echo $icon; ?>
+							<div class="content">
+								<span class="type"><?php echo $row['incident_type']; ?></span>
+								<span>Zone <?php echo $row['zone'] . ", " . $row['barangay']; ?></span>
+								<span class="status <?php echo $statusClass; ?>"><?php echo $row['status']; ?></span>
+							</div>
+							<span class="time"><?php echo $formattedTime; ?></span>
+						</li>
+						<?php
+								}
+							} else {
+								echo "<li class='splide__slide'> </li>";
+							}
+						?>
+					</ul>
+				</div>
+			</div>
+			<div class="calendar-container">
+				<header>
+					<p class="current-date"></p>
+					<div class="icons">
+						<span id="prev" class="fa fa-chevron-left"></span>
+						<span id="next" class="fa fa-chevron-right"></span>
+					</div>
+				</header>
+				<div class="calendar">
+					<ul class="weeks">
+						<li>Sun</li>
+						<li>Mon</li>
+						<li>Tue</li>
+						<li>Wed</li>
+						<li>Thu</li>
+						<li>Fri</li>
+						<li>Sat</li>
+					</ul>
+					<ul class="days"></ul>
+				</div>
+				<input type="date" id="selectedDate" name="date" onchange="this.form.submit()">
+			</div>
+		</div>
+	</body>
+	<script src="js/sidebar.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			new Splide('#text-slider', {
+				pagination: false,
+				arrows: true,
+			}).mount();
+		});
+
+
+const daysTag = document.querySelector(".days"),
+    currentDate = document.querySelector(".current-date"),
+    prevNextIcon = document.querySelectorAll(".icons span"),
+    selectedDateInput = document.querySelector("#selectedDate");
+
+let date = new Date(),
+    currYear = date.getFullYear(),
+    currMonth = date.getMonth();
+
+const months = ["January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"];
+
+const renderCalendar = () => {
+    let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(),
+        lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(),
+        lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(),
+        lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate();
+
+    let liTag = "";
+
+    // Display previous month's last days
+    for (let i = firstDayofMonth; i > 0; i--) {
+        liTag += `<li class="inactive" data-day="${lastDateofLastMonth - i + 1}" 
+                    data-month="${currMonth === 0 ? 12 : currMonth}" 
+                    data-year="${currMonth === 0 ? currYear - 1 : currYear}">
+                    ${lastDateofLastMonth - i + 1}
+                  </li>`;
+    }
+
+    // Display current month's days
+    for (let i = 1; i <= lastDateofMonth; i++) {
+        let isToday = i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear() ? "active selected" : "";
+        liTag += `<li class="${isToday}" data-day="${i}" data-month="${currMonth + 1}" data-year="${currYear}">${i}</li>`;
+    }
+
+    // Display next month's first days
+    for (let i = lastDayofMonth; i < 6; i++) {
+        liTag += `<li class="inactive" data-day="${i - lastDayofMonth + 1}" 
+                    data-month="${currMonth + 2 > 12 ? 1 : currMonth + 2}" 
+                    data-year="${currMonth + 2 > 12 ? currYear + 1 : currYear}">
+                    ${i - lastDayofMonth + 1}
+                  </li>`;
+    }
+
+    currentDate.innerText = `${months[currMonth]} ${currYear}`;
+    daysTag.innerHTML = liTag;
+
+    // Add event listeners to each day
+    const days = document.querySelectorAll(".days li");
+    days.forEach(day => {
+        day.addEventListener("click", () => {
+            days.forEach(d => d.classList.remove("selected"));
+            day.classList.add("selected");
+
+            const selectedDay = day.getAttribute("data-day"),
+                  selectedMonth = day.getAttribute("data-month"),
+                  selectedYear = day.getAttribute("data-year");
+
+            const formattedDate = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
+            selectedDateInput.value = formattedDate;
+
+            // Fetch incident data with the selected date
+            fetchIncidentDataByDate(formattedDate); // Use the new function
+        });
+    });
+};
+
+// Set the current date as the default value for the input field
+const setDefaultDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(today.getDate()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+    selectedDateInput.value = formattedDate; // Set the value of the input to today's date
+};
+
+renderCalendar();
+setDefaultDate(); // Set default date on page load
+
+prevNextIcon.forEach(icon => {
+    icon.addEventListener("click", () => {
+        currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+        if (currMonth < 0 || currMonth > 11) {
+            date = new Date(currYear, currMonth, new Date().getDate());
+            currYear = date.getFullYear();
+            currMonth = date.getMonth();
+        } else {
+            date = new Date();
+        }
+        renderCalendar();
+    });
+});
+
+// Input change event to update the URL and fetch incident data
+selectedDateInput.addEventListener('change', function() {
+    var selectedDate = this.value;
+
+    if (selectedDate) {
+        // Update the URL with the selected date
+        const url = new URL(window.location.href);
+        url.searchParams.set('date', selectedDate);
+        window.location.href = url.toString(); // Update the URL without reloading the page
+
+        // Fetch incident data with the selected date
+        fetchIncidentDataByDate(selectedDate); // Use the new function
+    }
+});
+
+// Function to fetch incident data by incident type
+function fetchIncidentDataByType(incidentType) {
+    console.log("Incident Type: ", incidentType);
+
+    var xhr = new XMLHttpRequest();
+    // Pass the incidentType to the PHP file
+    xhr.open('GET', `fetch_incident_data.php?type=${encodeURIComponent(incidentType)}`, true);
+    
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            updateIncidentIcons(response.incident_data);
+        } else {
+            console.error('Error fetching data: ', xhr.statusText);
+        }
+    };
+    xhr.send();
+}
+
+// Function to fetch incident data by selected date
+function fetchIncidentDataByDate(selectedDate) { 
+    console.log("Selected Date: ", selectedDate);
+
+    var xhr = new XMLHttpRequest();
+    // Pass the selectedDate to the PHP file
+    xhr.open('GET', `fetch_incident_data.php?date=${encodeURIComponent(selectedDate)}`, true);
+    
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            var incidentLocation = response.incident_location;
+
+            updateIncidentLocations(incidentLocation);
+        } else {
+            console.error('Error fetching data: ', xhr.statusText);
+        }
+    };
+    xhr.send();
+}
+
+// Update incident icons based on fetched data
+function updateIncidentIcons(incidentData) {
+    document.getElementById('vehicular').className = 'fas fa-car-crash ' + (incidentData.Vehicular || '');
+    document.getElementById('fire').className = 'fas fa-fire ' + (incidentData.Fire || '');
+    document.getElementById('flood').className = 'fas fa-house-flood-water ' + (incidentData.Flood || '');
+    document.getElementById('landslide').className = 'fas fa-hill-rockslide ' + (incidentData.Landslide || '');
+}
+
+// Update incident locations based on fetched data
+function updateIncidentLocations(incidentLocation) {
+    for (var barangay in incidentLocation) {
+        if (incidentLocation.hasOwnProperty(barangay)) {
+            var element = document.getElementById(barangay.toLowerCase());
+            if (element) {
+                if (incidentLocation[barangay]) {
+                    element.classList.add('blinking');
+                } else {
+                    element.classList.remove('blinking');
+                }
+            }
+        }
+    }
+}
+
+// Get incident type from URL
+function getIncidentTypeFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('type') || '';
+}
+
+window.onload = function() {
+    const incidentType = getIncidentTypeFromURL();
+    
+    // Set interval to fetch data based on the incident type only
+    setInterval(() => {
+        if (incidentType) {
+            fetchIncidentDataByType(incidentType); // Fetch incident data by type
+        } else {
+            console.warn("Incident type is blank. No data will be fetched.");
+        }
+    }, 500);
+};
+
+	</script>
+	</body>
+</html>

@@ -1,0 +1,66 @@
+<?php
+	session_start();
+	include_once "config.php";
+
+	if (isset($_GET['user_id'])) {
+		$user_id = $conn->real_escape_string($_GET['user_id']);
+		$incident_type = mysqli_real_escape_string($conn, $_POST['incident_type']);
+		$barangay = mysqli_real_escape_string($conn, $_POST['barangay']);
+		$zone = mysqli_real_escape_string($conn, $_POST['zone']);
+		$street = mysqli_real_escape_string($conn, $_POST['street']);
+    
+		$year = date("Y");
+		$month = date("m");
+
+		$uploadDir = "uploads/$year/$month/";
+
+		if (!is_dir($uploadDir)) {
+			mkdir($uploadDir, 0777, true);
+		}
+
+		foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+			$fileName = basename($_FILES['images']['name'][$key]);
+			$fileTmp = $_FILES['images']['tmp_name'][$key];
+
+			$filePath = $uploadDir . uniqid() . "-" . $fileName;
+
+			if (move_uploaded_file($fileTmp, $filePath)) {
+
+
+
+			$sql_image = "INSERT INTO image (image_id, file_path) 
+				VALUES ('$image_id', '$filePath')";
+
+			$sql = "INSERT INTO incident_report (incident_type, barangay, zone, street, image_id, user_id) 
+				VALUES ('$incident_type', '$barangay', '$zone', '$street', '$image_id', '$user_id')";
+
+				if ($sql) {
+					echo "success";
+				} else {
+					echo "Failed to insert data. Please try again.";
+				}
+			} else {
+				echo "Error uploading file: $fileName";
+			}
+		}
+	}
+?>
+
+
+
+
+
+$sql = "
+    SELECT 
+        ir.incident_type, ir.barangay, ir.zone, ir.street, 
+        img.image_id, img.file_path, 
+	ir.victim_id, vic.name, vic.address, vic.age, vic.sex, vic.description
+    FROM 
+        incident_report ir
+    JOIN 
+	image img ON ir.image_id = img.image_id
+    JOIN 
+	victim vic ON ir.victim_id = vic.victim_id
+    WHERE 
+        ir.user_id = ?
+";

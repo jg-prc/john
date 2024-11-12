@@ -551,7 +551,7 @@
 				<div class="logo-content">
 					<img src="php/image/logo.png" alt="profileImg">
 				</div>
-				<a href="login.php">login</a>
+				<a href="index.php">login</a>
 				<div class="details">
 					<h2>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</h2>
 					<i>San Jose, Camarines Sur</i>

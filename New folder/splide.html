@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/css/splide.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js"></script>
+		<title>Responsive Layout</title>
+		<style>
+			/* Optional styles to center the carousel */
+			body {
+				height: 100vh;
+				margin: 0;
+				background-color: #f4f4f4;
+			}
+			img {
+				width: 100px;
+				height: auto;
+				object-fit: cover;
+			}
+		</style>
+	</head>
+	<body>
+
+<section id="main-carousel" class="splide">
+  <div class="splide__track">
+		<ul class="splide__list">
+			<li class="splide__slide">
+				<img src="default_image.png" alt="Image 1">
+			</li>
+			<li class="splide__slide">
+				<img src="image.png" alt="Image 2">
+			</li>
+			<li class="splide__slide">
+				<img src="logo.png" alt="Image 3">
+			</li>
+		</ul>
+  </div>
+</section>
+
+<section id="thumbnail-carousel" class="splide">
+  <div class="splide__track">
+		<ul class="splide__list">
+			<li class="splide__slide">
+				<img src="default_image.png" alt="Thumbnail 1">
+			</li>
+			<li class="splide__slide">
+				<img src="image.png" alt="Thumbnail 2">
+			</li>
+			<li class="splide__slide">
+				<img src="logo.png" alt="Thumbnail 3">
+			</li>
+		</ul>
+  </div>
+</section>
+
+	<script>
+		document.addEventListener( 'DOMContentLoaded', function () {
+		  var main = new Splide( '#main-carousel', {
+		    type      : 'fade',
+		    rewind    : false,
+		    pagination: false,
+		    arrows    : false,
+		  } );
+
+		  var thumbnails = new Splide( '#thumbnail-carousel', {
+		    fixedWidth  : 100,
+		    fixedHeight : 60,
+		    gap         : 10,
+		    rewind      : false,
+		    pagination  : false,
+		    isNavigation: true,
+		    breakpoints : {
+		      600: {
+		        fixedWidth : 60,
+		        fixedHeight: 44,
+		      },
+		    },
+		  } );
+
+		  main.sync( thumbnails );
+		  main.mount();
+		  thumbnails.mount();
+		});
+	</script>
+	</body>
+</html>

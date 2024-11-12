@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'user') {
-		header("Location: login.php");
+		header("Location: index.php");
 		exit();
 	}
 	$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'created_at-desc';

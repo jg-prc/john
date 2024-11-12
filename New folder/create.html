@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" href="css/sidebar.css">
+		<title>Responsive Layout</title>
+		<style>
+			.create {
+				margin-left: 110px;
+				height: 1000px;
+			}
+			.create .title {
+				font-size: 32px;
+				border-bottom: solid 2px;
+				margin-top: 36px;
+				padding-bottom: 8px;
+				width: 90%;
+			}
+			form {
+				position: relative;
+				left: 12%;
+				top: 20px;
+				width: 1000px;
+				height: 730px;
+				padding: 10px;
+				border: solid 1px;
+			}
+			.image {
+				width: 150px;
+				position: relative;
+				left: 8%;
+				top: 60px;
+
+			}
+			.image img{
+				width: 150px;
+				height: 150px;
+				object-fit: cover;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+			#file-path{
+				display: none;
+			}
+			.image label{
+				position: relative;
+				top: -25px;
+				left: 55px;
+				color: #fff;
+				background-color: #1b74e4;
+				width: 40px;
+				height: 40px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				font-size: 20px;
+				cursor: pointer;
+			}
+			.input-container {
+				display: flex;
+				position: relative;
+				bottom: 155px;
+				width: 650px;
+				justify-content: space-between;
+				left: 30%;
+			}
+			.input-container#row3,
+			.input-container#row4,
+			.input-container#row5 {
+				width: 904px;
+				left: 4%;
+			}
+			.input-box {
+				width: 300px;
+				height: 110px;
+			}
+
+			.input-box#Sex-box,
+			.input-box#Zone-box {
+				width: 200px;
+			}
+			.input-box#Email-box,
+			.input-box#Password-box {
+				width: 427px;
+			}
+			input[type=email],
+			input[type=password],
+			input[type=text],
+			input[type=date],
+			input[type=tel],
+			#choiceInput,
+			select {
+				width: 300px;
+				height: 40px;
+				padding-left: 15px;
+				border: solid 2px;
+				border-radius: 10px;
+				margin: 5px 0 10px 0;
+				background: rgba(255, 255, 255, 0.2);
+				font-size: 16px;
+			}
+			input[type=email] {
+				width: 427px;
+			}
+			#Password-box input[type=text] {
+				width: 427px;
+			}
+			select#sex,
+			select#zone {
+				width: 200px;
+			}
+			input[type="date"]::-webkit-calendar-picker-indicator {
+				position: relative;
+				right: 5%;
+			}
+			input:focus,
+			textarea:focus {
+				background: rgba(255, 255, 255, 0.3);
+				border: 2px solid #f0f0f0;
+				transition: background 0.5s ease;
+			}
+			.message,
+			.input-container label {
+				padding-left: 10px;
+			}
+			i.fa-exclamation-circle {
+				position: relative;
+				bottom: 60%;
+				left: 90%;
+			}
+			#Barangay-box i.fa-exclamation-circle,
+			#Bdate-box i.fa-exclamation-circle,
+			#Sex-box i.fa-exclamation-circle,
+			#Zone-box i.fa-exclamation-circle {
+				left: 78%;
+			}
+			#Position-box i.fa-exclamation-circle {
+				left: 85%;
+			}
+			#Password-box i.fa-exclamation-circle {
+				left: 83%;
+			}
+			i.fa-shuffle {
+				position: relative;
+				bottom: 60%;
+				left: 85%;
+				cursor: pointer;
+			}
+			.message,
+			i.fas.fa-exclamation-circle {
+				visibility: hidden;
+				color: #e74c3c;
+			}
+			.input-box.error .message,
+			.input-box.error i.fa-exclamation-circle {
+				visibility: visible;
+			}
+			.input-box.error input[type=tel],
+			.input-box.error input[type=date],
+			.input-box.error input[type=email],
+			.input-box.error input[type=password],
+			.input-box.error input[type=text],
+			.input-box.error select,
+			.input-box.error #choiceInput {
+				border-color: #e74c3c;
+			}
+			.btn {
+				display: flex;
+				justify-content: center;
+				position: relative;
+				bottom: 120px;
+			}
+			button {
+				padding: 10px 30px;
+				font-size: 18px;
+				letter-spacing: 1px;
+				color: #725AC1;
+				background: transparent;
+				cursor: pointer;
+				transition: ease-out 0.5s;
+				border: 2px solid #725AC1;
+				border-radius: 10px;
+				box-shadow: inset 0 0 0 0 #725AC1;
+			}
+			button:hover {
+				color: white;
+				box-shadow: inset 0 -100px 0 0 #725AC1;
+			}
+			button:active {
+				transform: scale(0.9);
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="sidebar close">
+			<div class="open-btn">
+				<span class="openbtn">&#9776;</span>
+			</div>
+			<ul class="nav-links">
+				<li class="active">
+					<a href="dashboard.html">
+						<i class="fas fa-gauge"></i>
+						<span class="link_name">Dashboard</span>
+					</a>
+					<ul class="sub-menu blank">
+						<li><a class="link_name">Dashboard</a></li>
+					</ul>
+				</li>
+				<li>
+					<div class="iocn-link">
+						<a href="#">
+							<i>
+								<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+									<path stroke="currentColor" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M10 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h2m10 1a3 3 0 0 1-3 3m3-3a3 3 0 0 0-3-3m3 3h1m-4 3a3 3 0 0 1-3-3m3 3v1m-3-4a3 3 0 0 1 3-3m-3 3h-1m4-3v-1m-2.121 1.879-.707-.707m5.656 5.656-.707-.707m-4.242 0-.707.707m5.656-5.656-.707.707M12 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+								</svg>
+							</i>
+							<span class="link_name">Account Management</span>
+						</a>
+						<i class="fas fa-chevron-down arrow"></i>
+					</div>
+					<ul class="sub-menu">
+						<li><a class="link_name">Account Management</a></li>
+						<li><a href="#">Create account</a></li>
+						<li><a href="accounts.html">List of users</a></li>
+						<li><a href="archived.html">Archived account</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="report.html">
+						<i>
+							<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19V6a1 1 0 0 1 1-1h4.032a1 1 0 0 1 .768.36l1.9 2.28a1 1 0 0 0 .768.36H16a1 1 0 0 1 1 1v1M3 19l3-8h15l-3 8H3Z"/>
+							</svg>
+						</i>
+						<span class="link_name">Report Management</span>
+					</a>
+					<ul class="sub-menu blank">
+						<li><a class="link_name">Report Management</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="privacy.html">
+						<i class="fas fa-shield-alt"></i>
+						<span class="link_name">Privacy and Security</span>
+					</a>
+					<ul class="sub-menu blank">
+						<li><a class="link_name">Privacy and Security</a></li>
+					</ul>
+				</li>
+				<li>
+					<div class="profile-details">
+						<div class="profile-content">
+							<img src="image/logo.png" alt="profileImg">
+						</div>
+						<div class="name-job">
+							<div class="profile_name">Admin</div>
+							<div class="job">Administrator</div>
+						</div>
+						<a href="#">
+							<i class='fa fa-sign-out'></i>
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="create">
+			<div class="title">
+				<i class="fas fa-user-plus"></i>
+				<i>Create user account</i>
+			</div>
+			<form class="form-create" id="form-create" autocomplete="off" action="" method="post">
+				<div class="image">
+					<img src="image/default.png">
+					<label for="file-path">
+						<span class="material-symbols-rounded">photo_camera</span>
+					</label>
+					<input type="file" accept="image/*" id="file-path" class="user-file">
+				</div>
+
+				<div class="input-container" id="row1">
+
+					<div class="input-box" id="Fname-box">
+
+						<label for="firstname">First Name</label>
+
+						<input type="text" name="firstname" id="firstname" placeholder="First Name">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+
+					<div class="input-box" id="Lname-box">
+
+						<label for="lastname">Last Name</label>
+
+						<input type="text" name="lastname" id="lastname" placeholder="Last Name">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+				</div>
+				<div class="input-container" id="row2">
+
+					<div class="input-box" id="Mname-box">
+
+						<label for="middlename">Middle Name</label>
+
+						<input type="text" name="middlename" id="middlename" placeholder="Middle Name">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+
+					<div class="input-box" id="Ename-box">
+
+						<label for="extensionname">Extension Name</label>
+
+						<input type="text" name="extensionname" id="extensionname" placeholder="Extension Name">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+				</div>
+
+				<div class="input-container" id="row3">
+
+					<div class="input-box" id="Bdate-box">
+
+						<label for="bdate">Brithdate</label>
+
+						<input type="date" name="bdate" id="bdate">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+
+					<div class="input-box" id="Sex-box">
+
+						<label for="sex">Sex</label>
+
+						<select id="sex" name="sex">
+							<option value="" disabled selected>Sex</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+							<option value="other">Other</option>
+						</select>
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+
+					<div class="input-box" id="Contact-box">
+
+						<label for="contact">Contact No.</label>
+
+						<input type="tel" name="contact" id="contact" maxlength="11" placeholder="Contact No." oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+				</div>
+
+				<div class="input-container" id="row4">
+
+					<div class="input-box" id="Barangay-box">
+
+						<label for="choiceInput">Barangay</label>
+
+						<input list="choices" id="choiceInput" name="choice" placeholder="Barangay">
+							<datalist id="choices">
+								<option value="Adiangao">
+								<option value="Bagacay">
+								<option value="Bahay">
+								<option value="Boclod">
+								<option value="Calalahan">
+								<option value="Calawit">
+								<option value="Camagong">
+								<option value="Catalotoan">
+								<option value="Danlog">
+								<option value="Del Carmen (Poblacion)">
+								<option value="Dolo">
+								<option value="Kinalansan">
+								<option value="Mampirao">
+								<option value="Manzana">
+								<option value="Minoro">
+								<option value="Palale">
+								<option value="Ponglon">
+								<option value="Pugay">
+								<option value="Sabang">
+								<option value="Salogon">
+								<option value="San Antonio (Poblacion)">
+								<option value="San Juan (Poblacion)">
+								<option value="San Vicente (Poblacion)">
+								<option value="Santa Cruz (Poblacion)">
+								<option value="Soledad (Poblacion)">
+								<option value="Tagas">
+								<option value="Tambangan">
+								<option value="Telegrafo">
+								<option value="Tominawog">
+							</datalist>
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+
+					<div class="input-box" id="Zone-box">
+
+						<label for="zone">Zone</label>
+
+						<select id="zone" name="zone">
+							<option value="" disabled selected>Zone</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+						</select>
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+
+					<div class="input-box" id="Position-box">
+
+						<label for="position">Position</label>
+
+						<select id="position" name="position">
+							<option value="" disabled selected>Position</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+						</select>
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+				</div>
+
+				<div class="input-container" id="row5">
+
+					<div class="input-box" id="Email-box">
+
+						<label for="email">Email</label>
+
+						<input type="email" name="email" id="email" placeholder="Email">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+					</div>
+
+					<div class="input-box" id="Password-box">
+
+						<label for="password">Password</label>
+
+						<input type="text" name="password" id="password" placeholder="Password">
+						<div class="message">Error message</div>
+						<i class="fas fa-exclamation-circle"></i>
+						<i id="icon" class="fa fa-shuffle" onclick="generatePassword()"></i>
+					</div>
+
+				</div>
+				<div class="btn">
+					<button id="saveButton" type="submit">Create</button>
+				</div>
+			</form>
+
+		</div>
+	</body>
+	<script src="js/sidebar.js"></script>
+	<script>
+		const profilePic = document.querySelector(".image img");
+		const userFile = document.querySelector(".user-file");
+
+		userFile.onchange = function () {
+			profilePic.src = URL.createObjectURL(userFile.files[0]);
+		}
+
+
+		function generatePassword() {
+			const length = 6;
+			const charset = "0123456789";
+			let password = "";
+			for (let i = 0, n = charset.length; i < length; ++i) {
+				password += charset.charAt(Math.floor(Math.random() * n));
+			}
+			document.getElementById("password").value = password;
+		}
+
+
+		const Createform = document.getElementById("form-create");
+		const firstname = document.getElementById("firstname");
+		const lastname = document.getElementById("lastname");
+		const middlename = document.getElementById("middlename");
+		const bdate = document.getElementById("bdate");
+		const sex = document.getElementById("sex");
+		const contact = document.getElementById("contact");
+		const barangay = document.getElementById("choiceInput");
+		const zone = document.getElementById("zone");
+		const position = document.getElementById("position");
+		const email = document.getElementById("email");
+		const password = document.getElementById("password");
+
+		Createform.addEventListener("submit", (e) => {
+			e.preventDefault();
+			if (checkInputs()) {
+				Swal.fire({
+					title: "Do you want to save the changes?",
+					showCancelButton: true,
+					confirmButtonText: "Save",
+					cancelButtonText: "Cancel",
+					customClass: {
+						confirmButton: 'email-confirm-button',
+						cancelButton: 'email-cancel-button'
+					}
+				}).then((result) => {
+					if (result.isConfirmed) {
+						Swal.fire("Saved!", "", "success");
+					} else if (result.isDenied) {
+						Swal.fire("Changes are not saved", "", "info");
+					}
+				});
+			}
+		});
+
+		function checkInputs() {
+			let isValid = true;
+
+			const firstnameValue = firstname.value.trim();
+			const lastnameValue = lastname.value.trim();
+			const middlenameValue = middlename.value.trim();
+			const bdateValue = bdate.value.trim();
+			const sexValue = sex.value.trim();
+			const contactValue = contact.value.trim();
+			const barangayValue = barangay.value.trim();
+			const zoneValue = zone.value.trim();
+			const positionValue = position.value.trim();
+			const emailValue = email.value.trim();
+			const passwordValue = password.value.trim();
+
+			if (firstnameValue === "") {
+				setErrorFor(firstname, "First Name cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(firstname);
+			}
+
+			if (lastnameValue === "") {
+				setErrorFor(lastname, "Last Name cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(lastname);
+			}
+
+			if (middlenameValue === "") {
+				setErrorFor(middlename, "Middle Name cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(middlename);
+			}
+
+			if (bdateValue === "") {
+				setErrorFor(bdate, "Birthdate cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(bdate);
+			}
+
+			if (sexValue === "") {
+				setErrorFor(sex, "Sex cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(sex);
+			}
+
+			if (contactValue === "") {
+				setErrorFor(contact, "Contact No. cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(contact);
+			}
+
+			if (barangayValue === "") {
+				setErrorFor(barangay, "Barangay cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(barangay);
+			}
+
+			if (zoneValue === "") {
+				setErrorFor(zone, "Zone cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(zone);
+			}
+
+			if (positionValue === "") {
+				setErrorFor(position, "Position cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(position);
+			}
+
+			if (emailValue === "") {
+				setErrorFor(email, "Email cannot be blank");
+				isValid = false;
+			} else if (!isEmail(emailValue)) {
+				setErrorFor(email, "Not a valid email");
+				isValid = false;
+			} else {
+				setSuccessFor(email);
+			}
+
+			if (passwordValue === "") {
+				setErrorFor(password, "Password cannot be blank");
+				isValid = false;
+			} else {
+				setSuccessFor(password);
+			}
+
+			return isValid;
+		}
+
+		function setErrorFor(input, message) {
+			const inputBox = input.parentElement;
+			const messageElement = inputBox.querySelector('.message');
+			const iconElement = inputBox.querySelector('.fas.fa-exclamation-circle');
+
+			messageElement.innerText = message;
+			inputBox.className = 'input-box error';
+			iconElement.style.visibility = 'visible';
+		}
+
+		function setSuccessFor(input) {
+			const inputBox = input.parentElement;
+			inputBox.className = 'input-box';
+			const iconElement = inputBox.querySelector('.fas.fa-exclamation-circle');
+			iconElement.style.visibility = 'hidden';
+		}
+
+		function isEmail(email) {
+			return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+		}
+	</script>
+</html>

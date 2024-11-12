@@ -1,0 +1,1 @@
+					console.warn("Incident type or date is blank. No data will be fetched.");

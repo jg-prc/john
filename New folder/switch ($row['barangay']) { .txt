@@ -1,0 +1,89 @@
+switch ($row['barangay']) { 
+	case 'Adiangao':
+		$incident_location['Adiangao'] = 'blink';
+		break;
+	case 'Bagacay':
+		$incident_location['Bagacay'] = 'blink';
+		break;
+	case 'Bahay':
+		$incident_location['Bahay'] = 'blink';
+		break;
+	case 'Boclod':
+		$incident_location['Boclod'] = 'blink';
+		break;
+	case 'Calalahan':
+		$incident_location['Calalahan'] = 'blink';
+		break;
+	case 'Calawit':
+		$incident_location['Calawit'] = 'blink';
+		break;
+	case 'Camagong':
+		$incident_location['Camagong'] = 'blink';
+		break;
+	case 'Catalotoan':
+		$incident_location['Catalotoan'] = 'blink';
+		break;
+	case 'Danlog':
+		$incident_location['Danlog'] = 'blink';
+		break;
+	case 'Del Carmen':
+		$incident_location['Del Carmen'] = 'blink';
+		break;
+	case 'Dolo':
+		$incident_location['Vehicular'] = 'blink';
+		break;
+	case 'Kinalansan':
+		$incident_location['Dolo'] = 'blink';
+		break;
+	case 'Mampirao':
+		$incident_location['Mampirao'] = 'blink';
+		break;
+	case 'Manzana':
+		$incident_location['Manzana'] = 'blink';
+		break;
+	case 'Minoro':
+		$incident_location['Minoro'] = 'blink';
+		break;
+	case 'Palale':
+		$incident_location['Palale'] = 'blink';
+		break;
+	case 'Ponglon':
+		$incident_location['Ponglon'] = 'blink';
+		break;
+	case 'Pugay':
+		$incident_location['Pugay'] = 'blink';
+		break;
+	case 'Sabang':
+		$incident_location['Sabang'] = 'blink';
+		break;
+	case 'Salogon':
+		$incident_location['Salogon'] = 'blink';
+		break;
+	case 'San Antonio':
+		$incident_location['San Antonio'] = 'blink';
+		break;
+	case 'San Juan':
+		$incident_location['San Juan'] = 'blink';
+		break;
+	case 'San Vicente':
+		$incident_location['San Vicente'] = 'blink';
+		break;
+	case 'Santa Cruz':
+		$incident_location['Santa Cruz'] = 'blink';
+		break;
+	case 'Soledad':
+		$incident_location['Soledad'] = 'blink';
+		break;
+	case 'Tagas':
+		$incident_location['Tagas'] = 'blink';
+		break;
+	case 'Tambangan':
+		$incident_location['Tambangan'] = 'blink';
+		break;
+	case 'Telegrafo':
+		$incident_location['Telegrafo'] = 'blink';
+		break;
+	case 'Tominawog':
+		$incident_location['Tominawog'] = 'blink';
+		break;
+}

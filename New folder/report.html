@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" href="css/sidebar.css">
+		<title>Responsive Layout</title>
+		<style>
+			.report {
+				margin-left: 110px;
+			}
+			.report .title {
+				font-size: 32px;
+				border-bottom: solid 2px;
+				margin-top: 36px;
+				padding-bottom: 8px;
+				width: 90%;
+			}
+			.report .title svg {
+				position: relative;
+				top: 3px;
+				left: 3px;
+			}
+
+			.tools {
+				position: relative;
+				left: 8%;
+				top: 20px;
+				width: 1100px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.search-box {
+				display: flex;
+				align-items: center;
+				width: 400px;
+				border: 2px solid;
+				border-radius: 20px;
+			}
+			.search-box input {
+				width: 100%;
+				padding: 10px 10px 10px 30px;
+				border: none;
+				outline: none;
+				background: transparent;
+				font-size: 16px;
+			}
+			i.fa-magnifying-glass {
+				position: relative;
+				left: 4%;
+				font-size: 16px;
+			}
+
+
+
+			.dropdown-container {
+				width: 300px;
+			}
+			.dropdown-button {
+				display: flex;
+				justify-content: flex-end;
+				gap: 10px;
+			}
+			.dropdown-button button {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+				border-radius: 14px;
+				font-size: 16px;
+				font-weight: 600;
+				border: none;
+				padding: 5px 10px;
+				cursor: pointer;
+			}
+			.filter-container {
+				width: 300px;
+				border: solid 1px;
+				display: none;
+				margin-top: 10px;
+				position: absolute;
+				z-index: 1;
+				background-color: aliceblue;
+
+			}
+			.filter-container span {
+				font-size: 16px;
+				font-weight: 600;
+				border-bottom: solid 1px;
+				display: block;
+				padding: 10px;
+			}
+			.filter-group {
+				border-bottom: solid 1px;
+			}
+			.filter-title {
+				font-size: 16px;
+				display: flex;
+				justify-content: space-between;
+				gap: 100px;
+				padding: 10px;
+			}
+			select {
+				width: 280px;
+				height: 30px;
+				padding-left: 15px;
+				border: 2px solid transparent;
+				border-radius: 5px;
+				margin: 0 10px 20px 10px;
+				background: rgba(255, 255, 255, 0.2);
+				font-size: 16px;
+			}
+			.actions {
+				padding: 10px;
+				display: flex;
+				justify-content: space-between;
+			}
+			label {
+				padding-left: 10px;
+				position: relative;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="sidebar close">
+			<div class="open-btn">
+				<span class="openbtn">&#9776;</span>
+			</div>
+			<ul class="nav-links">
+				<li class="active">
+					<a href="dashboard.html">
+						<i class="fas fa-gauge"></i>
+						<span class="link_name">Dashboard</span>
+					</a>
+					<ul class="sub-menu blank">
+						<li><a class="link_name">Dashboard</a></li>
+					</ul>
+				</li>
+				<li>
+					<div class="iocn-link">
+						<a href="#">
+							<i>
+								<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+									<path stroke="currentColor" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M10 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h2m10 1a3 3 0 0 1-3 3m3-3a3 3 0 0 0-3-3m3 3h1m-4 3a3 3 0 0 1-3-3m3 3v1m-3-4a3 3 0 0 1 3-3m-3 3h-1m4-3v-1m-2.121 1.879-.707-.707m5.656 5.656-.707-.707m-4.242 0-.707.707m5.656-5.656-.707.707M12 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+								</svg>
+							</i>
+							<span class="link_name">Account Management</span>
+						</a>
+						<i class="fas fa-chevron-down arrow"></i>
+					</div>
+					<ul class="sub-menu">
+						<li><a class="link_name">Account Management</a></li>
+						<li><a href="create.html">Create account</a></li>
+						<li><a href="accounts.html">List of users</a></li>
+						<li><a href="#">Archived account</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i>
+							<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19V6a1 1 0 0 1 1-1h4.032a1 1 0 0 1 .768.36l1.9 2.28a1 1 0 0 0 .768.36H16a1 1 0 0 1 1 1v1M3 19l3-8h15l-3 8H3Z"/>
+							</svg>
+						</i>
+						<span class="link_name">Report Management</span>
+					</a>
+					<ul class="sub-menu blank">
+						<li><a class="link_name">Report Management</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="privacy.html">
+						<i class="fas fa-shield-alt"></i>
+						<span class="link_name">Privacy and Security</span>
+					</a>
+					<ul class="sub-menu blank">
+						<li><a class="link_name">Privacy and Security</a></li>
+					</ul>
+				</li>
+				<li>
+					<div class="profile-details">
+						<div class="profile-content">
+							<img src="image/logo.png" alt="profileImg">
+						</div>
+						<div class="name-job">
+							<div class="profile_name">Admin</div>
+							<div class="job">Administrator</div>
+						</div>
+						<a href="#">
+							<i class='fa fa-sign-out'></i>
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="report">
+			<div class="title">
+				<i>
+					<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="40.55" height="32" fill="none" viewBox="0 0 20 23">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19V6a1 1 0 0 1 1-1h4.032a1 1 0 0 1 .768.36l1.9 2.28a1 1 0 0 0 .768.36H16a1 1 0 0 1 1 1v1M3 19l3-8h15l-3 8H3Z"/>
+					</svg>
+				</i>
+				<i>Reported Incidents</i>
+			</div>
+			<div class="tools">
+				<div class="search-box">
+					<i class="fas fa-magnifying-glass"></i>
+					<input type="text" placeholder="Search...">
+				</div>
+				<div class="dropdown-container">
+					<div class="dropdown-button">
+						<button>
+							<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 20V10m0 10-3-3m3 3 3-3m5-13v10m0-10 3 3m-3-3-3 3"/>
+							</svg>
+							<label>Sort</label>
+						</button>
+						<button onclick="toggleFilterMenu()">
+							<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+								<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M20 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6h-2m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4"/>
+							</svg>
+							<label>Filter</label>
+						</button>
+					</div>
+					<div class="filter-container" id="filtermenu">
+
+						<span>Filter</span>
+
+						<div class="filter-group">
+							<div class="filter-title">
+								<label for="barangay">Barangay</label>
+								<a href="#" id="reset-barangay">Reset</a>
+							</div>
+							<select id="barangay">
+								<option value="default" selected>default</option>
+								<option value="barangay1">Barangay 1</option>
+								<option value="barangay2">Barangay 2</option>
+							</select>
+						</div>
+
+						<div class="filter-group">
+							<div class="filter-title">
+								<label for="position">Position</label>
+								<a href="#" id="reset-position">Reset</a>
+							</div>
+							<select id="position">
+								<option value="default" selected>default</option>
+								<option value="barangay1">Barangay 1</option>
+								<option value="barangay2">Barangay 2</option>
+							</select>
+						</div>
+						<div class="actions">
+							<button class="reset-btn">Reset all</button>
+							<button class="apply-btn">Apply now</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="js/sidebar.js"></script>
+	<script>
+		function toggleFilterMenu() {
+			const menu = document.getElementById('filtermenu');
+			if (menu.style.display === 'block') {
+				menu.style.display = 'none';
+			} else {
+				menu.style.display = 'block';
+			}
+		}
+	</script>
+	</body>
+</html>
