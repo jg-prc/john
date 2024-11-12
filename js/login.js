@@ -17,20 +17,8 @@ form.addEventListener("submit", async (e) => {
 				body: formData,
 			});
 
-const responseText = await response.text(); // Get raw response text
-console.log("Raw response:", responseText);
+			const data = await response.json(); // Parse JSON response
 
-let data;
-try {
-    data = JSON.parse(responseText); // Parse JSON response
-} catch (error) {
-    console.error("Error parsing JSON:", error, responseText);
-    Swal.fire("Error", "Invalid server response.", "error");
-    return;
-}
-
-
-			// Now handle the JSON response
 			if (data.status === "success") {
 				Swal.fire("Success", "Login successful", "success").then(() => {
 					// Redirect based on the role
@@ -41,16 +29,16 @@ try {
 					}
 				});
 			} else {
+				// Display the error message returned by PHP
 				Swal.fire("Error", data.message, "error");
 			}
 		} catch (error) {
 			console.error("Error during fetch operation:", error);
-			Swal.fire("Error", "Something went wrong!", "error");
+			Swal.fire("Error", "Something went wrong! Please try again.", "error");
 		}
 	}
 });
 
-// Validation functions
 function validateInput(input, errorMessage) {
 	const value = input.value.trim();
 	if (value === "") {
