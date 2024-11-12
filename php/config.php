@@ -2,7 +2,7 @@
   $hostname = "localhost";
   $username = "new";
   $password = "";  // Ensure this is correct
-  $dbname = "capstone";
+  $dbname = "u412427249_capstone";
 
   $conn = mysqli_connect($hostname, $username, $password, $dbname);
   if(!$conn){
