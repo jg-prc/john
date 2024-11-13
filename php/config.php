@@ -1,5 +1,5 @@
 <?php
-  $hostname = "localhost";
+  $hostname = "snow-bear-572093.hostingersite.com";
   $username = "new";
   $password = "";
   $dbname = "u412427249_capstone";
