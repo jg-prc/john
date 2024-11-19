@@ -2,7 +2,7 @@
 	$search = isset($_GET['search']) ? $_GET['search'] : '';
 	$barangay = isset($_GET['barangay']) ? $_GET['barangay'] : '';
 	$position = isset($_GET['position']) ? $_GET['position'] : '';
-	$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'created_at-desc';
+	$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'CreatedAt-desc';
 ?>
 			<div class="tools">
 				<div class="search-box">
@@ -70,7 +70,7 @@
 							<select id="position">
 								<option value="">All</option>
 								<option value="Brgy. Captain">Brgy. Captain</option>
-								<option value="Brgy. Captain">Brgy. Kagawad</option>
+								<option value="Brgy. Kagawad">Brgy. Kagawad</option>
 							</select>
 						</div>
 						<div class="actions">

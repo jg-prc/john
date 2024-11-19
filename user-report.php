@@ -1,10 +1,10 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'user') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '1') {
 		header("Location: index.php");
 		exit();
 	}
-	$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'created_at-desc';
+	$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'CreatedAt-desc';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,8 +16,12 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
 		<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
 		<link rel="stylesheet" href="css/sidebar-user.css">
-		<title>Responsive Layout</title>
+		<link rel="icon" href="php/image/logo.png" type="image/png">
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
+			body::-webkit-scrollbar {
+				display: none;
+			}
 			.container {
 				height: 1100px;
 				background-color: #f2f5f7;
@@ -189,24 +193,15 @@
 			.swal-body .sub-content {
 				display: flex;
 				flex-direction: column;
-				align-items: flex-start;
+				align-items: center;
 				font-size: 27px;
 				gap: 8px;
 			}
-			.barangay strong::after {
-				content: "Barangay:";
-			}
-			.street strong::after {
-				content: "Street/Sitio:";
-			}
-			.report_by strong::after {
-				content: "Reported By:";
-			}
-			.update strong::after {
-				content: "Updated at:";
-			}
 
-
+			.sub-content span {
+				display: flex;
+				flex-direction: column;
+			}
 
 			.swal-body .sub-btn {
 				display: flex;
@@ -309,25 +304,6 @@
 					display: flex;
 					flex-direction: column;
 				}
-				.barangay strong,
-				.report_by strong,
-				.street strong,
-				.update strong {
-					order: 2;
-				}
-
-				.report_by strong::after {
-					content: "Reported By";
-				}
-				.street strong::after {
-					content: "Street/Sitio";
-				}
-				.barangay strong::after {
-					content: "Barangay";
-				}
-				.update strong::after {
-					content: "Updated at";
-				}
 			}
 		</style>
 	</head>
@@ -414,11 +390,11 @@
 					include_once "php/config.php";
 					$user_id = $_SESSION['unique_id'];
 
-					$dateQuery = "SELECT DISTINCT event_at FROM incident_report WHERE user_id = $user_id";
+					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report WHERE OfficialsID = $user_id";
 
-					$order_by = 'ORDER BY `event_at` DESC';
-					if ($sort_by == 'event_at-asc') {
-						$order_by = 'ORDER BY `event_at` ASC';
+					$order_by = 'ORDER BY `CreatedAt` DESC';
+					if ($sort_by == 'CreatedAt-asc') {
+						$order_by = 'ORDER BY `CreatedAt` ASC';
 					}
 					$dateQuery .= " $order_by";
 
@@ -427,7 +403,7 @@
 					if ($dateResult->num_rows > 0) {
 						$eventDates = [];
 						while ($row = $dateResult->fetch_assoc()) {
-							$eventDates[] = date("F j, Y", strtotime($row['event_at']));
+							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
 						}
 					} else {
 						$eventDates = [];
@@ -435,7 +411,16 @@
 
 					foreach ($eventDates as $eventDate) {
 
-						$sql = "SELECT * FROM incident_report WHERE event_at = '" . $conn->real_escape_string(date("Y-m-d", strtotime($eventDate))) . "' AND user_id = " . $conn->real_escape_string($user_id) . " ORDER BY event_time DESC;";
+						$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, it.IncidentTypeName, b.BarangayName
+							FROM
+								incident_report AS ir
+							LEFT JOIN
+								incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN
+								barangay AS b ON ir.BarangayID = b.BarangayID
+							WHERE
+								CreatedAt = '" . $conn->real_escape_string(date("Y-m-d", strtotime($eventDate))) . "' 
+								AND OfficialsID = " . $conn->real_escape_string($user_id) . " ORDER BY CreatedTime DESC;";
 
 						$reportResult = $conn->query($sql);
 
@@ -450,7 +435,7 @@
 							while ($row = $reportResult->fetch_assoc()) {
 
 								$icon = '';
-								switch ($row['incident_type']) {
+								switch ($row['IncidentTypeName']) {
 									case 'Vehicular Accident':
 										$icon = '<i class="fas fa-car-crash"></i>';
 										break;
@@ -466,13 +451,13 @@
 								}
 
 								echo "
-									<a class='card' onclick=\"showForm(" . $row['report_id'] . ")\">
+									<a class='card' onclick=\"showForm(" . $row['IncidentReportID'] . ")\">
 										<div class='image'>
 										" . $icon . "
 										</div>
 										<div class='details'>
-											<span class='type'>" . $row['incident_type'] . "</span>
-											<span>Zone " . $row['zone'] . " , " . $row['barangay'] . "</span>
+											<span class='type'>" . $row['IncidentTypeName'] . "</span>
+											<span>Zone " . $row['Zone'] . " , " . $row['BarangayName'] . "</span>
 										</div>
 									</a>
 								";
@@ -488,33 +473,33 @@
 	<script src="js/logout.js"></script>
 	<script src="js/dashboard-user.js"></script>
 	<script>
-function toggleSortOrder() {
-	const urlParams = new URLSearchParams(window.location.search);
-	const sortIcon = document.getElementById('sort-icon');
-	let currentSortOrder = urlParams.get('sort_by');
+		function toggleSortOrder() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const sortIcon = document.getElementById('sort-icon');
+			let currentSortOrder = urlParams.get('sort_by');
 
-	if (!currentSortOrder || currentSortOrder === 'event_at-desc') {
-		urlParams.set('sort_by', 'event_at-asc');
-		sortIcon.classList.replace('fa-arrow-up-short-wide', 'fa-arrow-down-short-wide');
-	} else {
-		urlParams.set('sort_by', 'event_at-desc');
-		sortIcon.classList.replace('fa-arrow-down-short-wide', 'fa-arrow-up-short-wide');
-	}
+			if (!currentSortOrder || currentSortOrder === 'CreatedAt-desc') {
+				urlParams.set('sort_by', 'CreatedAt-asc');
+				sortIcon.classList.replace('fa-arrow-up-short-wide', 'fa-arrow-down-short-wide');
+			} else {
+				urlParams.set('sort_by', 'CreatedAt-desc');
+				sortIcon.classList.replace('fa-arrow-down-short-wide', 'fa-arrow-up-short-wide');
+			}
 
-	window.location.search = urlParams.toString();
-}
+			window.location.search = urlParams.toString();
+		}
 
-window.onload = function() {
-	const urlParams = new URLSearchParams(window.location.search);
-	const sortIcon = document.getElementById('sort-icon');
-	let currentSortOrder = urlParams.get('sort_by');
+		window.onload = function() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const sortIcon = document.getElementById('sort-icon');
+			let currentSortOrder = urlParams.get('sort_by');
 
-	if (currentSortOrder === 'event_at-asc') {
-		sortIcon.classList.replace('fa-arrow-up-short-wide', 'fa-arrow-down-short-wide');
-	} else {
-		sortIcon.classList.replace('fa-arrow-down-short-wide', 'fa-arrow-up-short-wide');
-	}
-}
+			if (currentSortOrder === 'CreatedAt-asc') {
+				sortIcon.classList.replace('fa-arrow-up-short-wide', 'fa-arrow-down-short-wide');
+			} else {
+				sortIcon.classList.replace('fa-arrow-down-short-wide', 'fa-arrow-up-short-wide');
+			}
+		}
 	</script>
 </html>
 

@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'admin') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '2') {
 		header("Location: index.php");
 		exit();
 	}
@@ -22,9 +22,8 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
 		<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
 		<link rel="stylesheet" href="css/sidebar.css">
-
 		<link rel="icon" href="php/image/logo.png" type="image/png">
-		<title>Responsive Layout</title>
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
 			.container {
 				margin-left: 70px;
@@ -294,7 +293,17 @@
 				transform: translateY(0);
 
 			}
-
+			.swal-body .sub-content {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				font-size: 27px;
+				gap: 30px;
+			}
+			.sub-content span {
+				display: flex;
+				flex-direction: column;
+			}
 
 
 			.swal-body {
@@ -327,13 +336,6 @@
 			}
 			.swal-body span.status {
 				margin-top: 0;
-			}
-			.swal-body .sub-content {
-				display: flex;
-				flex-direction: column;
-				align-items: flex-start;
-				font-size: 27px;
-				gap: 8px;
 			}
 			.swal-body .sub-btn {
 				display: flex;
@@ -480,79 +482,79 @@
 			<div id="text-slider" class="splide">
 				<div class="splide__track">
 					<ul class="splide__list">
+					<?php
+						include_once "php/config.php";
 
-						<?php
-							include_once "php/config.php";
+						$dateQuery = "SELECT ir.IncidentReportID, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime,
+							it.IncidentTypeName, b.BarangayName
+							FROM incident_report AS ir
+							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+							WHERE 1 = 1";
 
-							
-							$date = isset($_GET['date']) ? $_GET['date'] : '';
+						if (!empty($type)) {
+							$dateQuery .= " AND IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
+						}
+						if (!empty($selectedDate)) {
+							$dateQuery .= " AND CreatedAt = '" . $conn->real_escape_string($selectedDate) . "'";
+						}
 
-							$dateQuery = "SELECT * FROM incident_report WHERE 1 = 1";
+						$dateQuery .= " ORDER BY ir.CreatedTime DESC";
 
-							if (!empty($type)) {
-								$dateQuery .= " AND incident_type = '" . $conn->real_escape_string($type) . "'";
-							}
+						$result = $conn->query($dateQuery);
 
-							if (!empty($selectedDate)) {
-								$dateQuery .= " AND event_at = '" . $conn->real_escape_string($selectedDate) . "'";
-							}
-
-							$dateQuery .= " ORDER BY event_time DESC";
-
-							$result = $conn->query($dateQuery);
-
-							if ($result->num_rows > 0) {
-								while ($row = $result->fetch_assoc()) {
-									$icon = '';
-									switch ($row['incident_type']) {
-										case 'Vehicular Accident':
-											$icon = '<i class="fas fa-car-crash"></i>';
-											break;
-										case 'Fire Incident':
-											$icon = '<i class="fas fa-fire"></i>';
-											break;
-										case 'Flood Incident':
-											$icon = '<i class="fas fa-house-flood-water"></i>';
-											break;
-										case 'Landslide Incident':
-											$icon = '<i class="fas fa-hill-rockslide"></i>';
-											break;
-									}
-									$statusClass = '';
-									switch ($row['status']) {
-										case 'pending':
-											$statusClass = 'pending';
-											break;
-										case 'resolved':
-											$statusClass = 'resolved';
-											break;
-										case 'ongoing':
-											$statusClass = 'ongoing';
-											break;
-										case 'duplicated':
-											$statusClass = 'duplicated';
-											break;
-									}
-
-									$eventDateTime = new DateTime($row['event_time']);
-									$formattedTime = $eventDateTime->format('g:i a');
-
-						?>
-						<li class="splide__slide" onclick=showForm(<?php echo $row['report_id']; ?>)>
-							<?php echo $icon; ?>
-							<div class="content">
-								<span class="type"><?php echo $row['incident_type']; ?></span>
-								<span>Zone <?php echo $row['zone'] . ", " . $row['barangay']; ?></span>
-								<span class="status <?php echo $statusClass; ?>"><?php echo $row['status']; ?></span>
-							</div>
-							<span class="time"><?php echo $formattedTime; ?></span>
-						</li>
-						<?php
+						if ($result->num_rows > 0) {
+							while ($row = $result->fetch_assoc()) {
+								$icon = '';
+								switch ($row['IncidentTypeName']) {
+									case 'Vehicular Accident':
+										$icon = '<i class="fas fa-car-crash"></i>';
+										break;
+									case 'Fire Incident':
+										$icon = '<i class="fas fa-fire"></i>';
+										break;
+									case 'Flood Incident':
+										$icon = '<i class="fas fa-house-flood-water"></i>';
+										break;
+									case 'Landslide Incident':
+										$icon = '<i class="fas fa-hill-rockslide"></i>';
+										break;
 								}
-							} else {
-								echo "<li class='splide__slide'> </li>";
+								$statusClass = '';
+								switch ($row['ResponseStatus']) {
+									case 'pending':
+										$statusClass = 'pending';
+										break;
+									case 'resolved':
+										$statusClass = 'resolved';
+										break;
+									case 'ongoing':
+										$statusClass = 'ongoing';
+										break;
+									case 'duplicated':
+										$statusClass = 'duplicated';
+										break;
+								}
+
+								$eventDateTime = new DateTime($row['CreatedTime']);
+								$formattedTime = $eventDateTime->format('g:i a');
+
+					?>
+					<li class="splide__slide" onclick=showForm(<?php echo $row['IncidentReportID']; ?>)>
+						<?php echo $icon; ?>
+						<div class="content">
+							<span class="type"><?php echo $row['IncidentTypeName']; ?></span>
+							<span>Zone <?php echo $row['Zone'] . ", " . $row['BarangayName']; ?></span>
+							<span class="status <?php echo $statusClass; ?>"><?php echo $row['ResponseStatus']; ?></span>
+						</div>
+						<span class="time"><?php echo $formattedTime; ?></span>
+					</li>
+					<?php
 							}
-						?>
+						} else {
+							echo "<li class='splide__slide'> </li>";
+						}
+					?>
 					</ul>
 				</div>
 			</div>

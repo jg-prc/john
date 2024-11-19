@@ -10,13 +10,13 @@
 	$event_at = mysqli_real_escape_string($conn, $_POST['event_at']);
 
 	$sql = "UPDATE incident_report 
-		SET incident_type = '$incident_type',
-			barangay = '$barangay',
-			zone = '$zone',
-			street = '$street',
-			event_at = '$event_at',
-			update_at = CURRENT_TIMESTAMP
-		WHERE report_id = '$report_id'";
+		SET IncidentTypeID = '$incident_type',
+			BarangayID = '$barangay',
+			Zone = '$zone',
+			Street = '$street',
+			CreatedAt = '$event_at',
+			UpdatedAt = CURRENT_TIMESTAMP
+		WHERE IncidentReportID = '$report_id'";
 
 	$result = mysqli_query($conn, $sql);
 
@@ -42,12 +42,12 @@
 			$update_classification = mysqli_real_escape_string($conn, $update_classifications[$i]);
 
 			$update_query = "UPDATE victim 
-				SET name = '$update_name', 
-					address = '$update_address', 
-					age = '$update_age', 
-					sex = '$update_sex', 
-					classification = '$update_classification' 
-				WHERE victim_id = '$victim_id'";
+				SET VictimName = '$update_name', 
+					Address = '$update_address', 
+					Age = '$update_age', 
+					Sex = '$update_sex', 
+					Classification = '$update_classification' 
+				WHERE victimID = '$victim_id'";
 
 			$result = mysqli_query($conn, $update_query);
 
@@ -72,7 +72,7 @@
 			$sex = mysqli_real_escape_string($conn, $sexes[$i]);
 			$classification = mysqli_real_escape_string($conn, $classifications[$i]);
 
-			$insert_query = "INSERT INTO victim (ref_id, name, address, age, sex, classification) 
+			$insert_query = "INSERT INTO victims (victimID , VictimName, Address, Age, Sex, Classification) 
 				VALUES ('$report_id', '$name', '$address', '$age', '$sex', '$classification')";
 
 			$result = mysqli_query($conn, $insert_query);

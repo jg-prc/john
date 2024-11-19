@@ -2,7 +2,7 @@
 	$search = isset($_GET['search']) ? $_GET['search'] : '';
 	$barangay = isset($_GET['barangay']) ? $_GET['barangay'] : '';
 	$incident_type = isset($_GET['incident_type']) ? $_GET['incident_type'] : '';
-	$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'event_at-desc';
+	$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'CreatedAt-desc';
 
 ?>
 			<div class="tools">

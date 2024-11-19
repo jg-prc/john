@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'admin') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '2') {
 		header("Location: index.php");
 		exit();
 	}
@@ -16,7 +16,8 @@
 		<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="css/sidebar.css">
-		<title>Responsive Layout</title>
+		<link rel="icon" href="php/image/logo.png" type="image/png">
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
 			body::-webkit-scrollbar {
 				display: none;
@@ -116,6 +117,10 @@
 			span.status.pending {
 				background-color: #ffc107;
 				color: #333;
+			}
+			span.status.duplicated {
+				background-color: #5dade2;
+				color: white;
 			}
 			input[type=text],
 			input[type=date],
@@ -359,14 +364,17 @@
 			include_once "php/config.php";
 			$report_id = isset($_GET['report_id']) ? $_GET['report_id'] : '';
 
-			$sql = "SELECT ir.report_id, ir.status, ir.incident_type, ir.barangay, ir.zone, ir.street, ir.user_id,
-				 u.last_name, u.first_name, u.position, ir.event_at, ir.event_time,ir.update_at, img.file_path
-				FROM incident_report AS ir
-				LEFT JOIN image AS img
-				ON ir.ref_id = img.ref_id
-				LEFT JOIN user AS u
-				ON ir.user_id = u.user_id
-				WHERE ir.report_id = $report_id";
+			$sql = "SELECT ir.IncidentReportID, bo.FirstName, bo.LastName, bo.ExtensionName, p.PositionName,
+					it.IncidentTypeName, b.BarangayName, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt,
+					ir.CreatedTime, ir.UpdatedAt, fr.FolderName, img.ImagesName
+					FROM incident_report AS ir
+					LEFT JOIN barangay_officials AS bo ON ir.OfficialsID = bo.OfficialsID
+					LEFT JOIN position AS p ON bo.PositionID = p.PositionID
+					LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+					LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+					LEFT JOIN folder_report as fr ON ir.IncidentReportID = fr.FolderID
+					LEFT JOIN images AS img ON fr.ImageID = img.ImagesID
+					WHERE IncidentReportID = $report_id";
 
 			$result = $conn->query($sql);
 
@@ -374,7 +382,7 @@
 				$row = $result->fetch_all(MYSQLI_ASSOC);
 
 				$statusClass = '';
-				switch ($row[0]['status']) {
+				switch ($row[0]['ResponseStatus']) {
 					case 'pending':
 						$statusClass = 'pending';
 						break;
@@ -384,10 +392,13 @@
 					case 'ongoing':
 						$statusClass = 'ongoing';
 						break;
+					case 'duplicated':
+						$statusClass = 'duplicated';
+						break;
 				}
 
 				$icon = '';
-				switch ($row[0]['incident_type']) {
+				switch ($row[0]['IncidentTypeName']) {
 					case 'Vehicular Accident':
 						$icon = '<i class="fas fa-car-crash"></i>';
 						break;
@@ -411,10 +422,10 @@
 			<div class="sub-title">
 				<div>
 					<?php echo $icon; ?>
-					<i><?php echo $row[0]['incident_type']; ?></i>
+					<i><?php echo $row[0]['IncidentTypeName']; ?></i>
 				</div>
 				<?php
-					$eventDateTime = $row[0]['update_at'];
+					$eventDateTime = $row[0]['UpdatedAt'];
 
 					if ($eventDateTime !== '0000-00-00 00:00:00') {
 						$dateTime = new DateTime($eventDateTime);
@@ -438,7 +449,7 @@
 						<ul class="splide__list">
 
 							<?php foreach ($row as $image) { ?>
-								<li class="splide__slide"><img src="php/<?php echo $image['file_path']; ?>" alt=""></li>
+								<li class="splide__slide"><img src="php/<?php echo $image['FolderName']; ?><?php echo $image['ImagesName']; ?>" alt=""></li>
 							<?php } ?>
 
 						</ul>
@@ -447,53 +458,40 @@
 				</div>
 				<form class="report" id="report" autocomplete="off" action="" method="post" enctype="multipart/form-data">
 					<div class="input-container" id="row1">
-						<span class="status <?php echo $statusClass; ?>"><?php echo $row[0]['status']; ?></span>
+						<span class="status <?php echo $statusClass; ?>"><?php echo $row[0]['ResponseStatus']; ?></span>
 					</div>
 					<div class="input-container" id="row2">
 						<div class="input-box" id="Type-box">
 							<label for="incident_type">Incident Type</label>
 							<select id="incident_type" name="incident_type">
 								<option value="" disabled selected>Incident Type</option>
-								<option value="Fire Incident" <?php echo ($row[0]['incident_type'] == 'Fire Incident') ? 'selected' : ''; ?>>Fire Incident</option>
-								<option value="Vehicular Accident" <?php echo ($row[0]['incident_type'] == 'Vehicular Accident') ? 'selected' : ''; ?>>Vehicular Accident</option>
-								<option value="Flood Incident" <?php echo ($row[0]['incident_type'] == 'Flood Incident') ? 'selected' : ''; ?>>Flood Incident</option>
-								<option value="Landslide Incident" <?php echo ($row[0]['incident_type'] == 'Landslide Incident') ? 'selected' : ''; ?>>Landslide Incident</option>
+								<option value="1" <?php echo ($row[0]['IncidentTypeName'] == 'Fire Incident') ? 'selected' : ''; ?>>Fire Incident</option>
+								<option value="2" <?php echo ($row[0]['IncidentTypeName'] == 'Vehicular Accident') ? 'selected' : ''; ?>>Vehicular Accident</option>
+								<option value="3" <?php echo ($row[0]['IncidentTypeName'] == 'Flood Incident') ? 'selected' : ''; ?>>Flood Incident</option>
+								<option value="4" <?php echo ($row[0]['IncidentTypeName'] == 'Landslide Incident') ? 'selected' : ''; ?>>Landslide Incident</option>
 							</select>
 						</div>
 
 						<div class="input-box" id="Barangay-box">
 							<label for="barangay">Barangay</label>
 							<select id="barangay" name="barangay">
-								<option value="" disabled selected>Barangay</option>
-								<option value="Adiangao" <?php echo ($row[0]['barangay'] == 'Adiangao') ? 'selected' : ''; ?>>Adiangao</option>
-								<option value="Bagacay" <?php echo ($row[0]['barangay'] == 'Bagacay') ? 'selected' : ''; ?>>Bagacay</option>
-								<option value="Bahay" <?php echo ($row[0]['barangay'] == 'Bahay') ? 'selected' : ''; ?>>Bahay</option>
-								<option value="Boclod" <?php echo ($row[0]['barangay'] == 'Boclod') ? 'selected' : ''; ?>>Boclod</option>
-								<option value="Calalahan" <?php echo ($row[0]['barangay'] == 'Calalahan') ? 'selected' : ''; ?>>Calalahan</option>
-								<option value="Calawit" <?php echo ($row[0]['barangay'] == 'Calawit') ? 'selected' : ''; ?>>Calawit</option>
-								<option value="Camagong" <?php echo ($row[0]['barangay'] == 'Camagong') ? 'selected' : ''; ?>>Camagong</option>
-								<option value="Catalotoan" <?php echo ($row[0]['barangay'] == 'Catalotoan') ? 'selected' : ''; ?>>Catalotoan</option>
-								<option value="Danlog" <?php echo ($row[0]['barangay'] == 'Danlog') ? 'selected' : ''; ?>>Danlog</option>
-								<option value="Del Carmen (Poblacion)" <?php echo ($row[0]['barangay'] == 'Del Carmen (Poblacion)') ? 'selected' : ''; ?>>Del Carmen (Poblacion)</option>
-								<option value="Dolo" <?php echo ($row[0]['barangay'] == 'Dolo') ? 'selected' : ''; ?>>Dolo</option>
-								<option value="Kinalansan" <?php echo ($row[0]['barangay'] == 'Kinalansan') ? 'selected' : ''; ?>>Kinalansan</option>
-								<option value="Mampirao" <?php echo ($row[0]['barangay'] == 'Mampirao') ? 'selected' : ''; ?>>Mampirao</option>
-								<option value="Manzana" <?php echo ($row[0]['barangay'] == 'Manzana') ? 'selected' : ''; ?>>Manzana</option>
-								<option value="Minoro" <?php echo ($row[0]['barangay'] == 'Minoro') ? 'selected' : ''; ?>>Minoro</option>
-								<option value="Palale" <?php echo ($row[0]['barangay'] == 'Palale') ? 'selected' : ''; ?>>Palale</option>
-								<option value="Ponglon" <?php echo ($row[0]['barangay'] == 'Ponglon') ? 'selected' : ''; ?>>Ponglon</option>
-								<option value="Pugay" <?php echo ($row[0]['barangay'] == 'Pugay') ? 'selected' : ''; ?>>Pugay</option>
-								<option value="Sabang" <?php echo ($row[0]['barangay'] == 'Sabang') ? 'selected' : ''; ?>>Sabang</option>
-								<option value="Salogon" <?php echo ($row[0]['barangay'] == 'Salogon') ? 'selected' : ''; ?>>Salogon</option>
-								<option value="San Antonio (Poblacion)" <?php echo ($row[0]['barangay'] == 'San Antonio (Poblacion)') ? 'selected' : ''; ?>>San Antonio (Poblacion)</option>
-								<option value="San Juan (Poblacion)" <?php echo ($row[0]['barangay'] == 'San Juan (Poblacion)') ? 'selected' : ''; ?>>San Juan (Poblacion)</option>
-								<option value="San Vicente (Poblacion)" <?php echo ($row[0]['barangay'] == 'San Vicente (Poblacion)') ? 'selected' : ''; ?>>San Vicente (Poblacion)</option>
-								<option value="Santa Cruz (Poblacion)" <?php echo ($row[0]['barangay'] == 'Santa Cruz (Poblacion)') ? 'selected' : ''; ?>>Santa Cruz (Poblacion)</option>
-								<option value="Soledad (Poblacion)" <?php echo ($row[0]['barangay'] == 'Soledad (Poblacion)') ? 'selected' : ''; ?>>Soledad (Poblacion)</option>
-								<option value="Tagas" <?php echo ($row[0]['barangay'] == 'Tagas') ? 'selected' : ''; ?>>Tagas</option>
-								<option value="Tambangan" <?php echo ($row[0]['barangay'] == 'Tambangan') ? 'selected' : ''; ?>>Tambangan</option>
-								<option value="Telegrafo" <?php echo ($row[0]['barangay'] == 'Telegrafo') ? 'selected' : ''; ?>>Telegrafo</option>
-								<option value="Tominawog" <?php echo ($row[0]['barangay'] == 'Tominawog') ? 'selected' : ''; ?>>Tominawog</option>
+								<option value="" disabled <?php echo empty($row[0]['BarangayName']) ? 'selected' : ''; ?>>Barangay</option>
+								<?php
+									$barangays = [
+										"Adiangao", "Bagacay", "Bahay", "Boclod", "Calalahan", "Calawit", 
+										"Camagong", "Catalotoan", "Danlog", "Del Carmen (Poblacion)", 
+										"Dolo", "Kinalansan", "Mampirao", "Manzana", "Minoro", "Palale", 
+										"Ponglon", "Pugay", "Sabang", "Salogon", "San Antonio (Poblacion)", 
+										"San Juan (Poblacion)", "San Vicente (Poblacion)", "Santa Cruz (Poblacion)", 
+										"Soledad (Poblacion)", "Tagas", "Tambangan", "Telegrafo", "Tominawog"
+									];
+
+									foreach ($barangays as $index => $barangay) {
+										$value = $index + 1;
+										$selected = ($row[0]['BarangayName'] === $barangay) ? 'selected' : '';
+										echo "<option value=\"$value\" $selected>" . htmlspecialchars($barangay) . "</option>";
+									}
+								?>
 							</select>
 						</div>
 					</div>
@@ -502,29 +500,29 @@
 							<label for="zone">Zone</label>
 							<select id="zone" name="zone">
 								<option value="" disabled selected>Zone</option>
-								<option value="1" <?php echo ($row[0]['zone'] == '1') ? 'selected' : ''; ?>>1</option>
-								<option value="2" <?php echo ($row[0]['zone'] == '2') ? 'selected' : ''; ?>>2</option>
-								<option value="3" <?php echo ($row[0]['zone'] == '3') ? 'selected' : ''; ?>>3</option>
-								<option value="4" <?php echo ($row[0]['zone'] == '4') ? 'selected' : ''; ?>>4</option>
-								<option value="5" <?php echo ($row[0]['zone'] == '5') ? 'selected' : ''; ?>>5</option>
-								<option value="6" <?php echo ($row[0]['zone'] == '6') ? 'selected' : ''; ?>>6</option>
-								<option value="7" <?php echo ($row[0]['zone'] == '7') ? 'selected' : ''; ?>>7</option>
+								<option value="1" <?php echo ($row[0]['Zone'] == '1') ? 'selected' : ''; ?>>1</option>
+								<option value="2" <?php echo ($row[0]['Zone'] == '2') ? 'selected' : ''; ?>>2</option>
+								<option value="3" <?php echo ($row[0]['Zone'] == '3') ? 'selected' : ''; ?>>3</option>
+								<option value="4" <?php echo ($row[0]['Zone'] == '4') ? 'selected' : ''; ?>>4</option>
+								<option value="5" <?php echo ($row[0]['Zone'] == '5') ? 'selected' : ''; ?>>5</option>
+								<option value="6" <?php echo ($row[0]['Zone'] == '6') ? 'selected' : ''; ?>>6</option>
+								<option value="7" <?php echo ($row[0]['Zone'] == '7') ? 'selected' : ''; ?>>7</option>
 							</select>
 						</div>
 
 						<div class="input-box" id="Street-box">
 							<label for="street">Street / Sitio</label>
-							<input type="text" name="street" id="street" placeholder="Street / Sitio" value="<?php echo htmlspecialchars($row[0]['street']); ?>">
+							<input type="text" name="street" id="street" placeholder="Street / Sitio" value="<?php echo htmlspecialchars($row[0]['Street']); ?>">
 						</div>
 					</div>
 					<div class="input-container" id="row4">
 						<div class="input-box" id="Event-box">
 							<label for="event_at">Date</label>
-							<input type="date" name="event_at" id="event_at" value="<?php echo htmlspecialchars($row[0]['event_at']); ?>">
+							<input type="date" name="event_at" id="event_at" value="<?php echo htmlspecialchars($row[0]['CreatedAt']); ?>">
 						</div>
 						<div class="input-box" id="Report-box">
 							<label for="report_by">Reported by</label>
-							<input type="text" class="report_by" id="report_by" value="<?php echo htmlspecialchars($row[0]['position'] . ' ' . $row[0]['first_name'] . ' ' . $row[0]['last_name']); ?>" disabled>
+							<input type="text" class="report_by" id="report_by" value="<?php echo htmlspecialchars($row[0]['FirstName'] . ' ' . $row[0]['LastName'] . ' ' . $row[0]['ExtensionName']); ?>" disabled>
 						</div>
 					</div>
 				</form>
@@ -540,7 +538,7 @@
 						include_once "php/config.php";
 						$report_id = isset($_GET['report_id']) ? $_GET['report_id'] : '';
 
-						$sql = "SELECT victim_id, name, age, address, sex, classification FROM victim WHERE ref_id = ?";
+						$sql = "SELECT * FROM victims WHERE victimID = ?";
 
 						$stmt = $conn->prepare($sql);
 						$stmt->bind_param("i", $report_id);
@@ -550,27 +548,27 @@
 						if ($result->num_rows > 0) {
 							while ($row = $result->fetch_assoc()) {
 								echo "
-									<div class='form-section'  id='victim" . htmlspecialchars($row['victim_id']) . "'>
-										<input type='hidden' name='victim_id' value='" . htmlspecialchars($row['victim_id']) . "'>
+									<div class='form-section'  id='victim" . htmlspecialchars($row['victimID']) . "'>
+										<input type='hidden' name='victim_id' value='" . htmlspecialchars($row['victimID']) . "'>
 
-										<i class='fa fa-circle-xmark' onclick='deleteVictim(" . htmlspecialchars($row['victim_id']) . ")'></i>
+										<i class='fa fa-circle-xmark' onclick='deleteVictim(" . htmlspecialchars($row['victimID']) . ")'></i>
 
 										<div class='input-box' id='Name-box'>
 											<label for='name'>Name</label>
-											<input type='text' name='update_name[]' id='name' placeholder='Name' value='" . htmlspecialchars($row['name']) . "'>
+											<input type='text' name='update_name[]' id='name' placeholder='Name' value='" . htmlspecialchars($row['VictimName']) . "'>
 											<div class='message'>Error message</div>
 											<i class='fas fa-exclamation-circle'></i>
 										</div>
 										<div class='input-box' id='Address-box'>
 											<label for='address'>Address</label>
-											<textarea name='update_address[]' id='address' placeholder='Address'>" . htmlspecialchars($row['address']) . "</textarea>
+											<textarea name='update_address[]' id='address' placeholder='Address'>" . htmlspecialchars($row['Address']) . "</textarea>
 											<div class='message'>Error message</div>
 											<i class='fas fa-exclamation-circle'></i>
 										</div>
 										<div class='input-container' id='row5'>
 											<div class='input-box' id='Age-box'>
 												<label for='age'>Age</label>
-												<input type='text' name='update_age[]' id='age' placeholder='Age' value='" . htmlspecialchars($row['age']) . "'>
+												<input type='text' name='update_age[]' id='age' placeholder='Age' value='" . htmlspecialchars($row['Age']) . "'>
 												<div class='message'>Error message</div>
 												<i class='fas fa-exclamation-circle'></i>
 											</div>
@@ -578,8 +576,8 @@
 												<label for='sex'>Sex</label>
 												<select name='update_sex[]' id='sex'>
 													<option value='' disabled selected>Sex</option>
-													<option value='male'" . ($row['sex'] == 'male' ? ' selected' : '') . ">Male</option>
-													<option value='female'" . ($row['sex'] == 'female' ? ' selected' : '') . ">Female</option>
+													<option value='male'" . ($row['Sex'] == 'male' ? ' selected' : '') . ">Male</option>
+													<option value='female'" . ($row['Sex'] == 'female' ? ' selected' : '') . ">Female</option>
 												</select>
 												<div class='message'>Error message</div>
 												<i class='fas fa-exclamation-circle'></i>
@@ -587,7 +585,7 @@
 										</div>
 										<div class='input-box' id='Classification-box'>
 											<label for='classification'>Classification</label>
-											<textarea name='update_classification[]' id='classification' placeholder='Classification'>" . htmlspecialchars($row['classification']) . "</textarea>
+											<textarea name='update_classification[]' id='classification' placeholder='Classification'>" . htmlspecialchars($row['Classification']) . "</textarea>
 											<div class='message'>Error message</div>
 											<i class='fas fa-exclamation-circle'></i>
 										</div>

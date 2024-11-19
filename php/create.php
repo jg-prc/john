@@ -5,7 +5,7 @@
 	$currentYear = date('Y');
 	$autoIncrementValue = ($currentYear * 1000) + 1;
 
-	$auto_increment_query = "ALTER TABLE user AUTO_INCREMENT = $autoIncrementValue";
+	$auto_increment_query = "ALTER TABLE barangay_officials AUTO_INCREMENT = $autoIncrementValue";
 
 	$conn->query($auto_increment_query);
 
@@ -24,51 +24,71 @@
 
 	$image = "default_image.png"; // Default image if no file is uploaded
 	$status = "active";
-	$role = "user";
+	$role = "1";
 
-	// Proceed with email validation and the rest of the script if no errors
-	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$sql = mysqli_query($conn, "SELECT * FROM user WHERE email = '{$email}'");
-		if (mysqli_num_rows($sql) > 0) {
-			echo "This email already exists!";
-			exit();
-		} else {
-			// Handle image upload
-			if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-				$img_name = $_FILES['image']['name'];
-				$img_size = $_FILES['image']['size'];
-				$tmp_name = $_FILES['image']['tmp_name'];
-				$error = $_FILES['image']['error'];
+if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    // Check if email exists
+    $sql = $conn->prepare("SELECT * FROM barangay_officials WHERE EmailAddress = ?");
+    $sql->bind_param('s', $email);
+    $sql->execute();
+    $result = $sql->get_result();
+    
+    if ($result->num_rows > 0) {
+        echo "This email already exists!";
+        exit();
+    } else {
+        // Handle image upload securely
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            $img_name = $_FILES['image']['name'];
+            $img_size = $_FILES['image']['size'];
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $img_ext = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
 
-				// Get the file extension and validate
-				$img_explode = explode('.', $img_name);
-				$img_ext = strtolower(end($img_explode));
+            $allowed_extensions = ['jpeg', 'jpg', 'png'];
+            if (in_array($img_ext, $allowed_extensions)) {
+                // Validate MIME type
+                $img_mime = mime_content_type($tmp_name);
+                if (in_array($img_mime, ['image/jpeg', 'image/jpg', 'image/png'])) {
+                    $new_img_name = uniqid("IMG-", true) . '.' . $img_ext;
+                    $img_upload_path = 'profile/' . $new_img_name;
 
-				$allowed_extensions = ['jpeg', 'jpg', 'png'];
-				if (in_array($img_ext, $allowed_extensions)) {
-					$new_img_name = uniqid("IMG-", true) . '.' . $img_ext;
-					$img_upload_path = 'image/' . $new_img_name;
-					move_uploaded_file($tmp_name, $img_upload_path);
+                    if (move_uploaded_file($tmp_name, $img_upload_path)) {
+                        $image = $new_img_name;
+                    } else {
+                        echo "Failed to upload image.";
+                        exit();
+                    }
+                } else {
+                    echo "Invalid MIME type.";
+                    exit();
+                }
+            } else {
+                echo "Invalid file type. Only JPEG, JPG, and PNG are allowed.";
+                exit();
+            }
+        }
 
-					$image = $new_img_name;
-				} else {
-					echo "Invalid file type. Only JPEG, JPG, and PNG are allowed.";
-					exit();
-				}
-			}
-			$encrypt_pass = password_hash($password, PASSWORD_DEFAULT);
+        // Encrypt the password
+        $encrypt_pass = password_hash($password, PASSWORD_DEFAULT);
 
-		
-			$insert_query = mysqli_query($conn, "INSERT INTO user (role, first_name, last_name, middle_name, extension_name, birthdate, sex, contact_no, barangay, zone, position, email, password, image, status)
-			VALUES ('{$role}', '{$f_name}', '{$l_name}', '{$m_name}', '{$e_name}', '{$bdate}', '{$sex}', '{$contact}', '{$barangay}', '{$zone}', '{$position}', '{$email}', '{$encrypt_pass}', '{$image}', '{$status}')");
+        // Prepare and execute the insertion query using prepared statements
+        $insert_query = $conn->prepare("INSERT INTO barangay_officials 
+            (UserTypeID, PositionID, BarangayID, FirstName, MiddleName, LastName, ExtensionName, ContactNumber, Birthdate, Status, Sex, Zone, EmailAddress, Password, ImageURL)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-			if ($insert_query) {
-				echo "success";
-			} else {
-				echo "Failed to insert data. Please try again.";
-			}
-		}
-	} else {
-		echo "Not a valid email!";
-	}
+        $insert_query->bind_param('iiissssssssssss', $role, $position, $barangay, $f_name, $m_name, $l_name, $e_name, $contact, $bdate, $status, $sex, $zone, $email, $encrypt_pass, $image);
+
+        if ($insert_query->execute()) {
+            echo "success";
+        } else {
+            echo "Failed to insert data. Please try again.";
+        }
+    }
+
+    $sql->close();
+} else {
+    echo "Not a valid email!";
+}
+
+$conn->close();
 ?>

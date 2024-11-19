@@ -41,23 +41,23 @@
 		}
 	}
 	
-	$query = "UPDATE user SET 
-		first_name = '$f_name', 
-		last_name = '$l_name', 
-		middle_name = '$m_name', 
-		extension_name = '$e_name', 
-		birthdate = '$bdate', 
-		sex = '$sex', 
-		contact_no = '$contact', 
-		barangay = '$barangay', 
-		zone = '$zone', 
-		position = '$position'";
+	$query = "UPDATE barangay_officials SET 
+		FirstName = '$f_name', 
+		LastName = '$l_name', 
+		MiddleName = '$m_name', 
+		ExtensionName = '$e_name', 
+		Birthdate = '$bdate', 
+		Sex = '$sex', 
+		ContactNumber = '$contact', 
+		BarangayID = '$barangay', 
+		Zone = '$zone', 
+		PositionID = '$position'";
 
 		if (!empty($image)) {
-			$query .= ", image = '$image'";
+			$query .= ", ImageURL = '$image'";
 		}
 
-		$query .= " WHERE user_id = $unique_id";
+		$query .= " WHERE OfficialsID = $unique_id";
 
 	$result = $conn->prepare($query);
 

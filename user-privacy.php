@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'user') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '1') {
 		header("Location: index.php");
 		exit();
 	}
@@ -13,7 +13,8 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="css/sidebar-user.css">
-		<title>Responsive Layout</title>
+		<link rel="icon" href="php/image/logo.png" type="image/png">
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
 			body::-webkit-scrollbar {
 				display: none;

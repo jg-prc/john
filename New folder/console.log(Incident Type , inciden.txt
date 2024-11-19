@@ -1,2 +1,0 @@
-        console.log("Incident Type: ", incidentType);
-        console.log("Selected Date: ", selectedDate);

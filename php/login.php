@@ -6,24 +6,23 @@
 	$password = mysqli_real_escape_string($conn, $_POST['password']);
 
 	$sql = mysqli_query($conn, "
-		SELECT user_id AS id, email, password, status, 'user' AS role FROM user WHERE email = '{$email}'
+		SELECT OfficialsID AS id, EmailAddress, Password, Status, '1' AS UserTypeID FROM barangay_officials WHERE EmailAddress = '{$email}'
 		UNION ALL
-		SELECT admin_id AS id, email, password, status, 'admin' AS role FROM admin WHERE email = '{$email}'
+		SELECT ChiefID AS id, EmailAddress, Password, Status, '2' AS UserTypeID FROM mdrrmo_chief WHERE EmailAddress = '{$email}'
 	");
 
-	// Check if the query returned any results
 	if (mysqli_num_rows($sql) > 0) {
 		$row = mysqli_fetch_assoc($sql);
 
 		// Check if the account is active
-		if ($row['status'] === 'active') {
-			// Verify the password using the hashed password stored in the database
-			if (password_verify($password, $row['password'])) {
-				// Store the user ID and role in session variables
-				$_SESSION['unique_id'] = $row['id'];  // Keep using 'unique_id' in session
-				$_SESSION['role'] = $row['role'];
+		if ($row['Status'] === 'active') {
 
-				echo json_encode(["status" => "success", "role" => $row['role']]);
+			if (password_verify($password, $row['Password'])) {
+
+				$_SESSION['unique_id'] = $row['id'];
+				$_SESSION['role'] = $row['UserTypeID'];
+
+				echo json_encode(["status" => "success", "role" => $row['UserTypeID']]);
 			} else {
 				echo json_encode(["status" => "error", "message" => "Incorrect Password!"]);
 			}

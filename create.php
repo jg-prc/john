@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'admin') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '2') {
 		header("Location: index.php");
 		exit();
 	}
@@ -14,7 +14,8 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="css/sidebar.css">
-		<title>Responsive Layout</title>
+		<link rel="icon" href="php/image/logo.png" type="image/png">
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
 			body::-webkit-scrollbar {
 				display: none;
@@ -384,35 +385,35 @@
 						<label for="barangay">Barangay</label>
 						<select id="barangay" name="barangay">
 							<option value="" disabled selected>Barangay</option>
-							<option value="Adiangao">Adiangao</option>
-							<option value="Bagacay">Bagacay</option>
-							<option value="Bahay">Bahay</option>
-							<option value="Boclod">Boclod</option>
-							<option value="Calalahan">Calalahan</option>
-							<option value="Calawit">Calawit</option>
-							<option value="Camagong">Camagong</option>
-							<option value="Catalotoan">Catalotoan</option>
-							<option value="Danlog">Danlog</option>
-							<option value="Del Carmen (Poblacion)">Del Carmen (Poblacion)</option>
-							<option value="Dolo">Dolo</option>
-							<option value="Kinalansan">Kinalansan</option>
-							<option value="Mampirao">Mampirao</option>
-							<option value="Manzana">Manzana</option>
-							<option value="Minoro">Minoro</option>
-							<option value="Palale">Palale</option>
-							<option value="Ponglon">Ponglon</option>
-							<option value="Pugay">Pugay</option>
-							<option value="Sabang">Sabang</option>
-							<option value="Salogon">Salogon</option>
-							<option value="San Antonio (Poblacion)">San Antonio (Poblacion)</option>
-							<option value="San Juan (Poblacion)">San Juan (Poblacion)</option>
-							<option value="San Vicente (Poblacion)">San Vicente (Poblacion)</option>
-							<option value="Santa Cruz (Poblacion)">Santa Cruz (Poblacion)</option>
-							<option value="Soledad (Poblacion)">Soledad (Poblacion)</option>
-							<option value="Tagas">Tagas</option>
-							<option value="Tambangan">Tambangan</option>
-							<option value="Telegrafo">Telegrafo</option>
-							<option value="Tominawog">Tominawog</option>
+							<option value="1">Adiangao</option>
+							<option value="2">Bagacay</option>
+							<option value="3">Bahay</option>
+							<option value="4">Boclod</option>
+							<option value="5">Calalahan</option>
+							<option value="6">Calawit</option>
+							<option value="7">Camagong</option>
+							<option value="8">Catalotoan</option>
+							<option value="9">Danlog</option>
+							<option value="10">Del Carmen (Poblacion)</option>
+							<option value="11">Dolo</option>
+							<option value="12">Kinalansan</option>
+							<option value="13">Mampirao</option>
+							<option value="14">Manzana</option>
+							<option value="15">Minoro</option>
+							<option value="16">Palale</option>
+							<option value="17">Ponglon</option>
+							<option value="18">Pugay</option>
+							<option value="19">Sabang</option>
+							<option value="20">Salogon</option>
+							<option value="21">San Antonio (Poblacion)</option>
+							<option value="22">San Juan (Poblacion)</option>
+							<option value="23">San Vicente (Poblacion)</option>
+							<option value="24">Santa Cruz (Poblacion)</option>
+							<option value="25">Soledad (Poblacion)</option>
+							<option value="26">Tagas</option>
+							<option value="27">Tambangan</option>
+							<option value="28">Telegrafo</option>
+							<option value="29">Tominawog</option>
 						</select>
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
@@ -442,8 +443,8 @@
 
 						<select id="position" name="position">
 							<option value="" disabled selected>Position</option>
-							<option value="Brgy. Captain">Brgy. Captain</option>
-							<option value="Brgy. Captain">Brgy. Kagawad</option>
+							<option value="1">Brgy. Captain</option>
+							<option value="2">Brgy. Kagawad</option>
 						</select>
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>

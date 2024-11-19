@@ -7,7 +7,7 @@
 
 	$unique_id = $_SESSION['unique_id'];
 
-	$sql = "SELECT password FROM admin WHERE admin_id = '$unique_id'";
+	$sql = "SELECT password FROM mdrrmo_chief WHERE ChiefID = '$unique_id'";
 	$result = mysqli_query($conn, $sql);
 
 	if (mysqli_num_rows($result) > 0) {
@@ -21,7 +21,7 @@
 			$new_hashed_pass = password_hash($new_pass, PASSWORD_DEFAULT);
 
 			// Update the password in the database
-			$update_sql = "UPDATE admin SET password = '$new_hashed_pass' WHERE admin_id = '$unique_id'";
+			$update_sql = "UPDATE mdrrmo_chief SET Password = '$new_hashed_pass' WHERE ChiefID = '$unique_id'";
 			if (mysqli_query($conn, $update_sql)) {
 				echo "success";
 			} else {

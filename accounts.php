@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'admin') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '2') {
 		header("Location: index.php");
 		exit();
 	}
@@ -14,7 +14,8 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="css/sidebar.css">
-		<title>Responsive Layout</title>
+		<link rel="icon" href="php/image/logo.png" type="image/png">
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>>
 		<style>
 			body::-webkit-scrollbar {
 				display: none;
@@ -312,7 +313,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: start;
-				width: 340px;
+				width: 360px;
 				border-radius: 20px;
 				padding: 15px;
 				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -320,13 +321,20 @@
 				transition: transform 0.3s, box-shadow 0.3s;
 				cursor: pointer;
 			}
-
 			.card:hover {
 				transform: translateY(-5px);
 				box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 				background-color: #ededed;
 			}
-
+			.card-nothing {
+				display: flex;
+				justify-content: center;
+				width: 360px;
+				border-radius: 20px;
+				padding: 15px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				background-color: #ffffff;
+			}
 			.card .image img {
 				width: 100px;
 				height: 100px;
@@ -339,7 +347,7 @@
 				flex-direction: column;
 				align-items: center;
 				padding-left: 15px;
-				width: 200px;
+				width: 230px;
 			}
 
 			.card .details span {
@@ -443,22 +451,29 @@
 					<?php
 						include_once "php/config.php";
 					
-						$sql = "SELECT * FROM user WHERE status = 'active'";
+						$sql = "SELECT ob.OfficialsID, ob.FirstName, ob.MiddleName, ob.LastName, ob.ExtensionName,
+							ob.Status, ob.ImageURL, ob.CreatedAt, p.PositionName, b.BarangayName
+							FROM `barangay_officials` AS ob
+							LEFT JOIN position as p ON ob.PositionID = p.PositionID
+							LEFT JOIN barangay as b ON ob.BarangayID = b.BarangayID
+							WHERE Status = 'active'";
 
 						if (!empty($search)) {
-							$sql .= " AND (first_name LIKE '%" . $conn->real_escape_string($search) . "%' 
-								OR last_name LIKE '%" . $conn->real_escape_string($search) . "%')";
+							$sql .= " AND (FirstName LIKE '%" . $conn->real_escape_string($search) . "%'
+								OR MiddleName LIKE '%" . $conn->real_escape_string($search) . "%'
+								OR LastName LIKE '%" . $conn->real_escape_string($search) . "%'
+								OR ExtensionName LIKE '%" . $conn->real_escape_string($search) . "%')";
 							}
 						if (!empty($barangay)) {
-						$sql .= " AND barangay = '" . $conn->real_escape_string($barangay) . "'";
+						$sql .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
 						}
 						if (!empty($position)) {
-						$sql .= " AND position = '" . $conn->real_escape_string($position) . "'";
+						$sql .= " AND PositionName = '" . $conn->real_escape_string($position) . "'";
 						}
 
-						$order_by = 'ORDER BY `created_at` DESC';
-						if ($sort_by == 'created_at-asc') {
-							$order_by = 'ORDER BY `created_at` ASC';
+						$order_by = 'ORDER BY `CreatedAt` DESC';
+						if ($sort_by == 'CreatedAt-asc') {
+							$order_by = 'ORDER BY `CreatedAt` ASC';
 						}
 
 						$sql .= " $order_by";
@@ -467,21 +482,28 @@
 
 						if (!$result) {
 							die("invalid query: " . $connection->error);
-						} else {
+						}
+						if ($result->num_rows > 0) {
 							while ($row = $result->fetch_assoc()) {
 								echo "
-									<div class='card' onclick=\"showForm(" . $row['user_id'] . ")\">
+									<div class='card' onclick=\"showForm(" . $row['OfficialsID'] . ")\">
 										<div class='image'>
-											<img src='php/image/" . $row['image'] . "' alt='User Image'>
+											<img src='php/image/" . $row['ImageURL'] . "' alt='User Image'>
 										</div>
 										<div class='details'>
-											<span>" . $row['first_name'] . " " . $row['last_name'] . "</span>
-											<span>" . $row['position'] . "</span>
+											<span>" . $row['FirstName'] . " " . $row['LastName'] . " " . $row['ExtensionName'] . "</span>
+											<span>" . $row['PositionName'] . "</span>
 											<a href='#'>view details</a>
 										</div>
 									</div>
 								";
 							}
+						} else {
+							echo "
+								<div class='card-nothing'>
+									<span>No Data found</span>
+								</div>
+							";
 						}
 					?>
 				</div>
@@ -489,7 +511,7 @@
 		</div>
 	</body>
 	<script src="js/sidebar.js"></script>
-	<script src="js/popup.js"></script>
+	<script src="js/accounts.js"></script>
 	<script src="js/tools.js"></script>
 	<script src="js/logout.js"></script>
 	<script>

@@ -8,7 +8,7 @@ if (isset($input['report_id']) && isset($input['status'])) {
     $report_id = $input['report_id'];
     $status = $input['status'];
 
-    $stmt = $conn->prepare("UPDATE incident_report SET status = ? WHERE report_id = ?");
+    $stmt = $conn->prepare("UPDATE incident_report SET ResponseStatus = ? WHERE IncidentReportID = ?");
     $stmt->bind_param("si", $status, $report_id);
 
     if ($stmt->execute()) {

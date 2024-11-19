@@ -4,11 +4,11 @@ changeemailform.addEventListener("submit", (e) => {
 	e.preventDefault();
 	let formIsValid = true;
 
+	// Validate inputs
 	formIsValid = validateInput(current_email, "Email cannot be blank") && formIsValid;
 	formIsValid = validateInput(new_email, "New Email cannot be blank") && formIsValid;
 
 	if (formIsValid) {
-
 		// Show confirmation prompt
 		Swal.fire({
 			title: "Do you want to save the changes?",
@@ -25,13 +25,21 @@ changeemailform.addEventListener("submit", (e) => {
 				try {
 					const formData = new FormData(changeemailform);
 
+					// Log the form data keys and values
+					for (let [key, value] of formData.entries()) {
+						console.log(`FormData - ${key}: ${value}`);
+					}
+
 					const response = await fetch("php/email.php", {
 						method: "POST",
 						body: formData,
 					});
 
 					const data = await response.text();
-                    
+					
+					// Log the raw response data for debugging
+					console.log("Response Data:", data);
+
 					if (data === "success") {
 						Swal.fire(
 							"Successfully Updated",
@@ -42,10 +50,19 @@ changeemailform.addEventListener("submit", (e) => {
 							location.href = "privacy.php";
 						});
 					} else {
-						const parsedData = JSON.parse(data);
-						Swal.fire("Error", parsedData.message || data, "error");
+						// Parse and log error details for debugging
+						try {
+							const parsedData = JSON.parse(data);
+							console.log("Parsed Error Data:", parsedData);
+							Swal.fire("Error", parsedData.message || data, "error");
+						} catch (jsonError) {
+							console.error("JSON Parsing Error:", jsonError);
+							Swal.fire("Error", data, "error");
+						}
 					}
 				} catch (error) {
+					// Log the error for debugging
+					console.error("Fetch Error:", error);
 					Swal.fire("Error", "Something went wrong!", "error");
 				}
 			} else if (result.isDismissed) {
@@ -58,6 +75,7 @@ changeemailform.addEventListener("submit", (e) => {
 // Function to validate input and show error if necessary
 function validateInput(input, errorMessage) {
 	const value = input.value.trim();
+	console.log(`Validating input for ${input.id}:`, value); // Log validation steps
 	if (value === "") {
 		setErrorFor(input, errorMessage);
 		return false;
@@ -72,10 +90,12 @@ function setErrorFor(input, message) {
 	const error = inputBox.querySelector(".message");
 	inputBox.classList.add("error");
 	error.innerText = message;
+	console.log(`Set error for ${input.id}: ${message}`); // Log error setting
 }
 
 function setSuccessFor(input) {
 	const inputBox = input.parentElement;
 	inputBox.classList.remove("error");
 	inputBox.classList.add("success");
+	console.log(`Set success for ${input.id}`); // Log success setting
 }

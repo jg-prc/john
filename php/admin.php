@@ -5,7 +5,7 @@
 	$currentYear = date('Y');
 	$autoIncrementValue = ($currentYear * 100) + 1;
 
-	$auto_increment_query = "ALTER TABLE user AUTO_INCREMENT = $autoIncrementValue";
+	$auto_increment_query = "ALTER TABLE mdrrmo_chief AUTO_INCREMENT = $autoIncrementValue";
 
 	$conn->query($auto_increment_query);
 
@@ -13,17 +13,17 @@
 	$password = mysqli_real_escape_string($conn, $_POST['password']);
 
 	$status = "active";
-	$role = "admin";
+	$role = "2";
 
 	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$sql = mysqli_query($conn, "SELECT * FROM admin WHERE email = '{$email}'");
+		$sql = mysqli_query($conn, "SELECT * FROM mdrrmo_chief WHERE EmailAddress = '{$email}'");
 		if (mysqli_num_rows($sql) > 0) {
 			echo "This email already exists!";
 			exit();
 		} else {
 			$encrypt_pass = password_hash($password, PASSWORD_DEFAULT);
 
-			$insert_query = mysqli_query($conn, "INSERT INTO admin (role, email, password, status)
+			$insert_query = mysqli_query($conn, "INSERT INTO mdrrmo_chief (UserTypeID, EmailAddress, Password, Status)
 			VALUES ('{$role}', '{$email}', '{$encrypt_pass}', '{$status}')");
 
 			if ($insert_query) {

@@ -55,12 +55,12 @@ function toggleSortOrder() {
 	const sortIcon = document.getElementById('sort-icon');
 	let currentSortOrder = urlParams.get('sort_by');
 
-	if (!currentSortOrder || currentSortOrder === 'created_at-desc') {
-		urlParams.set('sort_by', 'created_at-asc');
+	if (!currentSortOrder || currentSortOrder === 'CreatedAt-desc') {
+		urlParams.set('sort_by', 'CreatedAt-asc');
 		sortIcon.classList.replace('fa-arrow-up-short-wide', 'fa-arrow-down-short-wide');
 
 	} else {
-		urlParams.set('sort_by', 'created_at-desc');
+		urlParams.set('sort_by', 'CreatedAt-desc');
 		sortIcon.classList.replace('fa-arrow-down-short-wide', 'fa-arrow-up-short-wide');
 	}
 
@@ -73,7 +73,7 @@ window.onload = function() {
 	let currentSortOrder = urlParams.get('sort_by');
 	const sortIcon = document.getElementById('sort-icon');
     
-	if (currentSortOrder === 'created_at-asc') {
+	if (currentSortOrder === 'CreatedAt-asc') {
 		sortIcon.classList.remove('fa-arrow-up-short-wide');
 		sortIcon.classList.add('fa-arrow-down-short-wide');
 	} else {

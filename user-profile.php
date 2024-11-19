@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) && $_SESSION['role'] !== 'user') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '1') {
 		header("Location: index.php");
 		exit();
 	}
@@ -14,7 +14,8 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="css/sidebar-user.css">
-		<title>Responsive Layout</title>
+		<link rel="icon" href="php/image/logo.png" type="image/png">
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
 			body::-webkit-scrollbar {
 				display: none;
@@ -356,7 +357,19 @@
 
 					$unique_id = $_SESSION['unique_id'];
 
-					$stmt = $conn->prepare("SELECT * FROM user WHERE user_id = ?");
+					$stmt = $conn->prepare("SELECT
+									o.FirstName, o.MiddleName, o.LastName,
+									o.ExtensionName, o.ContactNumber, o.Birthdate,
+									o.Sex, o.Zone, o.EmailAddress, o.ImageURL,
+									p.PositionName, b.BarangayName
+								FROM
+									barangay_officials as o
+								LEFT JOIN
+									position AS p ON o.PositionID = p.PositionID
+								LEFT JOIN
+									barangay as b on o.BarangayID = b.BarangayID
+								WHERE OfficialsID = ?");
+
 					$stmt->bind_param("s", $unique_id);
 					$stmt->execute();
 					$result = $stmt->get_result();
@@ -368,7 +381,7 @@
 				<form class="details" id="details" autocomplete="off" action="" method="post">
 					<div class="image-container">
 						<div class="image">
-							<img src="php/image/<?php echo htmlspecialchars($row['image']); ?>">
+							<img src="php/profile/<?php echo htmlspecialchars($row['ImageURL']); ?>">
 							<label for="file-path">
 								<span class="material-symbols-rounded">photo_camera</span>
 							</label>
@@ -381,7 +394,7 @@
 
 							<label for="firstname">First Name</label>
 
-							<input type="text" name="firstname" id="firstname" placeholder="First Name" value="<?php echo htmlspecialchars($row['first_name']); ?>">
+							<input type="text" name="firstname" id="firstname" placeholder="First Name" value="<?php echo htmlspecialchars($row['FirstName']); ?>">
 							<div class="message">Error message</div>
 							<i class="fas fa-exclamation-circle"></i>
 						</div>
@@ -390,7 +403,7 @@
 
 							<label for="lastname">Last Name</label>
 
-							<input type="text" name="lastname" id="lastname" placeholder="Last Name" value="<?php echo htmlspecialchars($row['last_name']); ?>">
+							<input type="text" name="lastname" id="lastname" placeholder="Last Name" value="<?php echo htmlspecialchars($row['LastName']); ?>">
 							<div class="message">Error message</div>
 							<i class="fas fa-exclamation-circle"></i>
 						</div>
@@ -401,7 +414,7 @@
 
 							<label for="middlename">Middle Name</label>
 
-							<input type="text" name="middlename" id="middlename" placeholder="Middle Name" value="<?php echo htmlspecialchars($row['middle_name']); ?>">
+							<input type="text" name="middlename" id="middlename" placeholder="Middle Name" value="<?php echo htmlspecialchars($row['MiddleName']); ?>">
 							<div class="message">Error message</div>
 							<i class="fas fa-exclamation-circle"></i>
 						</div>
@@ -410,7 +423,7 @@
 
 							<label for="extensionname">Extension Name</label>
 
-							<input type="text" name="extensionname" id="extensionname" placeholder="Extension Name" value="<?php echo htmlspecialchars($row['extension_name']); ?>">
+							<input type="text" name="extensionname" id="extensionname" placeholder="Extension Name" value="<?php echo htmlspecialchars($row['ExtensionName']); ?>">
 						</div>
 					</div>
 					<div class="input-container" id="row3">
@@ -419,7 +432,7 @@
 
 								<label for="bdate">Brithdate</label>
 
-								<input type="date" name="bdate" id="bdate" value="<?php echo htmlspecialchars($row['birthdate']); ?>">
+								<input type="date" name="bdate" id="bdate" value="<?php echo htmlspecialchars($row['Birthdate']); ?>">
 								<div class="message">Error message</div>
 								<i class="fas fa-exclamation-circle"></i>
 							</div>
@@ -430,8 +443,8 @@
 
 								<select id="sex" name="sex">
 									<option value="" disabled selected>Sex</option>
-									<option value="male" <?php echo ($row['sex'] == 'male') ? 'selected' : ''; ?>>Male</option>
-									<option value="female" <?php echo ($row['sex'] == 'female') ? 'selected' : ''; ?>>Female</option>
+									<option value="male" <?php echo ($row['Sex'] == 'male') ? 'selected' : ''; ?>>Male</option>
+									<option value="female" <?php echo ($row['Sex'] == 'female') ? 'selected' : ''; ?>>Female</option>
 								</select>
 								<div class="message">Error message</div>
 								<i class="fas fa-exclamation-circle"></i>
@@ -441,7 +454,7 @@
 
 							<label for="contact">Contact No.</label>
 
-							<input type="tel" name="contact" id="contact" maxlength="11" placeholder="Contact No." oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="<?php echo $row['contact_no'];?>">
+							<input type="tel" name="contact" id="contact" maxlength="11" placeholder="Contact No." oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="<?php echo $row['ContactNumber'];?>">
 							<div class="message">Error message</div>
 							<i class="fas fa-exclamation-circle"></i>
 						</div>
@@ -450,44 +463,30 @@
 					<div class="input-container" id="row4">
 
 						<div class="input-box" id="Barangay-box">
-
 							<label for="barangay">Barangay</label>
-
 							<select id="barangay" name="barangay">
-								<option value="" disabled selected>Barangay</option>
-								<option value="Adiangao" <?php echo ($row['barangay'] == 'Adiangao') ? 'selected' : ''; ?>>Adiangao</option>
-								<option value="Bagacay" <?php echo ($row['barangay'] == 'Bagacay') ? 'selected' : ''; ?>>Bagacay</option>
-								<option value="Bahay" <?php echo ($row['barangay'] == 'Bahay') ? 'selected' : ''; ?>>Bahay</option>
-								<option value="Boclod" <?php echo ($row['barangay'] == 'Boclod') ? 'selected' : ''; ?>>Boclod</option>
-								<option value="Calalahan" <?php echo ($row['barangay'] == 'Calalahan') ? 'selected' : ''; ?>>Calalahan</option>
-								<option value="Calawit" <?php echo ($row['barangay'] == 'Calawit') ? 'selected' : ''; ?>>Calawit</option>
-								<option value="Camagong" <?php echo ($row['barangay'] == 'Camagong') ? 'selected' : ''; ?>>Camagong</option>
-								<option value="Catalotoan" <?php echo ($row['barangay'] == 'Catalotoan') ? 'selected' : ''; ?>>Catalotoan</option>
-								<option value="Danlog" <?php echo ($row['barangay'] == 'Danlog') ? 'selected' : ''; ?>>Danlog</option>
-								<option value="Del Carmen (Poblacion)" <?php echo ($row['barangay'] == 'Del Carmen (Poblacion)') ? 'selected' : ''; ?>>Del Carmen (Poblacion)</option>
-								<option value="Dolo" <?php echo ($row['barangay'] == 'Dolo') ? 'selected' : ''; ?>>Dolo</option>
-								<option value="Kinalansan" <?php echo ($row['barangay'] == 'Kinalansan') ? 'selected' : ''; ?>>Kinalansan</option>
-								<option value="Mampirao" <?php echo ($row['barangay'] == 'Mampirao') ? 'selected' : ''; ?>>Mampirao</option>
-								<option value="Manzana" <?php echo ($row['barangay'] == 'Manzana') ? 'selected' : ''; ?>>Manzana</option>
-								<option value="Minoro" <?php echo ($row['barangay'] == 'Minoro') ? 'selected' : ''; ?>>Minoro</option>
-								<option value="Palale" <?php echo ($row['barangay'] == 'Palale') ? 'selected' : ''; ?>>Palale</option>
-								<option value="Ponglon" <?php echo ($row['barangay'] == 'Ponglon') ? 'selected' : ''; ?>>Ponglon</option>
-								<option value="Pugay" <?php echo ($row['barangay'] == 'Pugay') ? 'selected' : ''; ?>>Pugay</option>
-								<option value="Sabang" <?php echo ($row['barangay'] == 'Sabang') ? 'selected' : ''; ?>>Sabang</option>
-								<option value="Salogon" <?php echo ($row['barangay'] == 'Salogon') ? 'selected' : ''; ?>>Salogon</option>
-								<option value="San Antonio (Poblacion)" <?php echo ($row['barangay'] == 'San Antonio (Poblacion)') ? 'selected' : ''; ?>>San Antonio (Poblacion)</option>
-								<option value="San Juan (Poblacion)" <?php echo ($row['barangay'] == 'San Juan (Poblacion)') ? 'selected' : ''; ?>>San Juan (Poblacion)</option>
-								<option value="San Vicente (Poblacion)" <?php echo ($row['barangay'] == 'San Vicente (Poblacion)') ? 'selected' : ''; ?>>San Vicente (Poblacion)</option>
-								<option value="Santa Cruz (Poblacion)" <?php echo ($row['barangay'] == 'Santa Cruz (Poblacion)') ? 'selected' : ''; ?>>Santa Cruz (Poblacion)</option>
-								<option value="Soledad (Poblacion)" <?php echo ($row['barangay'] == 'Soledad (Poblacion)') ? 'selected' : ''; ?>>Soledad (Poblacion)</option>
-								<option value="Tagas" <?php echo ($row['barangay'] == 'Tagas') ? 'selected' : ''; ?>>Tagas</option>
-								<option value="Tambangan" <?php echo ($row['barangay'] == 'Tambangan') ? 'selected' : ''; ?>>Tambangan</option>
-								<option value="Telegrafo" <?php echo ($row['barangay'] == 'Telegrafo') ? 'selected' : ''; ?>>Telegrafo</option>
-								<option value="Tominawog" <?php echo ($row['barangay'] == 'Tominawog') ? 'selected' : ''; ?>>Tominawog</option>
+								<option value="" disabled <?php echo empty($row['BarangayName']) ? 'selected' : ''; ?>>Barangay</option>
+								<?php
+									$barangays = [
+										"Adiangao", "Bagacay", "Bahay", "Boclod", "Calalahan", "Calawit", 
+										"Camagong", "Catalotoan", "Danlog", "Del Carmen (Poblacion)", 
+										"Dolo", "Kinalansan", "Mampirao", "Manzana", "Minoro", "Palale", 
+										"Ponglon", "Pugay", "Sabang", "Salogon", "San Antonio (Poblacion)", 
+										"San Juan (Poblacion)", "San Vicente (Poblacion)", "Santa Cruz (Poblacion)", 
+										"Soledad (Poblacion)", "Tagas", "Tambangan", "Telegrafo", "Tominawog"
+									];
+
+									foreach ($barangays as $index => $barangay) {
+										$value = $index + 1; // Convert to 1-based index
+										$selected = ($row['BarangayName'] === $barangay) ? 'selected' : '';
+										echo "<option value=\"$value\" $selected>" . htmlspecialchars($barangay) . "</option>";
+									}
+								?>
 							</select>
 							<div class="message">Error message</div>
 							<i class="fas fa-exclamation-circle"></i>
 						</div>
+
 
 						<div class="sub-input-container">
 							<div class="input-box" id="Zone-box">
@@ -496,13 +495,13 @@
 
 								<select id="zone" name="zone">
 									<option value="" disabled selected>Zone</option>
-									<option value="1" <?php echo ($row['zone'] == '1') ? 'selected' : ''; ?>>1</option>
-									<option value="2" <?php echo ($row['zone'] == '2') ? 'selected' : ''; ?>>2</option>
-									<option value="3" <?php echo ($row['zone'] == '3') ? 'selected' : ''; ?>>3</option>
-									<option value="4" <?php echo ($row['zone'] == '4') ? 'selected' : ''; ?>>4</option>
-									<option value="5" <?php echo ($row['zone'] == '5') ? 'selected' : ''; ?>>5</option>
-									<option value="6" <?php echo ($row['zone'] == '6') ? 'selected' : ''; ?>>6</option>
-									<option value="7" <?php echo ($row['zone'] == '7') ? 'selected' : ''; ?>>7</option>
+									<option value="1" <?php echo ($row['Zone'] == '1') ? 'selected' : ''; ?>>1</option>
+									<option value="2" <?php echo ($row['Zone'] == '2') ? 'selected' : ''; ?>>2</option>
+									<option value="3" <?php echo ($row['Zone'] == '3') ? 'selected' : ''; ?>>3</option>
+									<option value="4" <?php echo ($row['Zone'] == '4') ? 'selected' : ''; ?>>4</option>
+									<option value="5" <?php echo ($row['Zone'] == '5') ? 'selected' : ''; ?>>5</option>
+									<option value="6" <?php echo ($row['Zone'] == '6') ? 'selected' : ''; ?>>6</option>
+									<option value="7" <?php echo ($row['Zone'] == '7') ? 'selected' : ''; ?>>7</option>
 								</select>
 								<div class="message">Error message</div>
 								<i class="fas fa-exclamation-circle"></i>
@@ -514,8 +513,8 @@
 
 								<select id="position" name="position">
 									<option value="" disabled selected>Position</option>
-									<option value="Brgy. Captain" <?php echo ($row['position'] == 'Brgy. Captain') ? 'selected' : ''; ?>>Brgy. Captain</option>
-									<option value="Brgy. Captain" <?php echo ($row['position'] == 'Brgy. Kagawad') ? 'selected' : ''; ?>>Brgy. Kagawad</option>
+									<option value="1" <?php echo ($row['PositionName'] == 'Brgy. Captain') ? 'selected' : ''; ?>>Brgy. Captain</option>
+									<option value="2" <?php echo ($row['PositionName'] == 'Brgy. Kagawad') ? 'selected' : ''; ?>>Brgy. Kagawad</option>
 								</select>
 								<div class="message">Error message</div>
 								<i class="fas fa-exclamation-circle"></i>

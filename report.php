@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== 'admin') {
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '2') {
 		header("Location: index.php");
 		exit();
 	}
@@ -16,7 +16,8 @@
 		<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="css/sidebar.css">
-		<title>Responsive Layout</title>
+		<link rel="icon" href="php/image/logo.png" type="image/png">
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
 			body::-webkit-scrollbar {
 				display: none;
@@ -343,10 +344,14 @@
 				<?php 
 					include_once "php/config.php";
 
-					$dateQuery = "SELECT DISTINCT event_at FROM incident_report WHERE 1 = 1";
+					$dateQuery = "SELECT DISTINCT ir.IncidentReportID, it.IncidentTypeName, b.BarangayName,
+							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt
+							FROM incident_report AS ir
+							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID WHERE 1 = 1";
 
 					if (!empty($search)) {
-						$search = str_ireplace(['zone', ','], '', $search);
+						$search = str_ireplace(['Zone', ','], '', $search);
 						$searchTerms = explode(' ', trim($search));
 					} else {
 						$searchTerms = [];
@@ -354,20 +359,20 @@
 
 					foreach ($searchTerms as $term) {
 						$term = $conn->real_escape_string($term);
-						$dateQuery .= " AND (incident_type LIKE '%$term%' 
-							OR zone LIKE '%$term%' 
-							OR barangay LIKE '%$term%')";
+						$dateQuery .= " AND (IncidentTypeName LIKE '%$term%' 
+							OR Zone LIKE '%$term%' 
+							OR BarangayName LIKE '%$term%')";
 					}
 
 					if (!empty($incident_type)) {
-						$dateQuery .= " AND incident_type = '" . $conn->real_escape_string($incident_type) . "'";
+						$dateQuery .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
 					}
 					if (!empty($barangay)) {
-						$dateQuery .= " AND barangay = '" . $conn->real_escape_string($barangay) . "'";
+						$dateQuery .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
 					}
-					$order_by = 'ORDER BY `event_at` DESC';
-					if ($sort_by == 'event_at-asc') {
-						$order_by = 'ORDER BY `event_at` ASC';
+					$order_by = 'ORDER BY `CreatedAt` DESC';
+					if ($sort_by == 'CreatedAt-asc') {
+						$order_by = 'ORDER BY `CreatedAt` ASC';
 					}
 					$dateQuery .= " $order_by";
 
@@ -376,7 +381,7 @@
 					if ($dateResult->num_rows > 0) {
 						$eventDates = [];
 						while ($row = $dateResult->fetch_assoc()) {
-							$eventDates[] = date("F j, Y", strtotime($row['event_at']));
+							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
 						}
 					} else {
 						echo "<p>No data matches your search criteria.</p>";
@@ -384,23 +389,27 @@
 					}
 
 					foreach ($eventDates as $eventDate) {
-						$sql = "SELECT * FROM incident_report WHERE event_at = '" . $conn->real_escape_string(date("Y-m-d", strtotime($eventDate))) . "'";
+						$sql = "SELECT ir.IncidentReportID, it.IncidentTypeName, b.BarangayName,
+							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt
+							FROM incident_report AS ir
+							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID WHERE CreatedAt = '" . $conn->real_escape_string(date("Y-m-d", strtotime($eventDate))) . "'";
 
 						foreach ($searchTerms as $term) {
 							$term = $conn->real_escape_string($term);
-							$sql .= " AND (incident_type LIKE '%$term%' 
-								OR zone LIKE '%$term%' 
-								OR barangay LIKE '%$term%')";
+							$sql .= " AND (IncidentTypeName LIKE '%$term%' 
+								OR Zone LIKE '%$term%' 
+								OR BarangayName LIKE '%$term%')";
 						}
 
 						if (!empty($incident_type)) {
-							$sql .= " AND incident_type = '" . $conn->real_escape_string($incident_type) . "'";
+							$sql .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
 						}
 						if (!empty($barangay)) {
-							$sql .= " AND barangay = '" . $conn->real_escape_string($barangay) . "'";
+							$sql .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
 						}
 
-						$sql .= " ORDER BY event_time DESC;";
+						$sql .= " ORDER BY CreatedTime DESC;";
 						$reportResult = $conn->query($sql);
 
 						if ($reportResult->num_rows == 0) {
@@ -414,7 +423,7 @@
 
 						while ($row = $reportResult->fetch_assoc()) {
 							$icon = '';
-							switch ($row['incident_type']) {
+							switch ($row['IncidentTypeName']) {
 								case 'Vehicular Accident':
 									$icon = '<i class="fas fa-car-crash"></i>';
 									break;
@@ -429,13 +438,13 @@
 									break;
 							}
 							echo "
-								<a class='card' href='report_file.php?report_id=" . $row['report_id'] . "'>
+								<a class='card' href='report_file.php?report_id=" . $row['IncidentReportID'] . "'>
 									<div class='image'>
 										" . $icon . "
 									</div>
 									<div class='details'>
-										<span class='type'>" . $row['incident_type'] . "</span>
-										<span>Zone " . $row['zone'] . " , " . $row['barangay'] . "</span>
+										<span class='type'>" . $row['IncidentTypeName'] . "</span>
+										<span>Zone " . $row['Zone'] . " , " . $row['BarangayName'] . "</span>
 									</div>
 								</a>
 							";

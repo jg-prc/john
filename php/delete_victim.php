@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $victim_id = $_POST['victim_id'];
     
     // Prepare SQL statement to delete the victim
-    $sql = "DELETE FROM victim WHERE victim_id = ?";
+    $sql = "DELETE FROM victims WHERE victimID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $victim_id);
 
