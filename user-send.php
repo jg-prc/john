@@ -1,5 +1,10 @@
 <?php
+	session_start();
 
+	if (!isset($_SESSION['unique_id']) || $_SESSION['role'] !== '1') {
+		header("Location: index.php");
+		exit();
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
