@@ -406,7 +406,6 @@
 		</div>
 	</body>
 	<script src="js/sidebar.js"></script>
-	<script src="js/send.js"></script>
 	<script src="js/logout.js"></script>
 	<script>
 		let selectedFiles = [];
