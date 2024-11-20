@@ -5,6 +5,9 @@
 	$email = mysqli_real_escape_string($conn, $_POST['email']);
 	$password = mysqli_real_escape_string($conn, $_POST['password']);
 
+	ini_set("log_errors", 1);
+	ini_set("error_log", __DIR__ . "/error_log.log");
+
 	$sql = mysqli_query($conn, "
 		SELECT OfficialsID AS id, EmailAddress, Password, Status, '1' AS UserTypeID FROM barangay_officials WHERE EmailAddress = '{$email}'
 		UNION ALL
