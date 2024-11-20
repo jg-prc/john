@@ -497,7 +497,7 @@ form.addEventListener("submit", (e) => {
 				try {
 					const formData = new FormData(form);
 
-					const response = await fetch("php/send.php", {
+					const response = await fetch("send.php", {
 						method: "POST",
 						body: formData,
 					});
