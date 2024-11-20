@@ -1,14 +1,16 @@
 <?php
 session_start();
 
+// Log errors to a custom log file
+ini_set("log_errors", 1);
+ini_set("error_log", __DIR__ . "/error_log.log");
+
+header('Content-Type: application/json'); // Set proper response headers
+
 $hostname = "localhost";
 $username = "new";
 $password = "Root_root01";
 $dbname = "u412427249_capstone";
-
-// Log errors to a custom log file
-ini_set("log_errors", 1);
-ini_set("error_log", __DIR__ . "/error_log.log");
 
 $conn = mysqli_connect($hostname, $username, $password, $dbname);
 
@@ -29,7 +31,6 @@ $sql_query = "
 
 $sql = mysqli_query($conn, $sql_query);
 
-// Check for query errors
 if (!$sql) {
     error_log("MySQL Error: " . mysqli_error($conn) . " | Query: " . $sql_query);
     echo json_encode(["status" => "error", "message" => "An error occurred while processing your request. Please try again later."]);
@@ -40,7 +41,6 @@ if (!$sql) {
 if (mysqli_num_rows($sql) > 0) {
     $row = mysqli_fetch_assoc($sql);
 
-    // Check if the account is active
     if ($row['Status'] === 'active') {
         if (password_verify($password, $row['Password'])) {
             $_SESSION['unique_id'] = $row['id'];
@@ -58,4 +58,4 @@ if (mysqli_num_rows($sql) > 0) {
 }
 
 mysqli_close($conn);
-?>
+exit; // Ensure the script stops after sending the response
