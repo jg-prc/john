@@ -12,7 +12,7 @@ form.addEventListener("submit", async (e) => {
 		try {
 			const formData = new FormData(form);
 
-			const response = await fetch("php/login.php", {
+			const response = await fetch("login.php", {
 				method: "POST",
 				body: formData,
 			});
