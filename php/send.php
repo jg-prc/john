@@ -42,7 +42,8 @@ if ($uploadSuccess) {
     $sql_incident = "INSERT INTO incident_report (OfficialsID, IncidentTypeID, BarangayID, ResponseStatus, Zone, Street)
         VALUES ('$unique_id', '$incident_type', '$barangay', '$status', '$zone', '$street')";
 
-    echo "<script>console.log('SQL Query for incident report: " . addslashes($sql_incident) . "');</script>";
+    // Log the $sql_incident query
+    error_log("SQL Incident Query: " . $sql_incident);
 
     if ($conn->query($sql_incident)) {
         $incident_id = $conn->insert_id;
@@ -50,13 +51,15 @@ if ($uploadSuccess) {
         $folderName = $targetDir;
         $sql_folder = "INSERT INTO folder_report (FolderID, FolderName) VALUES ('$incident_id', '$folderName')";
 
-        echo "<script>console.log('SQL Query for folder report: " . addslashes($sql_folder) . "');</script>";
+        // Log the $sql_folder query
+        error_log("SQL Folder Query: " . $sql_folder);
 
         if ($conn->query($sql_folder)) {
             foreach ($imagePaths as $imagePath) {
                 $sql_image = "INSERT INTO images (ImagesID, ImagesName) VALUES ('$incident_id', '$new_img_name')";
 
-                echo "<script>console.log('SQL Query for images: " . addslashes($sql_image) . "');</script>";
+                // Log the $sql_image query
+                error_log("SQL Image Query: " . $sql_image);
 
                 if (!$conn->query($sql_image)) {
                     echo "Failed to insert image.";
