@@ -49,7 +49,7 @@ try {
     $sql_incident = "INSERT INTO incident_report (IncidentTypeID, OfficialsID, BarangayID, ResponseStatus, Zone, Street)
                      VALUES (?, ?, ?, ?, ?, ?)";
     $stmt_incident = $conn->prepare($sql_incident);
-    $stmt_incident->bind_param("ssssss", $incident_type, $unique_id, $barangay, $status, $zone, $street);
+    $stmt_incident->bind_param("isssss", $incident_type, $unique_id, $barangay, $status, $zone, $street);
 
     if ($stmt_incident->execute()) {
         $incident_id = $stmt_incident->insert_id;
