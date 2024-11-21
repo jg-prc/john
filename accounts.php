@@ -15,7 +15,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="css/sidebar.css">
 		<link rel="icon" href="php/image/logo.png" type="image/png">
-		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>>
+		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
 		<style>
 			body::-webkit-scrollbar {
 				display: none;
