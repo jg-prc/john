@@ -46,7 +46,7 @@ ini_set('display_errors', 1);
 // Use prepared statements for secure queries
 try {
     // Insert into `incident_report`
-    $sql_incident = "INSERT INTO incident_report (BarangayID, OfficialsID, IncidentTypeID, ResponseStatus, Zone, Street)
+    $sql_incident = "INSERT INTO incident_report (barangayID, OfficialsID, IncidentTypeID, ResponseStatus, Zone, Street)
                      VALUES (?, ?, ?, ?, ?, ?)";
     $stmt_incident = $conn->prepare($sql_incident);
     $stmt_incident->bind_param("ssssss", $barangay, $unique_id, $incident_type, $status, $zone, $street);
