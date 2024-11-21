@@ -172,21 +172,6 @@
 			}
 
 
-			.forgot {
-				width: 80%;
-				margin-left: auto;
-				margin-right: auto;
-				text-align: center;
-				padding-top: 20px;
-				margin-top: 30px;
-				border-top: solid 1px rgba(7, 7, 7, 0.3);
-			}
-			.forgot a {
-				text-decoration: none;
-				color: #0000ff;
-			}
-
-
 
 			@media screen and (max-width: 575px) {
 
@@ -274,9 +259,6 @@
 						<button type="submit">Log in</button>
 					</div>
 				</form>
-				<div class="forgot">
-					<a href="#">Forgot your password?</a>
-				</div>
 			</div>
 		</div>
 		<script src="js/single_view-pass.js"></script>
