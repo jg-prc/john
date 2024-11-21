@@ -45,11 +45,20 @@ ini_set('display_errors', 1);
 
 // Use prepared statements for secure queries
 try {
-    // Insert into `incident_report`
-    $sql_incident = "INSERT INTO incident_report (IncidentTypeID, OfficialsID, BarangayID, ResponseStatus, Zone, Street)
-                     VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt_incident = $conn->prepare($sql_incident);
-    $stmt_incident->bind_param("ssssss", $incident_type, $unique_id, $barangay, $status, $zone, $street);
+$sql_incident = "INSERT INTO incident_report (IncidentTypeID, OfficialsID, BarangayID, ResponseStatus, Zone, Street)
+                 VALUES (?, ?, ?, ?, ?, ?)";
+$stmt_incident = $conn->prepare($sql_incident);
+
+if (!$stmt_incident) {
+    die("Prepare failed: " . $conn->error);
+}
+
+$stmt_incident->bind_param("isssss", $incident_type, $unique_id, $barangay, $status, $zone, $street);
+
+if (!$stmt_incident->execute()) {
+    die("Execution failed: " . $stmt_incident->error);
+}
+
 
     if ($stmt_incident->execute()) {
         $incident_id = $stmt_incident->insert_id;
