@@ -38,33 +38,41 @@
 		}
 	}
 
-	if ($uploadSuccess) {
-		$sql_incident = "INSERT INTO incident_report (OfficialsID, IncidentTypeID, BarangayID, ResponseStatus, Zone, Street)
-			VALUES ('$unique_id', '$incident_type', '$barangay', '$status', '$zone', '$street')";
+if ($uploadSuccess) {
+    $sql_incident = "INSERT INTO incident_report (OfficialsID, IncidentTypeID, BarangayID, ResponseStatus, Zone, Street)
+        VALUES ('$unique_id', '$incident_type', '$barangay', '$status', '$zone', '$street')";
 
-		if ($conn->query($sql_incident)) {
-			$incident_id = $conn->insert_id;
+    echo "<script>console.log('SQL Query for incident report: " . addslashes($sql_incident) . "');</script>";
 
-			$folderName = $targetDir;
-			$sql_folder = "INSERT INTO folder_report (FolderID, FolderName) VALUES ('$incident_id', '$folderName')";
+    if ($conn->query($sql_incident)) {
+        $incident_id = $conn->insert_id;
 
-			if ($conn->query($sql_folder)) {
-				foreach ($imagePaths as $imagePath) {
-					$sql_image = "INSERT INTO images (ImagesID, ImagesName) VALUES ('$incident_id', '$new_img_name')";
-					if (!$conn->query($sql_image)) {
-						echo "Failed to insert image.";
-						exit;
-					}
-				}
-				echo "success";
-			} else {
-				echo "Failed to insert folder name.";
-				exit;
-			}
-		} else {
-			echo "Failed to insert incident report.";
-		}
-	} else {
-		echo "Image cannot be empty.";
-	}
+        $folderName = $targetDir;
+        $sql_folder = "INSERT INTO folder_report (FolderID, FolderName) VALUES ('$incident_id', '$folderName')";
+
+        echo "<script>console.log('SQL Query for folder report: " . addslashes($sql_folder) . "');</script>";
+
+        if ($conn->query($sql_folder)) {
+            foreach ($imagePaths as $imagePath) {
+                $sql_image = "INSERT INTO images (ImagesID, ImagesName) VALUES ('$incident_id', '$new_img_name')";
+
+                echo "<script>console.log('SQL Query for images: " . addslashes($sql_image) . "');</script>";
+
+                if (!$conn->query($sql_image)) {
+                    echo "Failed to insert image.";
+                    exit;
+                }
+            }
+            echo "success";
+        } else {
+            echo "Failed to insert folder name.";
+            exit;
+        }
+    } else {
+        echo "Failed to insert incident report.";
+    }
+} else {
+    echo "Image cannot be empty.";
+}
+
 ?>
