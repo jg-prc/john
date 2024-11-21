@@ -1,6 +1,6 @@
 <?php
 	session_start();
-
+	include_once "config.php";
 
 	$incident_type = mysqli_real_escape_string($conn, $_POST['incident_type']);
 	$barangay = mysqli_real_escape_string($conn, $_POST['barangay']);
