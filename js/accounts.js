@@ -13,7 +13,7 @@ function showForm(OfficialsID) {
 						</div>
 						<div class="swal-body">
 							<div class="image">
-								<img src="php/profile/${data.ImageURL}">
+								<img src="php/image/${data.ImageURL}">
 							</div>
 							<div class="input-container" id="row1">
 								<div class="input-box" id="Fname-box">
