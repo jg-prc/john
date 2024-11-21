@@ -1,8 +1,8 @@
 <?php
   $hostname = "127.0.0.1";
-  $username = "u412427249_new";
+  $username = "newest";
   $password = "Capstoneroot01";
-  $dbname = "u412427249_capstone";
+  $dbname = "capstone1";
 
   $conn = mysqli_connect($hostname, $username, $password, $dbname);
   if(!$conn){
