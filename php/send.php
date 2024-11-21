@@ -38,44 +38,33 @@
 		}
 	}
 
-if ($uploadSuccess) {
-    $sql_incident = "INSERT INTO incident_report (OfficialsID, IncidentTypeID, BarangayID, ResponseStatus, Zone, Street)
-        VALUES ('$unique_id', '$incident_type', '$barangay', '$status', '$zone', '$street')";
+	if ($uploadSuccess) {
+		$sql_incident = "INSERT INTO incident_report (OfficialsID, IncidentTypeID, BarangayID, ResponseStatus, Zone, Street)
+			VALUES ('$unique_id', '$incident_type', '$barangay', '$status', '$zone', '$street')";
 
-    // Echo the $sql_incident query
-    echo "SQL Incident Query: " . $sql_incident . "<br>";
+		if ($conn->query($sql_incident)) {
+			$incident_id = $conn->insert_id;
 
-    if ($conn->query($sql_incident)) {
-        $incident_id = $conn->insert_id;
+			$folderName = $targetDir;
+			$sql_folder = "INSERT INTO folder_report (FolderID, FolderName) VALUES ('$incident_id', '$folderName')";
 
-        $folderName = $targetDir;
-        $sql_folder = "INSERT INTO folder_report (FolderID, FolderName) VALUES ('$incident_id', '$folderName')";
-
-        // Echo the $sql_folder query
-        echo "SQL Folder Query: " . $sql_folder . "<br>";
-
-        if ($conn->query($sql_folder)) {
-            foreach ($imagePaths as $imagePath) {
-                $sql_image = "INSERT INTO images (ImagesID, ImagesName) VALUES ('$incident_id', '$new_img_name')";
-
-                // Echo the $sql_image query
-                echo "SQL Image Query: " . $sql_image . "<br>";
-
-                if (!$conn->query($sql_image)) {
-                    echo "Failed to insert image.";
-                    exit;
-                }
-            }
-            echo "success";
-        } else {
-            echo "Failed to insert folder name.";
-            exit;
-        }
-    } else {
-        echo "Failed to insert incident report.";
-    }
-} else {
-    echo "Image cannot be empty.";
-}
-
+			if ($conn->query($sql_folder)) {
+				foreach ($imagePaths as $imagePath) {
+					$sql_image = "INSERT INTO images (ImagesID, ImagesName) VALUES ('$incident_id', '$new_img_name')";
+					if (!$conn->query($sql_image)) {
+						echo "Failed to insert image.";
+						exit;
+					}
+				}
+				echo "success";
+			} else {
+				echo "Failed to insert folder name.";
+				exit;
+			}
+		} else {
+			echo "Failed to insert incident report.";
+		}
+	} else {
+		echo "Image cannot be empty.";
+	}
 ?>
