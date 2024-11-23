@@ -133,34 +133,11 @@
 					}
 
 					foreach ($eventDates as $eventDate) {
-						$formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
-						$sql = "
-							SELECT ir.IncidentReportID, ir.OfficialsID, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime,
-							it.IncidentTypeName, b.BarangayName
-							FROM incident_report AS ir
-							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE 
-								ir.CreatedAt = '$formattedDate' 
-								AND ir.OfficialsID = $user_id
-							ORDER BY 
-								ir.CreatedTime DESC
-						";
 
-						$reportResult = $conn->query($sql);
-
-						if (!$reportResult) {
-							die("Error fetching reports: " . $conn->error);
-						}
 
 						echo "<div class='card-container'>";
 						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
 						echo "<div class='card-grid'>";
-
-						if ($reportResult->num_rows > 0) {
-						} else {
-							echo "<div class='no-data'>No reports available for " . htmlspecialchars($eventDate) . ".</div>";
-						}
 						echo "</div></div>";
 					}
 				?>
