@@ -1,6 +1,6 @@
 <?php
   $hostname = "127.0.0.1";
-  $username = "u412427249_new";
+  $username = "u412427249_newest";
   $password = "Capstoneroot01";
   $dbname = "u412427249_capstone";
 
