@@ -1,0 +1,275 @@
+			body::-webkit-scrollbar {
+				display: none;
+			}
+			.container {
+				background-color: #f2f5f7;
+			}
+			.title {
+				font-size: 32px;
+				padding-top: 10px;
+				padding-bottom: 10px;
+				padding-left: 80px;
+				background-color: #88B3DA;
+				color: #fff;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			.title img {
+				width: 75px;
+			}
+
+			.sub-title {
+				margin-left: 100px;
+				border-bottom: 2px solid;
+				display: flex;
+				width: 90%;
+				justify-content: space-between;
+				font-size: 32px;
+				padding-top: 40px;
+				padding-bottom: 10px;
+				align-items: flex-end;
+			}
+			#time {
+				font-size: 20px;
+				display: flex;
+				gap: 10px;
+			}
+
+			.sub-container1 {
+				display: flex;
+				gap: 50px;
+				padding: 20px 0 0 200px;
+			}
+			.image {
+				width: 500px;
+				margin: 20px;
+			}
+			.image img {
+				width: 500px;
+				height: 400px;
+				border-radius: 20px;
+			}
+			.splide__arrow {
+				height: 3em;
+				width: 3em;
+			}
+			.splide__arrow svg {
+				height: 2.2em;
+				width: 2.2em;
+			}
+
+
+
+			form {
+				padding-top: 20px;
+				padding-bottom: 20px;
+			}
+			.input-container {
+				display: flex;
+				justify-content: space-between;
+				width: 550px;
+			}
+			.input-container#row1 {
+				justify-content: flex-end;
+			}
+			span.status {
+				display: flex;
+				justify-content: center;
+				padding: 5px 10px;
+				font-size: 13px;
+				font-weight: bold;
+				border-radius: 12px;
+				margin-top: 5px;
+				text-transform: uppercase;
+				width: 120px;
+			}
+			span.status.ongoing {
+				background-color: #ff4500;
+				color: white;
+			}
+
+			span.status.resolved {
+				background-color: #28a745;
+				color: white;
+			}
+			span.status.pending {
+				background-color: #ffc107;
+				color: #333;
+			}
+			span.status.duplicated {
+				background-color: #5dade2;
+				color: white;
+			}
+			input[type=text],
+			input[type=date],
+			input[type=tel],
+			#barangay,
+			#street,
+			select {
+				width: 300px;
+				height: 40px;
+				padding-left: 15px;
+				border: solid 2px;
+				border-radius: 10px;
+				margin: 5px 0 10px 0;
+				background: rgba(255, 255, 255, 0.2);
+				font-size: 16px;
+				border-color: #A9A9A9;
+			}
+			.input-box {
+				width: 300px;
+				height: 110px;
+			}
+			.input-box#Type-box,
+			.input-box#Zone-box,
+			select#incident_type,
+			.input-box#Event-box,
+			select#zone,
+			input[type=date],
+			.input-box#Age-box,
+			input[type=text]#age,
+			.input-box#Sex-box,
+			select#sex {
+				width: 200px;
+			}
+			input[type="date"]::-webkit-calendar-picker-indicator {
+				position: relative;
+				right: 5%;
+			}
+			i.fa-exclamation-circle {
+				position: relative;
+				bottom: 60%;
+				left: 90%;
+			}
+			.message,
+			i.fas.fa-exclamation-circle {
+				visibility: hidden;
+				color: #e74c3c;
+			}
+			.input-box.error #barangay,
+			.input-box.error #name,
+			.input-box.error #address,
+			.input-box.error #age,
+			.input-box.error #sex,
+			.input-box.error #classification {
+				border-color: #e74c3c;
+			}
+			.input-box.error .message,
+			.input-box.error i.fa-exclamation-circle {
+				visibility: visible;
+			}
+
+
+
+
+			.sub-container2 {
+				padding: 20px 0 0 230px;
+			}
+			.form-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 50px;
+				width: 1070px;
+			}
+			.form-section {
+				height: 620px;
+				width: 510px;
+				padding: 20px 40px;
+				box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+				border-radius: 20px;
+			}
+			.victim-number {
+				display: flex;
+				justify-content: center;
+			}
+			input[type=text]#name {
+				width: 430px;
+			}
+			.input-box#Name-box {
+				width: 430px;
+			}
+			.input-box#Address-box {
+				width: 430px;
+				height: 140px;
+			}
+			.input-box#Classification-box {
+				width: 430px;
+				height: 190px;
+			}
+			textarea {
+				width: 430px;
+				font-size: 16px;
+				padding: 7px 15px;
+				margin: 5px 0 10px 0;
+				border: solid 2px;
+				border-radius: 10px;
+				resize: none;
+				background: rgba(255, 255, 255, 0.2);
+				border-color: #A9A9A9;
+			}
+			#classification {
+				height: 120px;
+			}
+			.input-container#row5 {
+				width: 430px;
+			}
+			#Age-box i.fas.fa-exclamation-circle,
+			#Sex-box i.fas.fa-exclamation-circle {
+				left: 80%;
+			}
+
+			.fa.fa-circle-xmark {
+				cursor: pointer;
+				position: relative;
+				bottom: 5%;
+				left: 106%;
+				font-size: 25px;
+				color: #e74c3c;
+			}
+
+
+
+
+			#add {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				gap: 10px;
+				height: 620px;
+				width: 510px;
+				padding: 20px 40px;
+				box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+				border-radius: 20px;
+			}
+			.fa.fa-square-plus {
+				font-size: 100px;
+			}
+			#add span {
+				font-size: 20px;
+			}
+			.btn {
+				position: relative;
+				left: 36%;
+				padding-top: 50px;
+			}
+			.btn button {
+				padding: 10px 30px;
+				font-size: 18px;
+				letter-spacing: 1px;
+				color: #725AC1;
+				background: transparent;
+				cursor: pointer;
+				transition: ease-out 0.5s;
+				border: 2px solid #725AC1;
+				border-radius: 10px;
+				box-shadow: inset 0 0 0 0 #725AC1;
+			}
+			.btn button:hover {
+				color: white;
+				box-shadow: inset 0 -100px 0 0 #725AC1;
+			}
+			.btn button:active {
+				transform: scale(0.9);
+			}

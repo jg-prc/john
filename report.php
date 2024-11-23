@@ -138,7 +138,7 @@
 							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
 						}
 					} else {
-						echo "<p>No data matches your search criteria.</p>";
+						echo "<p>No data found.</p>";
 						$eventDates = [];
 					}
 
