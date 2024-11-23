@@ -132,12 +132,14 @@
 						return;
 					}
 
+					foreach ($eventDates as $eventDate) {
 
 
 						echo "<div class='card-container'>";
-						echo "<span class='date'>" . htmlspecialchars($eventDates) . "</span>";
+						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
 						echo "<div class='card-grid'>";
 						echo "</div></div>";
+					}
 				?>
 			</div>
 		</div>
