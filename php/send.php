@@ -60,12 +60,11 @@
 				$stmt_folder->bind_param("is", $incident_id, $targetDir);
 
 				if ($stmt_folder->execute()) {
-					// Insert images
 					$sql_image = "INSERT INTO images (ImagesID, ImagesName) VALUES (?, ?)";
 					$stmt_image = $conn->prepare($sql_image);
 
 					foreach ($imagePaths as $imagePath) {
-						$stmt_image->bind_param("is", $incident_id, $imagePath);
+						$stmt_image->bind_param("is", $incident_id, $new_img_name);
 						if (!$stmt_image->execute()) {
 							echo "Failed to insert image: " . $stmt_image->error;
 							exit;
