@@ -234,7 +234,7 @@
 					if (!empty($type)) {
 						$dateQuery .= " AND it.IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
 					}
-					if (!empty($date)) {
+					if (!empty($selectedDate)) {
 						$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($date) . "'";
 					}
 
