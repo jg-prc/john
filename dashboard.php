@@ -140,26 +140,36 @@
 					<ul class="splide__list">
 					<?php
 						include_once "php/config.php";
-
-						$dateQuery = "SELECT ir.IncidentReportID, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime,
-							it.IncidentTypeName, b.BarangayName
-							FROM incident_report AS ir
-							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE 1 = 1";
-
+						$dateQuery = "
+							SELECT 
+								ir.IncidentReportID, 
+								ir.ResponseStatus, 
+								ir.Zone, 
+								ir.Street, 
+								ir.CreatedAt, 
+								ir.CreatedTime,
+								it.IncidentTypeName, 
+								b.BarangayName
+							FROM 
+								incident_report AS ir
+							LEFT JOIN 
+								incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN 
+								barangay AS b ON ir.BarangayID = b.BarangayID
+							WHERE 
+								1 = 1";
 						if (!empty($type)) {
-							$dateQuery .= " AND IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
+							$dateQuery .= " AND it.IncidentTypeName = '{$type}'";
 						}
 						if (!empty($selectedDate)) {
-							$dateQuery .= " AND CreatedAt = '" . $conn->real_escape_string($selectedDate) . "'";
+							$dateQuery .= " AND ir.CreatedAt = '{$selectedDate}'";
 						}
 
 						$dateQuery .= " ORDER BY ir.CreatedTime DESC";
 
 						$result = $conn->query($dateQuery);
 
-						if ($result->num_rows > 0) {
+						if ($result && $result->num_rows > 0) {
 							while ($row = $result->fetch_assoc()) {
 								$icon = '';
 								switch ($row['IncidentTypeName']) {
@@ -191,24 +201,22 @@
 										$statusClass = 'duplicated';
 										break;
 								}
-
 								$eventDateTime = new DateTime($row['CreatedTime']);
 								$formattedTime = $eventDateTime->format('g:i a');
-
 					?>
-					<li class="splide__slide" onclick=showForm(<?php echo $row['IncidentReportID']; ?>)>
+					<li class="splide__slide" onclick="showForm(<?php echo (int) $row['IncidentReportID']; ?>)">
 						<?php echo $icon; ?>
 						<div class="content">
-							<span class="type"><?php echo $row['IncidentTypeName']; ?></span>
-							<span>Zone <?php echo $row['Zone'] . ", " . $row['BarangayName']; ?></span>
-							<span class="status <?php echo $statusClass; ?>"><?php echo $row['ResponseStatus']; ?></span>
+							<span class="type"><?php echo htmlspecialchars($row['IncidentTypeName']); ?></span>
+							<span>Zone <?php echo htmlspecialchars($row['Zone'] . ", " . $row['BarangayName']); ?></span>
+							<span class="status <?php echo htmlspecialchars($statusClass); ?>"><?php echo htmlspecialchars($row['ResponseStatus']); ?></span>
 						</div>
-						<span class="time"><?php echo $formattedTime; ?></span>
+						<span class="time"><?php echo htmlspecialchars($formattedTime); ?></span>
 					</li>
 					<?php
 							}
 						} else {
-							echo "<li class='splide__slide'> </li>";
+							echo "<li class='splide__slide'>No incidents found.</li>";
 						}
 					?>
 					</ul>
