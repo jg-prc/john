@@ -205,6 +205,21 @@
 							$eventDateTime = new DateTime($row['CreatedTime']);
 							$formattedTime = $eventDateTime->format('g:i a');
 				?>
+
+
+				<li class="splide__slide" onclick="showForm(<?php echo $row['IncidentReportID']; ?>)">
+					<?php echo $icon; ?>
+					<div class="content">
+						<span class="type"><?php echo $row['IncidentTypeName']; ?></span>
+						<span>Zone <?php echo $row['Zone'] . ", " . $row['BarangayName']; ?></span>
+						<span class="status <?php echo $statusClass; ?>"><?php echo $row['ResponseStatus']; ?></span>
+					</div>
+					<span class="time"><?php echo $formattedTime; ?></span>
+				</li>
+
+
+
+
 				<?php
 						}
 					} else {
