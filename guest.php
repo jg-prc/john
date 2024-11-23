@@ -601,107 +601,92 @@
 				<div class="splide__track">
 					<ul class="splide__list">
 
-<?php 
-include_once "php/config.php";
+					<?php 
+						include_once "php/config.php";
 
-// Retrieve filters from GET parameters
-$type = isset($_GET['type']) ? $conn->real_escape_string($_GET['type']) : '';
-$selectedDate = isset($_GET['date']) ? $conn->real_escape_string($_GET['date']) : '';
+						$dateQuery = "
+							SELECT 
+								ir.IncidentReportID, 
+								ir.ResponseStatus, 
+								ir.Zone, 
+								ir.Street, 
+								ir.CreatedAt, 
+								ir.CreatedTime,
+								it.IncidentTypeName, 
+								b.BarangayName
+							FROM 
+								incident_report AS ir
+							LEFT JOIN 
+								incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN 
+								barangay AS b ON ir.BarangayID = b.BarangayID
+							WHERE 
+								1 = 1";
 
-// Build the SQL query
-$dateQuery = "
-    SELECT 
-        ir.IncidentReportID, 
-        ir.ResponseStatus, 
-        ir.Zone, 
-        ir.Street, 
-        ir.CreatedAt, 
-        ir.CreatedTime,
-        it.IncidentTypeName, 
-        b.BarangayName
-    FROM 
-        incident_report AS ir
-    LEFT JOIN 
-        incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-    LEFT JOIN 
-        barangay AS b ON ir.BarangayID = b.BarangayID
-    WHERE 
-        1 = 1";
+						if (!empty($type)) {
+							$dateQuery .= " AND it.IncidentTypeName = '{$type}'";
+						}
 
-// Apply filters if available
-if (!empty($type)) {
-    $dateQuery .= " AND it.IncidentTypeName = '{$type}'";
-}
+						if (!empty($selectedDate)) {
+							$dateQuery .= " AND ir.CreatedAt = '{$selectedDate}'";
+						}
 
-if (!empty($selectedDate)) {
-    $dateQuery .= " AND ir.CreatedAt = '{$selectedDate}'";
-}
+						$dateQuery .= " AND (ir.ResponseStatus = 'ongoing' OR ir.ResponseStatus = 'resolved')";
+						$dateQuery .= " ORDER BY ir.CreatedTime DESC";
 
-// Add condition for response status and ordering
-$dateQuery .= " AND (ir.ResponseStatus = 'ongoing' OR ir.ResponseStatus = 'resolved')";
-$dateQuery .= " ORDER BY ir.CreatedTime DESC";
+						$result = $conn->query($dateQuery);
 
-// Execute the query
-$result = $conn->query($dateQuery);
+						if ($result && $result->num_rows > 0) {
+							while ($row = $result->fetch_assoc()) {
+								$icon = '';
+								switch ($row['IncidentTypeName']) {
+									case 'Vehicular Accident':
+										$icon = '<i class="fas fa-car-crash"></i>';
+										break;
+									case 'Fire Incident':
+										$icon = '<i class="fas fa-fire"></i>';
+										break;
+									case 'Flood Incident':
+										$icon = '<i class="fas fa-house-flood-water"></i>';
+										break;
+									case 'Landslide Incident':
+										$icon = '<i class="fas fa-hill-rockslide"></i>';
+										break;
+								}
+								$statusClass = '';
+								switch ($row['ResponseStatus']) {
+									case 'pending':
+										$statusClass = 'pending';
+										break;
+									case 'resolved':
+										$statusClass = 'resolved';
+										break;
+									case 'ongoing':
+										$statusClass = 'ongoing';
+										break;
+									case 'duplicated':
+										$statusClass = 'duplicated';
+										break;
+								}
 
-// Check if there are results
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        // Determine the appropriate icon for the incident type
-        $icon = '';
-        switch ($row['IncidentTypeName']) {
-            case 'Vehicular Accident':
-                $icon = '<i class="fas fa-car-crash"></i>';
-                break;
-            case 'Fire Incident':
-                $icon = '<i class="fas fa-fire"></i>';
-                break;
-            case 'Flood Incident':
-                $icon = '<i class="fas fa-house-flood-water"></i>';
-                break;
-            case 'Landslide Incident':
-                $icon = '<i class="fas fa-hill-rockslide"></i>';
-                break;
-        }
-
-        // Determine the status class for CSS styling
-        $statusClass = '';
-        switch ($row['ResponseStatus']) {
-            case 'pending':
-                $statusClass = 'pending';
-                break;
-            case 'resolved':
-                $statusClass = 'resolved';
-                break;
-            case 'ongoing':
-                $statusClass = 'ongoing';
-                break;
-            case 'duplicated':
-                $statusClass = 'duplicated';
-                break;
-        }
-
-        // Format the time for display
-        $eventDateTime = new DateTime($row['CreatedTime']);
-        $formattedTime = $eventDateTime->format('g:i a');
-?>
-<li class="splide__slide">
-    <?php echo $icon; ?>
-    <div class="content">
-        <span class="type"><?php echo htmlspecialchars($row['IncidentTypeName']); ?></span>
-        <span>Zone <?php echo htmlspecialchars($row['Zone'] . ", " . $row['BarangayName']); ?></span>
-        <span class="status <?php echo htmlspecialchars($statusClass); ?>"><?php echo htmlspecialchars($row['ResponseStatus']); ?></span>
-    </div>
-    <span class="time"><?php echo $formattedTime; ?></span>
-</li>
-<?php
-    }
-} else {
-    // Display a placeholder if no results are found
-    echo "<li class='splide__slide'>No incidents found.</li>";
-}
-?>
-
+								$eventDateTime = new DateTime($row['CreatedTime']);
+								$formattedTime = $eventDateTime->format('g:i a');
+					?>
+					<li class="splide__slide">
+						<?php echo $icon; ?>
+						<div class="content">
+							<span class="type"><?php echo htmlspecialchars($row['IncidentTypeName']); ?></span>
+							<span>Zone <?php echo htmlspecialchars($row['Zone'] . ", " . $row['BarangayName']); ?></span>
+							<span class="status <?php echo htmlspecialchars($statusClass); ?>"><?php echo htmlspecialchars($row['ResponseStatus']); ?></span>
+						</div>
+						<span class="time"><?php echo $formattedTime; ?></span>
+					</li>
+					<?php
+							}
+						} else {
+							echo "<li class='splide__slide'>No incidents found.</li>";
+						}
+					?>
 					</ul>
 				</div>
 			</div>
