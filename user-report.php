@@ -99,91 +99,106 @@
 				</div>
 			</div>
 			<div class="card_container">
-<?php
-include_once "php/config.php";
-session_start();
+				<?php 
+					include_once "php/config.php";
+					$user_id = $_SESSION['unique_id'];
 
-$user_id = $_SESSION['unique_id'];
+					$dateQuery = "
+						SELECT DISTINCT CreatedAt 
+						FROM incident_report 
+						WHERE OfficialsID = $user_id
+					";
 
-// Fetch distinct event dates for the logged-in user
-$order_by = isset($sort_by) && $sort_by === 'CreatedAt-asc' ? 'ORDER BY CreatedAt ASC' : 'ORDER BY CreatedAt DESC';
-$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report WHERE OfficialsID = $user_id $order_by";
+					$order_by = "ORDER BY `CreatedAt` DESC";
+					if ($sort_by === 'CreatedAt-asc') {
+						$order_by = "ORDER BY `CreatedAt` ASC";
+					}
 
-$dateResult = $conn->query($dateQuery);
+					$dateQuery .= " $order_by";
 
-if (!$dateResult) {
-    die("Error fetching event dates: " . $conn->error);
-}
+					$dateResult = $conn->query($dateQuery);
 
-$eventDates = [];
-while ($row = $dateResult->fetch_assoc()) {
-    $eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
-}
+					if (!$dateResult) {
+						die("Error fetching dates: " . $conn->error);
+					}
 
-// Process each event date
-foreach ($eventDates as $eventDate) {
-    $formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
-    $userIdEscaped = $conn->real_escape_string($user_id);
+					$eventDates = [];
+					if ($dateResult->num_rows > 0) {
+						while ($row = $dateResult->fetch_assoc()) {
+							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
+						}
+					} else {
+						echo "<div class='no-data'>No data found.</div>";
+						return;
+					}
 
-    // Fetch incident reports for the current event date
-    $sql = "
-        SELECT 
-            ir.IncidentReportID, 
-            ir.Zone, 
-            ir.Street, 
-            it.IncidentTypeName, 
-            b.BarangayName
-        FROM
-            incident_report AS ir
-        LEFT JOIN
-            incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-        LEFT JOIN
-            barangay AS b ON ir.BarangayID = b.BarangayID
-        WHERE
-            CreatedAt = '$formattedDate'
-            AND OfficialsID = $userIdEscaped
-        ORDER BY CreatedTime DESC;
-    ";
+					foreach ($eventDates as $eventDate) {
+						$formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
+						$sql = "
+							SELECT 
+								ir.IncidentReportID, 
+								ir.Zone, 
+								ir.Street, 
+								it.IncidentTypeName, 
+								b.BarangayName
+							FROM 
+								incident_report AS ir
+							LEFT JOIN 
+								incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN 
+								barangay AS b ON ir.BarangayID = b.BarangayID
+							WHERE 
+								ir.CreatedAt = '$formattedDate' 
+								AND ir.OfficialsID = $user_id
+							ORDER BY 
+								ir.CreatedTime DESC
+						";
 
-    $reportResult = $conn->query($sql);
+						$reportResult = $conn->query($sql);
 
-    if (!$reportResult) {
-        die("Error fetching reports: " . $conn->error);
-    }
+						if (!$reportResult) {
+							die("Error fetching reports: " . $conn->error);
+						}
 
-    // Display the data
-    echo "<div class='card-container'>";
-    echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-    echo "<div class='card-grid'>";
+						echo "<div class='card-container'>";
+						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+						echo "<div class='card-grid'>";
 
-while ($row = $reportResult->fetch_assoc()) {
-    // Map incident type to icon
-    $icon = match (trim($row['IncidentTypeName'])) {
-        'Vehicular Accident' => '<i class="fas fa-car-crash"></i>',
-        'Fire Incident' => '<i class="fas fa-fire"></i>',
-        'Flood Incident' => '<i class="fas fa-house-flood-water"></i>',
-        'Landslide Incident' => '<i class="fas fa-hill-rockslide"></i>',
-        default => '<i class="fas fa-question-circle"></i>',
-    };
-
-    // Generate the card
-    echo "
-        <a class='card' onclick=\"showForm(" . htmlspecialchars($row['IncidentReportID']) . ")\">
-            <div class='image'>
-                $icon
-            </div>
-            <div class='details'>
-                <span class='type'>" . htmlspecialchars($row['IncidentTypeName']) . "</span>
-                <span>Zone " . htmlspecialchars($row['Zone']) . " , " . htmlspecialchars($row['BarangayName']) . "</span>
-            </div>
-        </a>
-    ";
-}
-
-    echo "</div></div>";
-}
-?>
-
+						if ($reportResult->num_rows > 0) {
+							while ($row = $reportResult->fetch_assoc()) {
+								$icon = '';
+								switch ($row['IncidentTypeName']) {
+									case 'Vehicular Accident':
+										$icon = '<i class="fas fa-car-crash"></i>';
+										break;
+									case 'Fire Incident':
+										$icon = '<i class="fas fa-fire"></i>';
+										break;
+									case 'Flood Incident':
+										$icon = '<i class="fas fa-house-flood-water"></i>';
+										break;
+									case 'Landslide Incident':
+										$icon = '<i class="fas fa-hill-rockslide"></i>';
+										break;
+								}
+								echo "
+									<a class='card' onclick=\"showForm(" . (int)$row['IncidentReportID'] . ")\">
+										<div class='image'>
+											$icon
+										</div>
+										<div class='details'>
+											<span class='type'>" . htmlspecialchars($row['IncidentTypeName']) . "</span>
+											<span>Zone " . htmlspecialchars($row['Zone']) . " , " . htmlspecialchars($row['BarangayName']) . "</span>
+										</div>
+									</a>
+								";
+							}
+						} else {
+							echo "<div class='no-data'>No reports available for " . htmlspecialchars($eventDate) . ".</div>";
+						}
+						echo "</div></div>";
+					}
+				?>
 			</div>
 		</div>
 	</body>
