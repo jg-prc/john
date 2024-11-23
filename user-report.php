@@ -139,7 +139,7 @@
 								ir.IncidentReportID, 
 								ir.Zone, 
 								ir.Street,
-								ir.CreatedTime,
+								ir.CreatedAt,
 								it.IncidentTypeName, 
 								b.BarangayName
 							FROM 
