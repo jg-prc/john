@@ -143,79 +143,110 @@
 			<div id="text-slider" class="splide">
 				<div class="splide__track">
 					<ul class="splide__list">
-					<?php
-						include_once "php/config.php";
+<?php
+include_once "php/config.php";
 
-						$dateQuery = "SELECT ir.IncidentReportID, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime,
-							it.IncidentTypeName, b.BarangayName
-							FROM incident_report AS ir
-							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE 1 = 1";
 
-						if (!empty($type)) {
-							$dateQuery .= " AND IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
-						}
-						if (!empty($selectedDate)) {
-							$dateQuery .= " AND CreatedAt = '" . $conn->real_escape_string($selectedDate) . "'";
-						}
+// Build the query
+$dateQuery = "
+    SELECT 
+        ir.IncidentReportID, 
+        ir.ResponseStatus, 
+        ir.Zone, 
+        ir.Street, 
+        ir.CreatedAt, 
+        ir.CreatedTime,
+        it.IncidentTypeName, 
+        b.BarangayName
+    FROM 
+        incident_report AS ir
+    LEFT JOIN 
+        incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+    LEFT JOIN 
+        barangay AS b ON ir.BarangayID = b.BarangayID
+    WHERE 
+        1 = 1
+";
 
-						$dateQuery .= " ORDER BY ir.CreatedTime DESC";
+// Add filters if applicable
+if (!empty($type)) {
+    $dateQuery .= " AND it.IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
+}
+if (!empty($selectedDate)) {
+    $dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($selectedDate) . "'";
+}
 
-						$result = $conn->query($dateQuery);
+// Add ordering
+$dateQuery .= " ORDER BY ir.CreatedTime DESC";
 
-						if ($result->num_rows > 0) {
-							while ($row = $result->fetch_assoc()) {
-								$icon = '';
-								switch ($row['IncidentTypeName']) {
-									case 'Vehicular Accident':
-										$icon = '<i class="fas fa-car-crash"></i>';
-										break;
-									case 'Fire Incident':
-										$icon = '<i class="fas fa-fire"></i>';
-										break;
-									case 'Flood Incident':
-										$icon = '<i class="fas fa-house-flood-water"></i>';
-										break;
-									case 'Landslide Incident':
-										$icon = '<i class="fas fa-hill-rockslide"></i>';
-										break;
-								}
+// Execute query
+$result = $conn->query($dateQuery);
 
-								$statusClass = '';
-								switch ($row['ResponseStatus']) {
-									case 'pending':
-										$statusClass = 'pending';
-										break;
-									case 'resolved':
-										$statusClass = 'resolved';
-										break;
-									case 'ongoing':
-										$statusClass = 'ongoing';
-										break;
-									case 'duplicated':
-										$statusClass = 'duplicated';
-										break;
-								}
+if (!$result) {
+    die("Error fetching data: " . $conn->error);
+}
 
-								$eventDateTime = new DateTime($row['CreatedTime']);
-								$formattedTime = $eventDateTime->format('g:i a');
-					?>
-					<li class="splide__slide" onclick="showForm(<?php echo $row['IncidentReportID']; ?>)">
-						<?php echo $icon; ?>
-						<div class="content">
-							<span class="type"><?php echo $row['IncidentTypeName']; ?></span>
-							<span>Zone <?php echo $row['Zone'] . ", " . $row['BarangayName']; ?></span>
-							<span class="status <?php echo $statusClass; ?>"><?php echo $row['ResponseStatus']; ?></span>
-						</div>
-						<span class="time"><?php echo $formattedTime; ?></span>
-					</li>
-					<?php
-							}
-						} else {
-							echo "<li class='splide__slide'> </li>";
-						}
-					?>
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // Determine the icon for the incident type
+        $icon = '';
+        switch ($row['IncidentTypeName']) {
+            case 'Vehicular Accident':
+                $icon = '<i class="fas fa-car-crash"></i>';
+                break;
+            case 'Fire Incident':
+                $icon = '<i class="fas fa-fire"></i>';
+                break;
+            case 'Flood Incident':
+                $icon = '<i class="fas fa-house-flood-water"></i>';
+                break;
+            case 'Landslide Incident':
+                $icon = '<i class="fas fa-hill-rockslide"></i>';
+                break;
+            default:
+                $icon = '<i class="fas fa-question-circle"></i>'; // Fallback icon
+        }
+
+        // Determine the status class
+        $statusClass = '';
+        switch ($row['ResponseStatus']) {
+            case 'pending':
+                $statusClass = 'pending';
+                break;
+            case 'resolved':
+                $statusClass = 'resolved';
+                break;
+            case 'ongoing':
+                $statusClass = 'ongoing';
+                break;
+            case 'duplicated':
+                $statusClass = 'duplicated';
+                break;
+            default:
+                $statusClass = 'unknown'; // Fallback status
+        }
+
+        // Format the time
+        $eventDateTime = new DateTime($row['CreatedTime']);
+        $formattedTime = $eventDateTime->format('g:i a');
+?>
+        <li class="splide__slide" onclick="showForm(<?php echo (int)$row['IncidentReportID']; ?>)">
+            <?php echo $icon; ?>
+            <div class="content">
+                <span class="type"><?php echo htmlspecialchars($row['IncidentTypeName']); ?></span>
+                <span>Zone <?php echo htmlspecialchars($row['Zone']) . ", " . htmlspecialchars($row['BarangayName']); ?></span>
+                <span class="status <?php echo htmlspecialchars($statusClass); ?>"><?php echo htmlspecialchars($row['ResponseStatus']); ?></span>
+            </div>
+            <span class="time"><?php echo htmlspecialchars($formattedTime); ?></span>
+        </li>
+<?php
+    }
+} else {
+    // Display "No data found" when there are no results
+    echo "<li class='splide__slide no-data'>No data found.</li>";
+}
+?>
+
 					</ul>
 				</div>
 			</div>
