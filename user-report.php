@@ -133,13 +133,13 @@
 				}
 
 				foreach ($eventDates as $eventDate) {
-$formattedDate = date("Y-m-d", strtotime($eventDate));
-$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, it.IncidentTypeName, b.BarangayName
-        FROM incident_report AS ir
-        LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-        LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-        WHERE DATE(ir.CreatedAt) = '$formattedDate' AND ir.OfficialsID = $user_id
-        ORDER BY ir.CreatedTime DESC";
+					$formattedDate = date("Y-m-d", strtotime($eventDate));
+					$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, it.IncidentTypeName, b.BarangayName
+						FROM incident_report AS ir
+						LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+						LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+						WHERE DATE(ir.CreatedAt) = '$formattedDate' AND ir.OfficialsID = $user_id
+						ORDER BY ir.CreatedTime DESC";
 
 					$reportResult = $conn->query($sql);
 
@@ -151,15 +151,36 @@ $sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, it.Inciden
 					echo "<div class='card-grid'>";
 
 					if ($reportResult->num_rows > 0) {
+							while ($row = $reportResult->fetch_assoc()) {
 
+								$icon = '';
+								switch ($row['IncidentTypeName']) {
+									case 'Vehicular Accident':
+										$icon = '<i class="fas fa-car-crash"></i>';
+										break;
+									case 'Fire Incident':
+										$icon = '<i class="fas fa-fire"></i>';
+										break;
+									case 'Flood Incident':
+										$icon = '<i class="fas fa-house-flood-water"></i>';
+										break;
+									case 'Landslide Incident':
+										$icon = '<i class="fas fa-hill-rockslide"></i>';
+										break;
+								}
 
-
-
-
-
-
-
-
+								echo "
+									<a class='card' onclick=\"showForm(" . $row['IncidentReportID'] . ")\">
+										<div class='image'>
+										" . $icon . "
+										</div>
+										<div class='details'>
+											<span class='type'>" . $row['IncidentTypeName'] . "</span>
+											<span>Zone " . $row['Zone'] . " , " . $row['BarangayName'] . "</span>
+										</div>
+									</a>
+								";
+							}
 					} else {
 						echo "<div class='no-data'>No reports available for " . htmlspecialchars($eventDate) . ".</div>";
 					}
