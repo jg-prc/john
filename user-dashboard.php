@@ -148,25 +148,12 @@ include_once "php/config.php";
 
 
 // Build the query
-$dateQuery = "
-    SELECT 
-        ir.IncidentReportID, 
-        ir.ResponseStatus, 
-        ir.Zone, 
-        ir.Street, 
-        ir.CreatedAt, 
-        ir.CreatedTime,
-        it.IncidentTypeName, 
-        b.BarangayName
-    FROM 
-        incident_report AS ir
-    LEFT JOIN 
-        incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-    LEFT JOIN 
-        barangay AS b ON ir.BarangayID = b.BarangayID
-    WHERE 
-        1 = 1
-";
+					$dateQuery = "SELECT ir.IncidentReportID, ir.OfficialsID, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime,
+						it.IncidentTypeName, b.BarangayName
+						FROM incident_report AS ir
+						LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+						LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+						WHERE 1 = 1";
 
 // Add filters if applicable
 if (!empty($type)) {
