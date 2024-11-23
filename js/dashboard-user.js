@@ -55,7 +55,7 @@ function showForm(report_id) {
                         const mainListItem = document.createElement('li');
                         mainListItem.classList.add('splide__slide');
                         const mainImg = document.createElement('img');
-                        mainImg.src = `php/`;
+                        mainImg.src = `php/${item.ImagesName}`;
                         mainListItem.appendChild(mainImg);
                         mainCarouselList.appendChild(mainListItem);
                     });
