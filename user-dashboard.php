@@ -217,7 +217,7 @@ if ($result->num_rows > 0) {
         $eventDateTime = new DateTime($row['CreatedTime']);
         $formattedTime = $eventDateTime->format('g:i a');
 ?>
-        <li class="splide__slide" onclick="showForm(<?php echo (int)$row['IncidentReportID']; ?>)">
+        <li class="splide__slide" onclick="showForm(<?php echo $row['IncidentReportID']; ?>)">
             <?php echo $icon; ?>
             <div class="content">
                 <span class="type"><?php echo htmlspecialchars($row['IncidentTypeName']); ?></span>
