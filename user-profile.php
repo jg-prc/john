@@ -381,7 +381,7 @@
 				<form class="details" id="details" autocomplete="off" action="" method="post">
 					<div class="image-container">
 						<div class="image">
-							<img src="php/profile/<?php echo htmlspecialchars($row['ImageURL']); ?>">
+							<img src="php/image/<?php echo htmlspecialchars($row['ImageURL']); ?>">
 							<label for="file-path">
 								<span class="material-symbols-rounded">photo_camera</span>
 							</label>
