@@ -138,7 +138,8 @@
 							SELECT 
 								ir.IncidentReportID, 
 								ir.Zone, 
-								ir.Street, 
+								ir.Street,
+								ir.CreatedTime,
 								it.IncidentTypeName, 
 								b.BarangayName
 							FROM 
