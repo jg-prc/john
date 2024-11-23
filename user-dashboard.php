@@ -143,6 +143,90 @@
 			<div id="text-slider" class="splide">
 				<div class="splide__track">
 					<ul class="splide__list">
+
+
+
+
+				<?php
+					include_once "php/config.php";
+
+					$dateQuery = "SELECT ir.IncidentReportID, ir.OfficialsID, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime,
+						it.IncidentTypeName, b.BarangayName
+						FROM incident_report AS ir
+						LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+						LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+						WHERE 1 = 1";
+
+					if (!empty($type)) {
+						$dateQuery .= " AND it.IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
+					}
+					if (!empty($date)) {
+						$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($date) . "'";
+					}
+
+					$dateQuery .= " ORDER BY ir.CreatedTime DESC";
+
+					$result = $conn->query($dateQuery);
+
+					if ($result->num_rows > 0) {
+						while ($row = $result->fetch_assoc()) {
+							$icon = '';
+							switch ($row['IncidentTypeName']) {
+								case 'Vehicular Accident':
+									$icon = '<i class="fas fa-car-crash"></i>';
+									break;
+								case 'Fire Incident':
+									$icon = '<i class="fas fa-fire"></i>';
+									break;
+								case 'Flood Incident':
+									$icon = '<i class="fas fa-house-flood-water"></i>';
+									break;
+								case 'Landslide Incident':
+									$icon = '<i class="fas fa-hill-rockslide"></i>';
+									break;
+							}
+
+							$statusClass = '';
+							switch ($row['ResponseStatus']) {
+								case 'pending':
+									$statusClass = 'pending';
+									break;
+								case 'resolved':
+									$statusClass = 'resolved';
+									break;
+								case 'ongoing':
+									$statusClass = 'ongoing';
+									break;
+								case 'duplicated':
+									$statusClass = 'duplicated';
+									break;
+							}
+
+							$eventDateTime = new DateTime($row['CreatedTime']);
+							$formattedTime = $eventDateTime->format('g:i a');
+				?>
+				<?php
+						}
+					} else {
+						echo "<li class='splide__slide'> </li>";
+					}
+				?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 					</ul>
 				</div>
 			</div>
