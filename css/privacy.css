@@ -1,0 +1,173 @@
+			body::-webkit-scrollbar {
+				display: none;
+			}
+			.container {
+				height: 1100px;
+				background-color: #f2f5f7;
+			}
+			.container .title {
+				font-size: 32px;
+				padding-top: 10px;
+				padding-bottom: 10px;
+				padding-left: 80px;
+				background-color: #88B3DA;
+				color: #fff;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			.title img {
+				width: 75px;
+			}
+			.sub-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding-top: 50px;
+				padding-left: 80px;
+				gap: 50px;
+			}
+			.change-email {
+				width: 1050px;
+				height: 300px;
+				padding: 30px;
+				box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+				border-radius: 20px;
+			}
+			p {
+				margin: 5px 0 10px 5px;
+			}
+			.change-email .input-container {
+				display: flex;
+				justify-content: space-around;
+				gap: 50px;
+				margin: 5px 0 20px 0;
+				height: 65px;
+			}
+			input[type=email],
+			input[type=password],
+			input[type=text] {
+				width: 400px;
+				height: 40px;
+				padding-left: 15px;
+				border: solid 2px;
+				border-radius: 10px;
+				margin-bottom: 10px;
+				background: rgba(255, 255, 255, 0.2);
+				font-size: 16px;
+				border-color: #A9A9A9;
+			}
+			input:focus,
+			textarea:focus {
+				background: rgba(255, 255, 255, 0.3);
+				border: 2px solid #e0e0e0;
+				transition: background 0.5s ease;
+			}
+			.message,
+			label[for="current_email"] {
+				position: relative;
+				left: 4%;
+			}
+			label[for="new_email"] {
+				position: relative;
+				left: 45%;
+			}
+			i.fas.fa-exclamation-circle {
+				position: relative;
+				bottom: 100%;
+				left: 92%;
+			}
+			#new_pass-box i.fas.fa-exclamation-circle,
+			#confirm_pass-box i.fas.fa-exclamation-circle {
+				left: 80%;
+			}
+			.message,
+			i.fa-exclamation-circle {
+				visibility: hidden;
+				color: #e74c3c;
+			}
+			.input-box.error .message,
+			.input-box.error i.fa-exclamation-circle {
+				visibility: visible;
+			}
+			.input-box.error input[type=email],
+			.input-box.error input[type=password],
+			.input-box.error input[type=text] {
+				border-color: #e74c3c;
+			}
+
+
+			.btn {
+				display: flex;
+				justify-content: center;
+				padding-bottom: 20px;
+			}
+			button {
+				background-color: #6A8BB4;
+				color: #fff;
+				padding: 10px 30px;
+				border-radius: 20px;
+				font-weight: bold;
+				font-size: 20px;
+				box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				border: none;
+				transition: background-color 0.3s, transform 0.2s;
+			}
+			button:hover {
+				background-color: #5a7aa2;
+				transform: translateY(-2px);
+			}
+
+			.change-pass {
+				display: flex;
+				flex-direction: column;
+				width: 1050px;
+				height: 520px;
+				padding: 30px;
+				box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+				border-radius: 20px;
+			}
+			.change-pass .input-container {
+				display: flex;
+				justify-content: space-around;
+				gap: 50px;
+				margin: 5px 0 20px 0;
+				height: 310px;
+			}
+			.change-pass .input-box {
+				margin: 5px 0 15px 0;
+				height: 65px;
+				width: 400px;
+			}
+			.fa-eye-slash,
+			.fa-eye {
+				position: relative;
+				left: 90%;
+				bottom: 65%;
+			}
+			#new_pass-box .fa-eye-slash,
+			#confirm_pass-box .fa-eye-slash,
+			#new_pass-box .fa-eye,
+			#confirm_pass-box .fa-eye {
+				position: relative;
+				left: 85%;
+				bottom: 100%;
+			}
+			.requirements ul {
+				list-style-type: none;
+				padding: 0;
+			}
+			.requirements li {
+				margin: 10px 0;
+				display: flex;
+				align-items: center;
+				gap: 16px;
+			}
+			.requirements li i {
+				font-size: 20px;
+				color: #e74c3c;
+			}
+
