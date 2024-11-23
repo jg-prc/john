@@ -99,33 +99,38 @@
 				</div>
 			</div>
 			<div class="card_container">
-				<?php 
-					include_once "php/config.php";
-					$user_id = $_SESSION['unique_id'];
+<?php
+include_once "php/config.php";
+session_start();
 
-					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report WHERE OfficialsID = $user_id";
+// Ensure the user is logged in
+if (!isset($_SESSION['unique_id'])) {
+    die("Unauthorized access.");
+}
 
-					$order_by = 'ORDER BY `CreatedAt` DESC';
-					if ($sort_by == 'CreatedAt-asc') {
-						$order_by = 'ORDER BY `CreatedAt` ASC';
-					}
-					$dateQuery .= " $order_by";
+$user_id = $_SESSION['unique_id'];
 
-					$dateResult = $conn->query($dateQuery);
+// Fetch distinct event dates for the logged-in user
+$order_by = isset($sort_by) && $sort_by === 'CreatedAt-asc' ? 'ORDER BY CreatedAt ASC' : 'ORDER BY CreatedAt DESC';
+$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report WHERE OfficialsID = $user_id $order_by";
 
-					if ($dateResult->num_rows > 0) {
-						$eventDates = [];
-						while ($row = $dateResult->fetch_assoc()) {
-							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
-						}
-					} else {
-						$eventDates = [];
-					}
+$dateResult = $conn->query($dateQuery);
 
+if (!$dateResult) {
+    die("Error fetching event dates: " . $conn->error);
+}
+
+$eventDates = [];
+while ($row = $dateResult->fetch_assoc()) {
+    $eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
+}
+
+// Process each event date
 foreach ($eventDates as $eventDate) {
-    // Prepare the SQL query
     $formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
     $userIdEscaped = $conn->real_escape_string($user_id);
+
+    // Fetch incident reports for the current event date
     $sql = "
         SELECT 
             ir.IncidentReportID, 
@@ -145,11 +150,10 @@ foreach ($eventDates as $eventDate) {
         ORDER BY CreatedTime DESC;
     ";
 
-    // Execute the query
     $reportResult = $conn->query($sql);
 
     if (!$reportResult) {
-        die("Invalid query: " . $conn->error);
+        die("Error fetching reports: " . $conn->error);
     }
 
     // Display the data
@@ -183,8 +187,8 @@ foreach ($eventDates as $eventDate) {
 
     echo "</div></div>";
 }
+?>
 
-				?>
 			</div>
 		</div>
 	</body>
