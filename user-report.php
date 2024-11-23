@@ -122,62 +122,68 @@
 						$eventDates = [];
 					}
 
-					foreach ($eventDates as $eventDate) {
+foreach ($eventDates as $eventDate) {
+    // Prepare the SQL query
+    $formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
+    $userIdEscaped = $conn->real_escape_string($user_id);
+    $sql = "
+        SELECT 
+            ir.IncidentReportID, 
+            ir.Zone, 
+            ir.Street, 
+            it.IncidentTypeName, 
+            b.BarangayName
+        FROM
+            incident_report AS ir
+        LEFT JOIN
+            incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+        LEFT JOIN
+            barangay AS b ON ir.BarangayID = b.BarangayID
+        WHERE
+            CreatedAt = '$formattedDate'
+            AND OfficialsID = $userIdEscaped
+        ORDER BY CreatedTime DESC;
+    ";
 
-						$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, it.IncidentTypeName, b.BarangayName
-							FROM
-								incident_report AS ir
-							LEFT JOIN
-								incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-							LEFT JOIN
-								barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE
-								CreatedAt = '" . $conn->real_escape_string(date("Y-m-d", strtotime($eventDate))) . "' 
-								AND OfficialsID = " . $conn->real_escape_string($user_id) . " ORDER BY CreatedTime DESC;";
+    // Execute the query
+    $reportResult = $conn->query($sql);
 
-						$reportResult = $conn->query($sql);
+    if (!$reportResult) {
+        die("Invalid query: " . $conn->error);
+    }
 
-						if (!$reportResult) {
-							die("Invalid query: " . $conn->error);
-						} else {
+    // Display the data
+    echo "<div class='card-container'>";
+    echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+    echo "<div class='card-grid'>";
 
-							echo "<div class='card-container'>";
-							echo "<span class='date'>" . $eventDate . "</span>";
-							echo "<div class='card-grid'>";
+    while ($row = $reportResult->fetch_assoc()) {
+        // Map incident type to icon
+        $icon = match ($row['IncidentTypeName']) {
+            'Vehicular Accident' => '<i class="fas fa-car-crash"></i>',
+            'Fire Incident' => '<i class="fas fa-fire"></i>',
+            'Flood Incident' => '<i class="fas fa-house-flood-water"></i>',
+            'Landslide Incident' => '<i class="fas fa-hill-rockslide"></i>',
+            default => '<i class="fas fa-question-circle"></i>'
+        };
 
-							while ($row = $reportResult->fetch_assoc()) {
+        // Generate the card
+        echo "
+            <a class='card' onclick=\"showForm(" . htmlspecialchars($row['IncidentReportID']) . ")\">
+                <div class='image'>
+                    $icon
+                </div>
+                <div class='details'>
+                    <span class='type'>" . htmlspecialchars($row['IncidentTypeName']) . "</span>
+                    <span>Zone " . htmlspecialchars($row['Zone']) . " , " . htmlspecialchars($row['BarangayName']) . "</span>
+                </div>
+            </a>
+        ";
+    }
 
-								$icon = '';
-								switch ($row['IncidentTypeName']) {
-									case 'Vehicular Accident':
-										$icon = '<i class="fas fa-car-crash"></i>';
-										break;
-									case 'Fire Incident':
-										$icon = '<i class="fas fa-fire"></i>';
-										break;
-									case 'Flood Incident':
-										$icon = '<i class="fas fa-house-flood-water"></i>';
-										break;
-									case 'Landslide Incident':
-										$icon = '<i class="fas fa-hill-rockslide"></i>';
-										break;
-								}
+    echo "</div></div>";
+}
 
-								echo "
-									<a class='card' onclick=\"showForm(" . $row['IncidentReportID'] . ")\">
-										<div class='image'>
-										" . $icon . "
-										</div>
-										<div class='details'>
-											<span class='type'>" . $row['IncidentTypeName'] . "</span>
-											<span>Zone " . $row['Zone'] . " , " . $row['BarangayName'] . "</span>
-										</div>
-									</a>
-								";
-							}
-							echo "</div></div>";
-						}
-					}
 				?>
 			</div>
 		</div>
