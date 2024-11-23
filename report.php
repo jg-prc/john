@@ -166,6 +166,11 @@
 						$sql .= " ORDER BY CreatedTime DESC;";
 						$reportResult = $conn->query($sql);
 
+						if ($reportResult->num_rows == 0) {
+							echo "<p>No incidents found for " . $eventDate . ".</p>";
+							continue;
+						}
+
 						echo "<div class='card-container'>";
 						echo "<span class='date'>" . $eventDate . "</span>";
 						echo "<div class='card-grid'>";
