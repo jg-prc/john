@@ -254,6 +254,8 @@ if ($result->num_rows > 0) {
 						$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($date) . "'";
 					}
 
+					$dateQuery .= " ORDER BY ir.CreatedTime DESC";
+
 					$result = $conn->query($dateQuery);
 
 					if ($result->num_rows > 0) {
