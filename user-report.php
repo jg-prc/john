@@ -156,29 +156,29 @@ foreach ($eventDates as $eventDate) {
     echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
     echo "<div class='card-grid'>";
 
-    while ($row = $reportResult->fetch_assoc()) {
-        // Map incident type to icon
-        $icon = match ($row['IncidentTypeName']) {
-            'Vehicular Accident' => '<i class="fas fa-car-crash"></i>',
-            'Fire Incident' => '<i class="fas fa-fire"></i>',
-            'Flood Incident' => '<i class="fas fa-house-flood-water"></i>',
-            'Landslide Incident' => '<i class="fas fa-hill-rockslide"></i>',
-            default => '<i class="fas fa-question-circle"></i>'
-        };
+while ($row = $reportResult->fetch_assoc()) {
+    // Map incident type to icon
+    $icon = match (trim($row['IncidentTypeName'])) {
+        'Vehicular Accident' => '<i class="fas fa-car-crash"></i>',
+        'Fire Incident' => '<i class="fas fa-fire"></i>',
+        'Flood Incident' => '<i class="fas fa-house-flood-water"></i>',
+        'Landslide Incident' => '<i class="fas fa-hill-rockslide"></i>',
+        default => '<i class="fas fa-question-circle"></i>',
+    };
 
-        // Generate the card
-        echo "
-            <a class='card' onclick=\"showForm(" . htmlspecialchars($row['IncidentReportID']) . ")\">
-                <div class='image'>
-                    $icon
-                </div>
-                <div class='details'>
-                    <span class='type'>" . htmlspecialchars($row['IncidentTypeName']) . "</span>
-                    <span>Zone " . htmlspecialchars($row['Zone']) . " , " . htmlspecialchars($row['BarangayName']) . "</span>
-                </div>
-            </a>
-        ";
-    }
+    // Generate the card
+    echo "
+        <a class='card' onclick=\"showForm(" . htmlspecialchars($row['IncidentReportID']) . ")\">
+            <div class='image'>
+                $icon
+            </div>
+            <div class='details'>
+                <span class='type'>" . htmlspecialchars($row['IncidentTypeName']) . "</span>
+                <span>Zone " . htmlspecialchars($row['Zone']) . " , " . htmlspecialchars($row['BarangayName']) . "</span>
+            </div>
+        </a>
+    ";
+}
 
     echo "</div></div>";
 }
