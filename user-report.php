@@ -133,14 +133,14 @@
 				}
 
 				foreach ($eventDates as $eventDate) {
-					$formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
-					$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, it.IncidentTypeName, b.BarangayName
-							FROM incident_report AS ir
-							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE ir.CreatedAt = '$formattedDate' AND ir.OfficialsID = $user_id
-							ORDER BY ir.CreatedTime DESC
-						";
+$formattedDate = date("Y-m-d", strtotime($eventDate));
+$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, it.IncidentTypeName, b.BarangayName
+        FROM incident_report AS ir
+        LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+        LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+        WHERE DATE(ir.CreatedAt) = '$formattedDate' AND ir.OfficialsID = $user_id
+        ORDER BY ir.CreatedTime DESC";
+
 					$reportResult = $conn->query($sql);
 
 					if (!$reportResult) {
