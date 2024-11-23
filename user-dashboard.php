@@ -209,8 +209,6 @@ if ($result->num_rows > 0) {
             case 'duplicated':
                 $statusClass = 'duplicated';
                 break;
-            default:
-                $statusClass = 'unknown'; // Fallback status
         }
 
         // Format the time
