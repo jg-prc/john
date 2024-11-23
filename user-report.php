@@ -103,11 +103,6 @@
 include_once "php/config.php";
 session_start();
 
-// Ensure the user is logged in
-if (!isset($_SESSION['unique_id'])) {
-    die("Unauthorized access.");
-}
-
 $user_id = $_SESSION['unique_id'];
 
 // Fetch distinct event dates for the logged-in user
