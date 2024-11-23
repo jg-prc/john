@@ -103,110 +103,103 @@
 					include_once "php/config.php";
 					$user_id = $_SESSION['unique_id'];
 
-$dateQuery = "
-    SELECT DISTINCT CreatedAt 
-    FROM incident_report 
-    WHERE OfficialsID = $user_id
-";
+					$dateQuery = "
+						SELECT DISTINCT CreatedAt 
+						FROM incident_report 
+						WHERE OfficialsID = $user_id
+					";
 
-// Handle sorting
-$order_by = "ORDER BY `CreatedAt` DESC";
-if ($sort_by === 'CreatedAt-asc') {
-    $order_by = "ORDER BY `CreatedAt` ASC";
-}
-$dateQuery .= " $order_by";
+					$order_by = "ORDER BY `CreatedAt` DESC";
+					if ($sort_by === 'CreatedAt-asc') {
+						$order_by = "ORDER BY `CreatedAt` ASC";
+					}
 
-// Execute date query
-$dateResult = $conn->query($dateQuery);
+					$dateQuery .= " $order_by";
 
-if (!$dateResult) {
-    die("Error fetching dates: " . $conn->error);
-}
+					$dateResult = $conn->query($dateQuery);
 
-$eventDates = [];
-if ($dateResult->num_rows > 0) {
-    while ($row = $dateResult->fetch_assoc()) {
-        $eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
-    }
-} else {
-    echo "<div class='no-data'>No data found.</div>";
-    return;
-}
+					if (!$dateResult) {
+						die("Error fetching dates: " . $conn->error);
+					}
 
-// Process each event date
-foreach ($eventDates as $eventDate) {
-    // Build query to fetch reports for the given date
-    $formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
-    $sql = "
-        SELECT 
-            ir.IncidentReportID, 
-            ir.Zone, 
-            ir.Street, 
-            it.IncidentTypeName, 
-            b.BarangayName
-        FROM 
-            incident_report AS ir
-        LEFT JOIN 
-            incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-        LEFT JOIN 
-            barangay AS b ON ir.BarangayID = b.BarangayID
-        WHERE 
-            ir.CreatedAt = '$formattedDate' 
-            AND ir.OfficialsID = $user_id
-        ORDER BY 
-            ir.CreatedTime DESC
-    ";
+					$eventDates = [];
+					if ($dateResult->num_rows > 0) {
+						while ($row = $dateResult->fetch_assoc()) {
+							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
+						}
+					} else {
+						echo "<div class='no-data'>No data found.</div>";
+						return;
+					}
 
-    $reportResult = $conn->query($sql);
+					foreach ($eventDates as $eventDate) {
+						$formattedDate = $conn->real_escape_string(date("Y-m-d", strtotime($eventDate)));
+						$sql = "
+							SELECT 
+								ir.IncidentReportID, 
+								ir.Zone, 
+								ir.Street, 
+								it.IncidentTypeName, 
+								b.BarangayName
+							FROM 
+								incident_report AS ir
+							LEFT JOIN 
+								incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN 
+								barangay AS b ON ir.BarangayID = b.BarangayID
+							WHERE 
+								ir.CreatedAt = '$formattedDate' 
+								AND ir.OfficialsID = $user_id
+							ORDER BY 
+								ir.CreatedTime DESC
+						";
 
-    if (!$reportResult) {
-        die("Error fetching reports: " . $conn->error);
-    }
+						$reportResult = $conn->query($sql);
 
-    // Render the cards for this date
-    echo "<div class='card-container'>";
-    echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-    echo "<div class='card-grid'>";
+						if (!$reportResult) {
+							die("Error fetching reports: " . $conn->error);
+						}
 
-    if ($reportResult->num_rows > 0) {
-        while ($row = $reportResult->fetch_assoc()) {
-            // Determine the icon for the incident type
-            $icon = '';
-            switch ($row['IncidentTypeName']) {
-                case 'Vehicular Accident':
-                    $icon = '<i class="fas fa-car-crash"></i>';
-                    break;
-                case 'Fire Incident':
-                    $icon = '<i class="fas fa-fire"></i>';
-                    break;
-                case 'Flood Incident':
-                    $icon = '<i class="fas fa-house-flood-water"></i>';
-                    break;
-                case 'Landslide Incident':
-                    $icon = '<i class="fas fa-hill-rockslide"></i>';
-                    break;
-            }
+						echo "<div class='card-container'>";
+						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+						echo "<div class='card-grid'>";
 
-            // Render the card
-            echo "
-                <a class='card' onclick=\"showForm(" . (int)$row['IncidentReportID'] . ")\">
-                    <div class='image'>
-                        $icon
-                    </div>
-                    <div class='details'>
-                        <span class='type'>" . htmlspecialchars($row['IncidentTypeName']) . "</span>
-                        <span>Zone " . htmlspecialchars($row['Zone']) . " , " . htmlspecialchars($row['BarangayName']) . "</span>
-                    </div>
-                </a>
-            ";
-        }
-    } else {
-        echo "<div class='no-data'>No reports available for " . htmlspecialchars($eventDate) . ".</div>";
-    }
-
-    echo "</div></div>";
-}
-?>			</div>
+						if ($reportResult->num_rows > 0) {
+							while ($row = $reportResult->fetch_assoc()) {
+								$icon = '';
+								switch ($row['IncidentTypeName']) {
+									case 'Vehicular Accident':
+										$icon = '<i class="fas fa-car-crash"></i>';
+										break;
+									case 'Fire Incident':
+										$icon = '<i class="fas fa-fire"></i>';
+										break;
+									case 'Flood Incident':
+										$icon = '<i class="fas fa-house-flood-water"></i>';
+										break;
+									case 'Landslide Incident':
+										$icon = '<i class="fas fa-hill-rockslide"></i>';
+										break;
+								}
+								echo "
+									<a class='card' onclick=\"showForm(" . (int)$row['IncidentReportID'] . ")\">
+										<div class='image'>
+											$icon
+										</div>
+										<div class='details'>
+											<span class='type'>" . htmlspecialchars($row['IncidentTypeName']) . "</span>
+											<span>Zone " . htmlspecialchars($row['Zone']) . " , " . htmlspecialchars($row['BarangayName']) . "</span>
+										</div>
+									</a>
+								";
+							}
+						} else {
+							echo "<div class='no-data'>No reports available for " . htmlspecialchars($eventDate) . ".</div>";
+						}
+						echo "</div></div>";
+					}
+				?>
+			</div>
 		</div>
 	</body>
 	<script src="js/sidebar.js"></script>
