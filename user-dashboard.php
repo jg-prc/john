@@ -208,7 +208,7 @@
 				<?php
 						}
 					} else {
-						echo "<li class='splide__slide'> </li>";
+						echo "<li class='splide__slide no-data'>No data found.</li>";
 					}
 				?>
 
