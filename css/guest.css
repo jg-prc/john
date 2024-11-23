@@ -1,0 +1,526 @@
+			@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: "Poppins", sans-serif;
+			}
+			.container {
+				height: 100vh;
+			}
+			.header-container {
+				width: 100%;
+				height: 100px;
+				display:flex;
+				align-items: center;
+				gap: 20px;
+				position: fixed;
+				z-index: 1;
+				background-color: #88B3DA;
+				color: #ffffff;
+			}
+			.logo-content {
+				padding-left: 20px;
+			}
+			.logo-content img {
+				width: 100px;
+			}
+			.header-container a {
+				order: 3;
+				margin-left: 30%;
+				text-decoration: none;
+				color: #fff;
+				font-weight: 500;
+				background-color: #6A8BB4;
+				padding: 8px 16px;
+				border-radius: 20px;
+				transition: background-color 0.3s, transform 0.2s;
+			}
+			.header-container a:hover {
+				background-color: #5a7aa2;
+				transform: translateY(-2px);
+			}
+			.date {
+				display: none;
+			}
+
+			.button-container {
+				display: flex;
+				position: fixed;
+				top: 100px;
+				z-index: 1;
+			}
+			.button-container button {
+				padding: 20px;
+				width: 310px;
+				border: none;
+				background-color: #497EA9;
+				transition: background-color 0.3s ease;
+			}
+			.button-container button:hover {
+				background-color: #21618c;
+			}
+			.button-container button.highlighted {
+				background-color: #21618c;
+				transition: background-color 0.3s ease;
+			}
+			.button-container button a {
+				display: flex;
+				flex-direction: column;	
+				text-decoration: none;
+				color: #ffffff;
+			}
+			.button-container button i {
+				font-size: 30px;
+			}
+			.button-container button p {
+				font-size: 16px;
+			}
+			a .blink {
+				animation: blink-animation 1s steps(5, start) infinite;
+			}
+			@keyframes blink-animation {
+				50% {
+					color: #ff4500;
+				}
+			}
+			.blinking {
+				animation: blink 1s steps(5, start) infinite;
+			}
+			@keyframes blink {
+				50% {
+					fill: #ff4500;
+				}
+			}
+
+			svg#map {
+				margin-left: 20px;
+				position: relative;
+				top: 220px;
+			}
+			.calendar-container {
+				width: 550px;
+				background: #fff;
+				border-radius: 10px;
+				box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+				position: relative;
+				left: 57%;
+				bottom: 292px;
+				z-index: 0;
+			}
+			.calendar-container header {
+				display: flex;
+				align-items: center;
+				padding: 25px 30px 15px;
+				justify-content: space-between;
+			}
+			.calendar-container header .icons {
+				display: flex;
+			}
+			.calendar-container header .icons span {
+				height: 38px;
+				width: 38px;
+				margin: 0 1px;
+				cursor: pointer;
+				color: #878787;
+				text-align: center;
+				line-height: 38px;
+				font-size: 1.9rem;
+				user-select: none;
+				border-radius: 50%;
+			}
+			.calendar-container .icons span:last-child {
+				margin-right: -10px;
+			}
+			.calendar-container header .icons span:hover {
+				background: #f2f2f2;
+			}
+			.calendar-container header .current-date {
+				font-size: 1.45rem;
+				font-weight: 500;
+			}
+			.calendar {
+				padding: 0 20px 20px 20px;
+			}
+			.calendar ul {
+				display: flex;
+				flex-wrap: wrap;
+				list-style: none;
+				text-align: center;
+			}
+			.calendar li {
+				color: #333;
+				width: calc(100% / 7);
+				font-size: 1.07rem;
+			}
+			.calendar .weeks li {
+				font-weight: 500;
+				cursor: default;
+			}
+			.calendar .days li {
+				z-index: 1;
+				cursor: pointer;
+				position: relative;
+				margin-top: 20px;
+			}
+			.days li.inactive {
+				color: #aaa;
+			}
+			.days li.active {
+				color: #fff;
+			}
+			.days li::before {
+				position: absolute;
+				content: "";
+				left: 50%;
+				top: 50%;
+				height: 40px;
+				width: 40px;
+				z-index: -1;
+				border-radius: 50%;
+				transform: translate(-50%, -50%);
+			}
+			.days li.active::before {
+				background: #9B59B6;
+			}
+			.days li.selected::before {
+				background: #3498DB;
+			}
+			.days li:not(.active):hover:not(.selected)::before {
+				background: #f2f2f2;
+			}
+
+
+			#text-slider.splide {
+				position: relative;
+				left: 57%;
+				bottom: 300px;
+				width: 550px;
+			}
+			#text-slider .splide__slide {
+				display: flex;
+				align-items: center;
+				justify-content: space-evenly;
+				border: 1px solid #e0e0e0;
+				background-color: #fff;
+				padding: 15px;
+				box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+				border-radius: 8px;
+				width: 500px;
+				min-height: 120px;
+			}
+			#text-slider .splide__slide i {
+				font-size: 36px;
+				color: #ff4500;
+			}
+			#text-slider .content {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+			span.type {
+				font-size: 18px;
+				font-weight: bold;
+				color: #333;
+			}
+			span.time {
+				font-size: 14px;
+				color: #666;
+			}
+			span.status {
+				display: flex;
+				justify-content: center;
+				padding: 5px 10px;
+				font-size: 13px;
+				font-weight: bold;
+				border-radius: 12px;
+				margin-top: 5px;
+				text-transform: uppercase;
+				width: 120px;
+			}
+			span.status.ongoing {
+				background-color: #ff4500;
+				color: white;
+			}
+
+			span.status.resolved {
+				background-color: #28a745;
+				color: white;
+			}
+			span.status.pending {
+				background-color: #ffc107;
+				color: #333;
+			}
+			span.status.duplicated {
+				background-color: #5dade2;
+				color: white;
+			}
+
+
+			.not-blink {
+				color: #ff4500;
+			}
+			.not-blinking {
+				fill: #ff4500;
+			}
+
+
+
+
+
+
+			.swal-body {
+				display: flex;
+				justify-content: space-around;
+			}
+			i.fa-xmark {
+				position: relative;
+				left: 50%;
+				cursor: pointer;
+				font-size: 25px;
+			}
+			.swal-wide {
+				width: 1300px;
+				height: 650px;
+			}
+			.swal-body .image {
+				width: 500px;
+			}
+			.swal-body .content {
+				width: 620px;
+				display: flex;
+				flex-direction: column;
+				gap: 36px;
+			}
+			.swal-body .head {
+				display: flex;
+				align-items: center;
+				justify-content: space-around;
+			}
+			.swal-body span.status {
+				margin-top: 0;
+			}
+			.swal-body .sub-content {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				font-size: 27px;
+				gap: 8px;
+			}
+			.barangay strong::after {
+				content: "Barangay:";
+			}
+			.street strong::after {
+				content: "Street/Sitio:";
+			}
+			.report_by strong::after {
+				content: "Reported By:";
+			}
+			.update strong::after {
+				content: "Updated at:";
+			}
+
+			.swal-body .sub-btn {
+				display: flex;
+				gap: 8px;
+			}
+			.sub-btn span{
+				cursor: pointer;
+			}
+
+
+			.image img {
+				width: 500px;
+				height: 500px;
+			}
+			.splide__track--nav > .splide__list > .splide__slide.is-active {
+				border: 2px solid #000;
+			}
+			.splide__arrow {
+				height: 3em;
+				width: 3em;
+			}
+			.splide__arrow svg {
+				height: 2.2em;
+				width: 2.2em;
+			}
+
+
+
+
+			.notif-container {
+				display: none;
+			}
+
+			@media screen and (max-width: 575px) {
+				.container {
+					margin: 0;
+					height: unset;
+				}
+				.logo-content {
+					padding-left: 0;
+				}
+				.header-container {
+					position: unset;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					gap: 0;
+					height: auto;
+				}
+				.logo-content img {
+					width: 80px;
+				}
+				.details {
+					text-align: center;
+					position: relative;
+					bottom: 30px;
+					height: 60px;
+				}
+				.details h2 {
+					font-size: 16px;
+				}
+				.details i {
+					font-size: 14px;
+				}
+				.header-container a {
+					order: unset;
+					position: relative;
+					bottom: 61px;
+					left: 130px;
+					margin-left: 0;
+				}
+
+
+
+				.button-container {
+					flex-wrap: wrap;
+					position: unset;
+					justify-content: center;
+				}
+				.button-container button {
+					width: 50%;
+				}
+				#over_all {
+					width: 100%;
+				}
+				svg#map {
+					width: 320px;
+					height: 300px;
+					margin-left: 0;
+					position: unset;
+					margin: 30px 20px 20px 20px;
+				}
+				.date {
+					display: flex;
+					justify-content: center;
+					margin: 20px;
+				}
+				#selectedDate {
+					width: 90%;
+					height: 40px;
+					padding-left: 15px;
+					border: solid 2px;
+					border-radius: 10px;
+					margin: 5px 0 10px 0;
+					background: rgba(255, 255, 255, 0.2);
+					font-size: 16px;
+				}
+				input[type="date"]::-webkit-calendar-picker-indicator {
+					position: relative;
+					right: 5%;
+				}
+				#text-slider.splide,
+				.calendar-container {
+					display: none;
+				}
+
+
+				.notif-container {
+					display: block;
+					padding-bottom: 50px;
+					margin: 0 20px;
+				}
+				.notif-list {
+					display: flex;
+					flex-direction: column;
+					gap: 20px;
+					list-style: none;
+				}
+				.notif {
+					display: flex;
+					align-items: center;
+					justify-content: space-evenly;
+					height: 100px;
+					gap: 20px;
+					box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.1);
+				}
+				.notif .content {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
+				.notif i {
+					font-size: 30px;
+					color: #ff4500;
+				}
+
+				.swal-wide {
+					width: 100%;
+					height: 100%;
+				}
+				i.fa-xmark {
+					position: relative;
+					left: 54%;
+					cursor: pointer;
+					font-size: 25px;
+					top: -10px;
+				}
+
+
+
+
+
+				.swal-body {
+					display: block;
+				}
+				.swal-body .image,
+				.image img {
+					width: 100%;
+					height: 100%;
+				}
+				.swal-body .content {
+					width: 100%;
+				}
+				.swal-body .head {
+					flex-direction: column;
+				}
+				.swal-body .sub-content {
+					font-size: 20px;
+					display: flex;
+					align-items: center;
+				}
+				.sub-content span {
+					display: flex;
+					flex-direction: column;
+				}
+				.barangay strong,
+				.report_by strong,
+				.street strong,
+				.update strong {
+					order: 2;
+				}
+
+				.report_by strong::after {
+					content: "Reported By";
+				}
+				.street strong::after {
+					content: "Street/Sitio";
+				}
+				.barangay strong::after {
+					content: "Barangay";
+				}
+				.update strong::after {
+					content: "Updated at";
+				}
+			}
