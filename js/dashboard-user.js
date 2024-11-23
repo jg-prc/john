@@ -47,29 +47,30 @@ function showForm(report_id) {
                 customClass: {
                     popup: 'swal-wide',
                 },
-                didOpen: () => {
-                    const mainCarouselList = document.querySelector('#main-carousel .splide__list');
-                    mainCarouselList.innerHTML = '';
+didOpen: () => {
+    const mainCarouselList = document.querySelector('#main-carousel .splide__list');
+    mainCarouselList.innerHTML = '';
 
-                    data.forEach(item => {
-                        const mainListItem = document.createElement('li');
-                        mainListItem.classList.add('splide__slide');
-                        const mainImg = document.createElement('img');
-                        mainImg.src = `php/${item.FolderName}/${item.ImagesName}`;
-                        mainListItem.appendChild(mainImg);
-                        mainCarouselList.appendChild(mainListItem);
-                    });
+    data.forEach(item => {
+        const mainListItem = document.createElement('li');
+        mainListItem.classList.add('splide__slide');
+        const mainImg = document.createElement('img');
+        mainImg.src = `php/${item.FolderName}/${item.ImagesName}`; // Fixed folder name duplication
+        mainListItem.appendChild(mainImg);
+        mainCarouselList.appendChild(mainListItem);
+    });
 
-                    if (data.length > 0) {
-                        const main = new Splide('#main-carousel', {
-                            type: 'slide',
-                            pagination: false,
-                            arrows: true,
-                            rewind: false,
-                        });
-                        main.mount();
-                    }
-                }
+    if (data.length > 0) {
+        const main = new Splide('#main-carousel', {
+            type: 'slide',
+            pagination: false,
+            arrows: true,
+            rewind: false,
+        });
+        main.mount();
+    }
+}
+
             });
         })
         .catch(error => console.error('Error:', error));
