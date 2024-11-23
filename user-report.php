@@ -99,51 +99,47 @@
 				</div>
 			</div>
 			<div class="card_container">
-<?php 
-include_once "php/config.php";
-$user_id = $_SESSION['unique_id'];
+			<?php 
+				include_once "php/config.php";
+				$user_id = $_SESSION['unique_id'];
 
-// Query to fetch unique dates for the specified user
-$dateQuery = "
-    SELECT DISTINCT DATE(CreatedAt) as EventDate
-    FROM incident_report 
-    WHERE OfficialsID = $user_id
-";
+				$dateQuery = "
+					SELECT DISTINCT DATE(CreatedAt) as EventDate
+					FROM incident_report 
+					WHERE OfficialsID = $user_id
+				";
 
-// Apply sorting based on user preference
-$order_by = "ORDER BY EventDate DESC";
-if (isset($sort_by) && $sort_by === 'CreatedAt-asc') {
-    $order_by = "ORDER BY EventDate ASC";
-}
+				$order_by = "ORDER BY EventDate DESC";
+				if (isset($sort_by) && $sort_by === 'CreatedAt-asc') {
+					$order_by = "ORDER BY EventDate ASC";
+				}
 
-$dateQuery .= " $order_by";
+				$dateQuery .= " $order_by";
 
-$dateResult = $conn->query($dateQuery);
+				$dateResult = $conn->query($dateQuery);
 
-if (!$dateResult) {
-    die("Error fetching dates: " . $conn->error);
-}
+				if (!$dateResult) {
+					die("Error fetching dates: " . $conn->error);
+				}
 
-$eventDates = [];
-if ($dateResult->num_rows > 0) {
-    // Collect unique dates
-    while ($row = $dateResult->fetch_assoc()) {
-        $eventDates[] = date("F j, Y", strtotime($row['EventDate']));
-    }
-} else {
-    echo "<div class='no-data'>No data found.</div>";
-    return;
-}
+				$eventDates = [];
+				if ($dateResult->num_rows > 0) {
+					while ($row = $dateResult->fetch_assoc()) {
+						$eventDates[] = date("F j, Y", strtotime($row['EventDate']));
+					}
+				} else {
+					echo "<div class='no-data'>No data found.</div>";
+					return;
+				}
 
-// Generate containers for each unique date
-foreach ($eventDates as $eventDate) {
-    echo "<div class='card-container'>";
-    echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-    echo "<div class='card-grid'>";
-    // You can populate this section with data related to the specific date
-    echo "</div></div>";
-}
-?>
+				foreach ($eventDates as $eventDate) {
+					echo "<div class='card-container'>";
+					echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+					echo "<div class='card-grid'>";
+
+					echo "</div></div>";
+				}
+			?>
 
 			</div>
 		</div>
