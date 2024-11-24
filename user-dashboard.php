@@ -156,8 +156,8 @@
 						if (!empty($type)) {
 							$dateQuery .= " AND it.IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
 						}
-						if (!empty($date)) {
-							$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($date) . "'";
+						if (!empty($selectedDate)) {
+							$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($selectedDate) . "'";
 						}
 
 						$dateQuery .= " ORDER BY ir.CreatedTime DESC";
