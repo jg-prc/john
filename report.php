@@ -124,10 +124,64 @@
 					}
 
 					foreach ($eventDates as $eventDate) {
-					echo "<div class='card-container'>";
-					echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-					echo "<div class='card-grid'>";
-					echo "</div></div>";
+						$formattedDate = date("Y-m-d", strtotime($eventDate));
+						$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, it.IncidentTypeName, b.BarangayName
+							FROM incident_report AS ir
+							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+							WHERE ir.CreatedAt = '$formattedDate'
+							ORDER BY ir.CreatedTime DESC";
+
+						$reportResult = $conn->query($sql);
+
+						if (!$reportResult) {
+							die("Error fetching reports: " . $conn->error);
+						}
+						echo "<div class='card-container'>";
+						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+						echo "<div class='card-grid'>";
+
+
+					if ($reportResult->num_rows > 0) {
+						while ($row = $reportResult->fetch_assoc()) {
+							$icon = '';
+							switch ($row['IncidentTypeName']) {
+								case 'Vehicular Accident':
+									$icon = '<i class="fas fa-car-crash"></i>';
+									break;
+								case 'Fire Incident':
+									$icon = '<i class="fas fa-fire"></i>';
+									break;
+								case 'Flood Incident':
+									$icon = '<i class="fas fa-house-flood-water"></i>';
+									break;
+								case 'Landslide Incident':
+									$icon = '<i class="fas fa-hill-rockslide"></i>';
+									break;
+							}
+
+							echo "
+								<a class='card' href='report_file.php?report_id=" . $row['IncidentReportID'] . "'>
+									<div class='image'>
+										" . $icon . "
+									</div>
+									<div class='details'>
+										<span class='type'>" . $row['IncidentTypeName'] . "</span>
+										<span>Zone " . $row['Zone'] . " , " . $row['BarangayName'] . "</span>
+									</div>
+								</a>
+							";
+						}
+
+
+
+
+
+
+
+
+
+						echo "</div></div>";
 					}
 
 
