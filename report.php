@@ -132,6 +132,15 @@
 							WHERE ir.CreatedAt = '$formattedDate'
 							ORDER BY ir.CreatedTime DESC";
 
+
+
+
+
+
+
+
+
+
 						$reportResult = $conn->query($sql);
 
 						if (!$reportResult) {
