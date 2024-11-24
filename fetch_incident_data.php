@@ -10,28 +10,6 @@
 	$status2 = 'resolved';
 	$status3 = 'duplicated';
 
-	$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus, it.IncidentTypeName, b.BarangayName
-		FROM incident_report AS ir
-		LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-		LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-		WHERE ir.ResponseStatus = ?";
-
-	$params = [$status];
-
-	if (!empty($type)) {
-		$sql .= " AND it.IncidentTypeName = ?";
-		$params[] = $type;
-	}
-	if (!empty($date)) {
-		$sql .= " AND ir.CreatedAt = ?";
-		$params[] = $date;
-	}
-
-	$stmt = $conn->prepare($sql);
-	$stmt->bind_param(str_repeat('s', count($params)), ...$params);
-	$stmt->execute();
-	$result = $stmt->get_result();
-
 	$incident_data = [
 		'Vehicular' => '',
 		'Fire' => '',
@@ -48,182 +26,89 @@
 		'soledad' => '', 'tagas' => '', 'tambangan' => '', 'telegrafo' => '', 'tominawog' => ''
 	];
 
-	if ($result->num_rows > 0) {
-		while ($row = $result->fetch_assoc()) {
-			switch ($row['IncidentTypeName']) {
-				case 'Vehicular Accident':
-					$incident_data['Vehicular'] = 'blink';
-					break;
-				case 'Fire Incident':
-					$incident_data['Fire'] = 'blink';
-					break;
-				case 'Flood Incident':
-					$incident_data['Flood'] = 'blink';
-					break;
-				case 'Landslide Incident':
-					$incident_data['Landslide'] = 'blink';
-					break;
-			}
+	// Function to execute query
+	function executeQuery($conn, $status, $type, $date) {
+		$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus, it.IncidentTypeName, b.BarangayName
+				FROM incident_report AS ir
+				LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+				LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+				WHERE ir.ResponseStatus = ?";
+		$params = [$status];
+
+		if (!empty($type)) {
+			$sql .= " AND it.IncidentTypeName = ?";
+			$params[] = $type;
+		}
+		if (!empty($date)) {
+			$sql .= " AND ir.CreatedAt = ?";
+			$params[] = $date;
+		}
+
+		$stmt = $conn->prepare($sql);
+		$stmt->bind_param(str_repeat('s', count($params)), ...$params);
+		$stmt->execute();
+		return $stmt->get_result();
+	}
+
+	// Query execution for each status
+	$result = executeQuery($conn, $status, $type, $date);
+	while ($row = $result->fetch_assoc()) {
+		switch ($row['IncidentTypeName']) {
+			case 'Vehicular Accident': $incident_data['Vehicular'] = 'blink'; break;
+			case 'Fire Incident': $incident_data['Fire'] = 'blink'; break;
+			case 'Flood Incident': $incident_data['Flood'] = 'blink'; break;
+			case 'Landslide Incident': $incident_data['Landslide'] = 'blink'; break;
 		}
 	}
 
-	$sql1 = "SELECT ir.IncidentReportID, ir.ResponseStatus, it.IncidentTypeName, b.BarangayName
-		FROM incident_report AS ir
-		LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-		LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-		WHERE ir.ResponseStatus = ?";
-
-	$params1 = [$status1];
-
-	if (!empty($type)) {
-		$sql1 .= " AND it.IncidentTypeName = ?";
-		$params1[] = $type;
-	}
-
-	if (!empty($date)) {
-		$sql1 .= " AND ir.CreatedAt = ?";
-		$params1[] = $date;
-	}
-
-	$stmt1 = $conn->prepare($sql1);
-	$stmt1->bind_param(str_repeat('s', count($params1)), ...$params1);
-	$stmt1->execute();
-	$result1 = $stmt1->get_result();
-
-	if ($result1->num_rows > 0) {
-		while ($row = $result1->fetch_assoc()) {
-			switch ($row['IncidentTypeName']) {
-				case 'Vehicular Accident':
-					$incident_data['Vehicular'] = 'blink';
-					break;
-				case 'Fire Incident':
-					$incident_data['Fire'] = 'blink';
-					break;
-				case 'Flood Incident':
-					$incident_data['Flood'] = 'blink';
-					break;
-				case 'Landslide Incident':
-					$incident_data['Landslide'] = 'blink';
-					break;
-			}
-
-			$barangay = strtolower($row['BarangayName']);
-			if (isset($incident_location[$barangay])) {
-				$incident_location[$barangay] = 'blinking';
-			}
+	$result1 = executeQuery($conn, $status1, $type, $date);
+	while ($row = $result1->fetch_assoc()) {
+		$barangay = strtolower($row['BarangayName']);
+		if (isset($incident_location[$barangay])) {
+			$incident_location[$barangay] = 'blinking';
 		}
 	}
 
-
-
-
-	$sql2 = "SELECT ir.IncidentReportID, ir.ResponseStatus, it.IncidentTypeName, b.BarangayName
-		FROM incident_report AS ir
-		LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-		LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-		WHERE ir.ResponseStatus = ?";
-	$params2 = [$status2];
-
-	if (!empty($type)) {
-		$sql2 .= " AND it.IncidentTypeName = ?";
-		$params2[] = $type;
-	}
-
-	if (!empty($date)) {
-		$sql2 .= " AND ir.CreatedAt = ?";
-		$params2[] = $date;
-	}
-
-	$stmt2 = $conn->prepare($sql2);
-	$stmt2->bind_param(str_repeat('s', count($params2)), ...$params2);
-	$stmt2->execute();
-	$result2 = $stmt2->get_result();
-
-	if ($result2->num_rows > 0) {
-		while ($row = $result2->fetch_assoc()) {
-			switch ($row['IncidentTypeName']) {
-				case 'Vehicular Accident':
-					if ($incident_data['Vehicular'] !== 'blink') {
-						$incident_data['Vehicular'] = 'not-blink';
-					}
-					break;
-				case 'Fire Incident':
-					if ($incident_data['Fire'] !== 'blink') {
-						$incident_data['Fire'] = 'not-blink';
-					}
-					break;
-				case 'Flood Incident':
-					if ($incident_data['Flood'] !== 'blink') {
-						$incident_data['Flood'] = 'not-blink';
-					}
-					break;
-				case 'Landslide Incident':
-					if ($incident_data['Landslide'] !== 'blink') {
-						$incident_data['Landslide'] = 'not-blink';
-					}
-					break;
-			}
-
-			$barangay = strtolower($row['BarangayName']);
-			if (isset($incident_location[$barangay]) && $incident_location[$barangay] !== 'blinking') {
-				$incident_location[$barangay] = 'not-blinking';
-			}
+	$result2 = executeQuery($conn, $status2, $type, $date);
+	while ($row = $result2->fetch_assoc()) {
+		$incident_data = handleStatus($row, $incident_data, 'not-blink');
+		$barangay = strtolower($row['BarangayName']);
+		if (isset($incident_location[$barangay]) && $incident_location[$barangay] !== 'blinking') {
+			$incident_location[$barangay] = 'not-blinking';
 		}
 	}
 
-
-
-
-
-
-	$sql3 = "SELECT ir.IncidentReportID, ir.ResponseStatus, it.IncidentTypeName, b.BarangayName
-		FROM incident_report AS ir
-		LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-		LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-		WHERE ir.ResponseStatus = ?";
-	$params3 = [$status3];
-
-	if (!empty($type)) {
-		$sql3 .= " AND it.IncidentTypeName = ?";
-		$params3[] = $type;
+	$result3 = executeQuery($conn, $status3, $type, $date);
+	while ($row = $result3->fetch_assoc()) {
+		$incident_data = handleStatus($row, $incident_data, '');
 	}
 
-	if (!empty($date)) {
-		$sql3 .= " AND ir.CreatedAt = ?";
-		$params3[] = $date;
-	}
-
-	$stmt3 = $conn->prepare($sql3);
-	$stmt3->bind_param(str_repeat('s', count($params3)), ...$params3);
-	$stmt3->execute();
-	$result3 = $stmt3->get_result();
-
-	if ($result3->num_rows > 0) {
-		while ($row = $result3->fetch_assoc()) {
-			switch ($row['IncidentTypeName']) {
-				case 'Vehicular Accident':
-
-					if ($incident_data['Vehicular'] !== 'blink' && $incident_data['Vehicular'] !== 'not-blink') {
-						$incident_data['Vehicular'] = '';
-					}
-					break;
-				case 'Fire Incident':
-					if ($incident_data['Fire'] !== 'blink' && $incident_data['Fire'] !== 'not-blink') {
-						$incident_data['Fire'] = '';
-					}
-					break;
-				case 'Flood Incident':
-					if ($incident_data['Flood'] !== 'blink' && $incident_data['Flood'] !== 'not-blink') {
-						$incident_data['Flood'] = '';
-					}
-					break;
-				case 'Landslide Incident':
-					if ($incident_data['Landslide'] !== 'blink' && $incident_data['Landslide'] !== 'not-blink') {
-						$incident_data['Landslide'] = '';
-					}
-					break;
-			}
+	// Function to handle status changes
+	function handleStatus($row, $incident_data, $status) {
+		switch ($row['IncidentTypeName']) {
+			case 'Vehicular Accident':
+				if (!in_array($incident_data['Vehicular'], ['blink', 'not-blink'])) {
+					$incident_data['Vehicular'] = $status;
+				}
+				break;
+			case 'Fire Incident':
+				if (!in_array($incident_data['Fire'], ['blink', 'not-blink'])) {
+					$incident_data['Fire'] = $status;
+				}
+				break;
+			case 'Flood Incident':
+				if (!in_array($incident_data['Flood'], ['blink', 'not-blink'])) {
+					$incident_data['Flood'] = $status;
+				}
+				break;
+			case 'Landslide Incident':
+				if (!in_array($incident_data['Landslide'], ['blink', 'not-blink'])) {
+					$incident_data['Landslide'] = $status;
+				}
+				break;
 		}
+		return $incident_data;
 	}
+
 	echo json_encode(['incident_data' => $incident_data, 'incident_location' => $incident_location]);
 ?>
