@@ -7,7 +7,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : '';
 $date = isset($_GET['date']) && !empty($_GET['date']) ? $_GET['date'] : date('Y-m-d');
 $status = 'pending';
 
-$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus, ir.CreatedAt, ir.CreatedTime, it.IncidentTypeName, b.BarangayName
+$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt, it.IncidentTypeName, b.BarangayName
         FROM incident_report AS ir
         LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
         LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
@@ -43,6 +43,7 @@ if ($result->num_rows > 0) {
                 <td>{$row['BarangayName']}</td>
                 <td>{$row['CreatedAt']}</td>
               <td>{$row['CreatedTime']}</td>
+              <td>{$row['UpdatedAt']}</td>
               </tr>";
     }
     echo "</table>";
