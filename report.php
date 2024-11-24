@@ -145,8 +145,6 @@
 							$sql .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
 						}
 
-						$sql .= " ORDER BY ir.CreatedTime DESC;";
-
 						$reportResult = $conn->query($sql);
 
 						if (!$reportResult) {
