@@ -19,6 +19,10 @@ if (!empty($type)) {
     $sql .= " AND it.IncidentTypeName = ?";
     $params[] = $type;
 }
+if (!empty($date)) {
+    $sql .= " AND ir.CreatedAt = ?";
+    $params[] = $date;
+}
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(str_repeat('s', count($params)), ...$params);
@@ -40,6 +44,7 @@ if ($result->num_rows > 0) {
                 <td>{$row['ResponseStatus']}</td>
                 <td>{$row['IncidentTypeName']}</td>
                 <td>{$row['BarangayName']}</td>
+                <td>{$row['CreatedAt']}</td>
               </tr>";
     }
     echo "</table>";
