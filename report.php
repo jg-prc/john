@@ -97,7 +97,7 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
-					$dateQuery = "SELECT DISTINCT CreatedAt as EventDate FROM incident_report";
+					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report";
 
 
 					$order_by = 'ORDER BY `CreatedAt` DESC';
@@ -116,7 +116,7 @@
 					$eventDates = [];
 					if ($dateResult->num_rows > 0) {
 						while ($row = $dateResult->fetch_assoc()) {
-							$eventDates[] = date("F j, Y", strtotime($row['EventDate']));
+							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
 						}
 					} else {
 						echo "<div class='no-data'>No data found.</div>";
