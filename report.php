@@ -130,12 +130,19 @@
 							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
 							WHERE ir.CreatedAt = '$formattedDate'";
 
-						foreach ($searchTerms as $term) {
-							$term = $conn->real_escape_string($term);
-							$sql .= " AND (IncidentTypeName LIKE '%$term%' 
-								OR Zone LIKE '%$term%' 
-								OR BarangayName LIKE '%$term%')";
-						}
+					if (!empty($search)) {
+						$search = str_ireplace(['Zone', ','], '', $search);
+						$searchTerms = explode(' ', trim($search));
+					} else {
+						$searchTerms = [];
+					}
+
+					foreach ($searchTerms as $term) {
+						$term = $conn->real_escape_string($term);
+						$sql .= " AND (IncidentTypeName LIKE '%$term%' 
+							OR Zone LIKE '%$term%' 
+							OR BarangayName LIKE '%$term%')";
+					}
 
 						if (!empty($incident_type)) {
 							$sql .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
