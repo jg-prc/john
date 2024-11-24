@@ -99,7 +99,6 @@
 					include_once "php/config.php";
 					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report";
 
-
 					$order_by = 'ORDER BY `CreatedAt` DESC';
 					if ($sort_by == 'CreatedAt-asc') {
 						$order_by = 'ORDER BY `CreatedAt` ASC';
