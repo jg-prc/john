@@ -104,7 +104,7 @@
 				$user_id = $_SESSION['unique_id'];
 
 				$dateQuery = "
-					SELECT DISTINCT DATE(CreatedAt) as EventDate
+					SELECT DISTINCT CreatedAt as EventDate
 					FROM incident_report 
 					WHERE OfficialsID = $user_id
 				";
@@ -138,7 +138,7 @@
 						FROM incident_report AS ir
 						LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
 						LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-						WHERE DATE(ir.CreatedAt) = '$formattedDate' AND ir.OfficialsID = $user_id
+						WHERE ir.CreatedAt = '$formattedDate' AND ir.OfficialsID = $user_id
 						ORDER BY ir.CreatedTime DESC";
 
 					$reportResult = $conn->query($sql);
