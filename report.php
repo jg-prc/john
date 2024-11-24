@@ -129,8 +129,27 @@
 							FROM incident_report AS ir
 							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
 							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE ir.CreatedAt = '$formattedDate'
-							ORDER BY ir.CreatedTime DESC";
+							WHERE ir.CreatedAt = '$formattedDate';
+
+						foreach ($searchTerms as $term) {
+							$term = $conn->real_escape_string($term);
+							$sql .= " AND (IncidentTypeName LIKE '%$term%' 
+								OR Zone LIKE '%$term%' 
+								OR BarangayName LIKE '%$term%')";
+						}
+
+						if (!empty($incident_type)) {
+							$sql .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
+						}
+						if (!empty($barangay)) {
+							$sql .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
+						}
+
+
+
+
+
+
 
 						$reportResult = $conn->query($sql);
 
