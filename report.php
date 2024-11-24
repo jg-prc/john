@@ -145,16 +145,16 @@
 							$sql .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
 						}
 
-
-
-
-
-
+						$sql .= " ORDER BY CreatedTime DESC;";
 
 						$reportResult = $conn->query($sql);
 
 						if (!$reportResult) {
 							die("Error fetching reports: " . $conn->error);
+						}
+						if ($reportResult->num_rows == 0) {
+							echo "<p>No incidents found for " . $eventDate . ".</p>";
+							continue;
 						}
 						echo "<div class='card-container'>";
 						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
