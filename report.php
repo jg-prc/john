@@ -97,13 +97,37 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
-					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report WHERE 1 = 1";
 
+					$dateQuery = "SELECT DISTINCT ir.IncidentReportID, it.IncidentTypeName, b.BarangayName,
+							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt
+							FROM incident_report AS ir
+							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID WHERE 1 = 1";
+
+					if (!empty($search)) {
+						$search = str_ireplace(['Zone', ','], '', $search);
+						$searchTerms = explode(' ', trim($search));
+					} else {
+						$searchTerms = [];
+					}
+
+					foreach ($searchTerms as $term) {
+						$term = $conn->real_escape_string($term);
+						$dateQuery .= " AND (IncidentTypeName LIKE '%$term%' 
+							OR Zone LIKE '%$term%' 
+							OR BarangayName LIKE '%$term%')";
+					}
+
+					if (!empty($incident_type)) {
+						$dateQuery .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
+					}
+					if (!empty($barangay)) {
+						$dateQuery .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
+					}
 					$order_by = 'ORDER BY `CreatedAt` DESC';
 					if ($sort_by == 'CreatedAt-asc') {
 						$order_by = 'ORDER BY `CreatedAt` ASC';
 					}
-
 					$dateQuery .= " $order_by";
 
 					$dateResult = $conn->query($dateQuery);
