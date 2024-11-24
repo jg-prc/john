@@ -10,7 +10,7 @@
 	$status2 = 'resolved';
 	$status3 = 'duplicated';
 
-	$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus, it.IncidentTypeName, b.BarangayName
+	$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus, ir.CreatedAt, it.IncidentTypeName, b.BarangayName
 		FROM incident_report AS ir
 		LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
 		LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
