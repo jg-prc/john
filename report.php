@@ -124,6 +124,7 @@
 					if (!empty($barangay)) {
 						$dateQuery .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
 					}
+
 					$order_by = 'ORDER BY `CreatedAt` DESC';
 					if ($sort_by == 'CreatedAt-asc') {
 						$order_by = 'ORDER BY `CreatedAt` ASC';
@@ -154,12 +155,6 @@
 							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
 							WHERE ir.CreatedAt = '$formattedDate'";
 
-						foreach ($searchTerms as $term) {
-							$term = $conn->real_escape_string($term);
-							$sql .= " AND (IncidentTypeName LIKE '%$term%' 
-								OR Zone LIKE '%$term%' 
-								OR BarangayName LIKE '%$term%')";
-						}
 
 						if (!empty($incident_type)) {
 							$sql .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
