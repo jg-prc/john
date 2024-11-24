@@ -143,7 +143,6 @@
 						}
 					} else {
 						echo "<div class='no-data'>No data found.</div>";
-						return;
 					}
 
 					foreach ($eventDates as $eventDate) {
