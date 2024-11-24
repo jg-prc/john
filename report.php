@@ -191,6 +191,8 @@
 									</a>
 								";
 							}
+						} else {
+							echo "<div class='no-data'>No reported</div>";
 						}
 						echo "</div></div>";
 					}
