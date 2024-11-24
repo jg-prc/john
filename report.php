@@ -192,7 +192,7 @@
 								";
 							}
 						} else {
-							echo "<div class='no-data'>No reported</div>";
+							echo "<div class='card'>No reported</div>";
 						}
 						echo "</div></div>";
 					}
