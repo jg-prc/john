@@ -132,27 +132,6 @@
 							WHERE ir.CreatedAt = '$formattedDate'
 							ORDER BY ir.CreatedTime DESC";
 
-						if (!empty($search)) {
-							$search = str_ireplace(['Zone', ','], '', $search);
-							$searchTerms = explode(' ', trim($search));
-						} else {
-							$searchTerms = [];
-						}
-
-						foreach ($searchTerms as $term) {
-							$term = $conn->real_escape_string($term);
-							$sql .= " AND (IncidentTypeName LIKE '%$term%' 
-								OR Zone LIKE '%$term%' 
-								OR BarangayName LIKE '%$term%')";
-						}
-
-
-
-
-
-
-
-
 						$reportResult = $conn->query($sql);
 
 						if (!$reportResult) {
