@@ -136,9 +136,7 @@
 			<div class="date">
 				<input type="date" id="selectedDate" value="<?php echo $selectedDate; ?>" onchange="updateUrlWithDate()">
 			</div>
-			<?php
-				include_once "map.php";
-			?>
+
 
 			<div id="text-slider" class="splide">
 				<div class="splide__track">
