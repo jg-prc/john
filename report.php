@@ -97,7 +97,7 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
-					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report";
+					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report WHERE 1 = 1";
 
 					$order_by = 'ORDER BY `CreatedAt` DESC';
 					if ($sort_by == 'CreatedAt-asc') {
