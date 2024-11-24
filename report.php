@@ -191,8 +191,6 @@
 									</a>
 								";
 							}
-						} else {
-							echo "<div class='no-data'>No reports available for " . htmlspecialchars($eventDate) . ".</div>";
 						}
 						echo "</div></div>";
 					}
