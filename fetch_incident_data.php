@@ -7,10 +7,8 @@ $type = isset($_GET['type']) ? $_GET['type'] : '';
 $date = isset($_GET['date']) && !empty($_GET['date']) ? $_GET['date'] : date('Y-m-d');
 $status = 'pending';
 
-$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus, it.IncidentTypeName, b.BarangayName
+$sql = "SELECT ir.IncidentReportID, ir.ResponseStatus
         FROM incident_report AS ir
-        LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-        LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
         WHERE ir.ResponseStatus = ?";
 
 $params = [$status];
@@ -41,9 +39,6 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         echo "<tr>
                 <td>{$row['IncidentReportID']}</td>
-                <td>{$row['ResponseStatus']}</td>
-                <td>{$row['IncidentTypeName']}</td>
-                <td>{$row['BarangayName']}</td>
               </tr>";
     }
     echo "</table>";
