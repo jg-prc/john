@@ -125,11 +125,19 @@
 
 					foreach ($eventDates as $eventDate) {
 						$formattedDate = date("Y-m-d", strtotime($eventDate));
-						$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, it.IncidentTypeName, b.BarangayName
+						$sql = "SELECT ir.IncidentReportID, ir.Zone, ir.Street, ir.CreatedAt, it.IncidentTypeName, b.BarangayName
 							FROM incident_report AS ir
 							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
 							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE ir.CreatedAt = '$formattedDate';
+							WHERE ir.CreatedAt = '$formattedDate'
+							ORDER BY ir.CreatedTime DESC";
+
+						if (!empty($search)) {
+							$search = str_ireplace(['Zone', ','], '', $search);
+							$searchTerms = explode(' ', trim($search));
+						} else {
+							$searchTerms = [];
+						}
 
 						foreach ($searchTerms as $term) {
 							$term = $conn->real_escape_string($term);
@@ -138,21 +146,17 @@
 								OR BarangayName LIKE '%$term%')";
 						}
 
-						if (!empty($incident_type)) {
-							$sql .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
-						}
-						if (!empty($barangay)) {
-							$sql .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
-						}
+
+
+
+
+
+
 
 						$reportResult = $conn->query($sql);
 
 						if (!$reportResult) {
 							die("Error fetching reports: " . $conn->error);
-						}
-						if ($reportResult->num_rows == 0) {
-							echo "<p>No incidents found for " . $eventDate . ".</p>";
-							continue;
 						}
 						echo "<div class='card-container'>";
 						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
