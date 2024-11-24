@@ -136,7 +136,9 @@
 			<div class="date">
 				<input type="date" id="selectedDate" value="<?php echo $selectedDate; ?>" onchange="updateUrlWithDate()">
 			</div>
-
+			<?php
+				include_once "map.php";
+			?>
 
 			<div id="text-slider" class="splide">
 				<div class="splide__track">
@@ -154,8 +156,8 @@
 						if (!empty($type)) {
 							$dateQuery .= " AND it.IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
 						}
-						if (!empty($selectedDate)) {
-							$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($selectedDate) . "'";
+						if (!empty($date)) {
+							$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($date) . "'";
 						}
 
 						$dateQuery .= " ORDER BY ir.CreatedTime DESC";
@@ -232,8 +234,8 @@
 					if (!empty($type)) {
 						$dateQuery .= " AND it.IncidentTypeName = '" . $conn->real_escape_string($type) . "'";
 					}
-					if (!empty($selectedDate)) {
-						$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($selectedDate) . "'";
+					if (!empty($date)) {
+						$dateQuery .= " AND ir.CreatedAt = '" . $conn->real_escape_string($date) . "'";
 					}
 
 					$dateQuery .= " ORDER BY ir.CreatedTime DESC";
