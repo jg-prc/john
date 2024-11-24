@@ -191,8 +191,6 @@
 									</a>
 								";
 							}
-						} else {
-							echo "<div class='card'>No reported</div>";
 						}
 						echo "</div></div>";
 					}
