@@ -97,7 +97,7 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
-					$dateQuery = "SELECT DISTINCT CreatedAt as EventDate FROM incident_report  WHERE OfficialsID = $user_id";
+					$dateQuery = "SELECT DISTINCT CreatedAt as EventDate FROM incident_report";
 
 
 					$order_by = 'ORDER BY `CreatedAt` DESC';
