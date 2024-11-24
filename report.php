@@ -97,7 +97,11 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
-					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report";
+					$dateQuery = "SELECT DISTINCT ir.IncidentReportID, it.IncidentTypeName, b.BarangayName,
+							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt
+							FROM incident_report AS ir
+							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID WHERE 1 = 1";
 
 					if (!empty($search)) {
 						$search = str_ireplace(['Zone', ','], '', $search);
