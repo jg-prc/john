@@ -97,7 +97,7 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
-					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report";
+					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report WHERE 1=1";
 
 					if (!empty($incident_type)) {
 						$dateQuery .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
