@@ -19,10 +19,7 @@ if (!empty($type)) {
     $sql .= " AND it.IncidentTypeName = ?";
     $params[] = $type;
 }
-if (!empty($date)) {
-    $sql .= " AND ir.CreatedAt = ?";
-    $params[] = $date;
-}
+
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param(str_repeat('s', count($params)), ...$params);
