@@ -97,8 +97,8 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
-					$dateQuery = "SELECT DISTINCT ir.IncidentReportID, it.IncidentTypeName, b.BarangayName,
-							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt
+					$dateQuery = "SELECT DISTINCT ir.CreatedAt, it.IncidentTypeName, b.BarangayName,
+							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedTime, ir.UpdatedAt
 							FROM incident_report AS ir
 							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
 							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID WHERE 1 = 1";
