@@ -97,114 +97,43 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
+					$dateQuery = "SELECT DISTINCT CreatedAt as EventDate FROM incident_report  WHERE OfficialsID = $user_id";
 
-					$dateQuery = "SELECT DISTINCT ir.IncidentReportID, it.IncidentTypeName, b.BarangayName,
-							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt
-							FROM incident_report AS ir
-							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID WHERE 1 = 1";
 
-					if (!empty($search)) {
-						$search = str_ireplace(['Zone', ','], '', $search);
-						$searchTerms = explode(' ', trim($search));
-					} else {
-						$searchTerms = [];
-					}
-
-					foreach ($searchTerms as $term) {
-						$term = $conn->real_escape_string($term);
-						$dateQuery .= " AND (IncidentTypeName LIKE '%$term%' 
-							OR Zone LIKE '%$term%' 
-							OR BarangayName LIKE '%$term%')";
-					}
-
-					if (!empty($incident_type)) {
-						$dateQuery .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
-					}
-					if (!empty($barangay)) {
-						$dateQuery .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
-					}
 					$order_by = 'ORDER BY `CreatedAt` DESC';
 					if ($sort_by == 'CreatedAt-asc') {
 						$order_by = 'ORDER BY `CreatedAt` ASC';
 					}
+
 					$dateQuery .= " $order_by";
 
 					$dateResult = $conn->query($dateQuery);
 
+					if (!$dateResult) {
+						die("Error fetching dates: " . $conn->error);
+					}
+
+					$eventDates = [];
 					if ($dateResult->num_rows > 0) {
-						$eventDates = [];
 						while ($row = $dateResult->fetch_assoc()) {
-							$eventDates[] = date("F j, Y", strtotime($row['CreatedAt']));
+							$eventDates[] = date("F j, Y", strtotime($row['EventDate']));
 						}
 					} else {
-						echo "<p>No data matches your search criteria.</p>";
-						$eventDates = [];
+						echo "<div class='no-data'>No data found.</div>";
+						return;
 					}
 
-					foreach ($eventDates as $eventDate) {
-						$sql = "SELECT ir.IncidentReportID, it.IncidentTypeName, b.BarangayName,
-							ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt, ir.CreatedTime, ir.UpdatedAt
-							FROM incident_report AS ir
-							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID WHERE CreatedAt = '" . $conn->real_escape_string(date("Y-m-d", strtotime($eventDate))) . "'";
 
-						foreach ($searchTerms as $term) {
-							$term = $conn->real_escape_string($term);
-							$sql .= " AND (IncidentTypeName LIKE '%$term%' 
-								OR Zone LIKE '%$term%' 
-								OR BarangayName LIKE '%$term%')";
-						}
 
-						if (!empty($incident_type)) {
-							$sql .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
-						}
-						if (!empty($barangay)) {
-							$sql .= " AND BarangayName = '" . $conn->real_escape_string($barangay) . "'";
-						}
 
-						$sql .= " ORDER BY CreatedTime DESC;";
-						$reportResult = $conn->query($sql);
 
-						if ($reportResult->num_rows == 0) {
-							echo "<p>No incidents found for " . $eventDate . ".</p>";
-							continue;
-						}
 
-						echo "<div class='card-container'>";
-						echo "<span class='date'>" . $eventDate . "</span>";
-						echo "<div class='card-grid'>";
 
-						while ($row = $reportResult->fetch_assoc()) {
-							$icon = '';
-							switch ($row['IncidentTypeName']) {
-								case 'Vehicular Accident':
-									$icon = '<i class="fas fa-car-crash"></i>';
-									break;
-								case 'Fire Incident':
-									$icon = '<i class="fas fa-fire"></i>';
-									break;
-								case 'Flood Incident':
-									$icon = '<i class="fas fa-house-flood-water"></i>';
-									break;
-								case 'Landslide Incident':
-									$icon = '<i class="fas fa-hill-rockslide"></i>';
-									break;
-							}
-							echo "
-								<a class='card' href='report_file.php?report_id=" . $row['IncidentReportID'] . "'>
-									<div class='image'>
-										" . $icon . "
-									</div>
-									<div class='details'>
-										<span class='type'>" . $row['IncidentTypeName'] . "</span>
-										<span>Zone " . $row['Zone'] . " , " . $row['BarangayName'] . "</span>
-									</div>
-								</a>
-							";
-						}
-						echo "</div></div>";
-					}
+
+
+
+
+
 				?>
 			</div>
 		</div>
