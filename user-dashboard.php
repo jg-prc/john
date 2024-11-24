@@ -291,7 +291,7 @@
 				<?php
 						}
 					} else {
-						echo "<li class='splide__slide'>No data found.</li>";
+						echo "<li class='notif'>No data found.</li>";
 					}
 				?>
 
