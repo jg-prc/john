@@ -158,13 +158,11 @@
 						if (!$reportResult) {
 							die("Error fetching reports: " . $conn->error);
 						}
-							echo "<div class='card-container'>";
+						echo "<div class='card-container'>";
+						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+						echo "<div class='card-grid'>";
+
 						if ($reportResult->num_rows > 0) {
-
-
-							echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-							echo "<div class='card-grid'>";
-
 							while ($row = $reportResult->fetch_assoc()) {
 								$icon = '';
 								switch ($row['IncidentTypeName']) {
