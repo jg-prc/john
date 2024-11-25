@@ -41,7 +41,7 @@
 			$update_sex = mysqli_real_escape_string($conn, $update_sexes[$i]);
 			$update_classification = mysqli_real_escape_string($conn, $update_classifications[$i]);
 
-			$update_query = "UPDATE victim 
+			$update_query = "UPDATE victims 
 				SET VictimName = '$update_name', 
 					Address = '$update_address', 
 					Age = '$update_age', 
