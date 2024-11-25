@@ -158,10 +158,10 @@
 						if (!$reportResult) {
 							die("Error fetching reports: " . $conn->error);
 						}
-
+							echo "<div class='card-container'>";
 						if ($reportResult->num_rows > 0) {
 
-							echo "<div class='card-container'>";
+
 							echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
 							echo "<div class='card-grid'>";
 
