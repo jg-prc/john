@@ -130,19 +130,19 @@
 							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
 							WHERE ir.CreatedAt = '$formattedDate'";
 
-					if (!empty($search)) {
-						$search = str_ireplace(['Zone', ','], '', $search);
-						$searchTerms = explode(' ', trim($search));
-					} else {
-						$searchTerms = [];
-					}
+						if (!empty($search)) {
+							$search = str_ireplace(['Zone', ','], '', $search);
+							$searchTerms = explode(' ', trim($search));
+						} else {
+							$searchTerms = [];
+						}
 
-					foreach ($searchTerms as $term) {
-						$term = $conn->real_escape_string($term);
-						$sql .= " AND (IncidentTypeName LIKE '%$term%' 
-							OR Zone LIKE '%$term%' 
-							OR BarangayName LIKE '%$term%')";
-					}
+						foreach ($searchTerms as $term) {
+							$term = $conn->real_escape_string($term);
+							$sql .= " AND (IncidentTypeName LIKE '%$term%' 
+								OR Zone LIKE '%$term%' 
+								OR BarangayName LIKE '%$term%')";
+						}
 
 						if (!empty($incident_type)) {
 							$sql .= " AND IncidentTypeName = '" . $conn->real_escape_string($incident_type) . "'";
@@ -158,11 +158,13 @@
 						if (!$reportResult) {
 							die("Error fetching reports: " . $conn->error);
 						}
-						echo "<div class='card-container'>";
-						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-						echo "<div class='card-grid'>";
 
 						if ($reportResult->num_rows > 0) {
+
+							echo "<div class='card-container'>";
+							echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+							echo "<div class='card-grid'>";
+
 							while ($row = $reportResult->fetch_assoc()) {
 								$icon = '';
 								switch ($row['IncidentTypeName']) {
