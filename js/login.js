@@ -33,7 +33,7 @@ if (data.status === "success") {
         title: "Success",
         text: "Login successful",
         icon: "success",
-        timer: 2000, // Display for 2 seconds
+        timer: 1000, // Display for 2 seconds
         showConfirmButton: false, // Hide the confirm button
         willClose: () => {
             // Redirect based on the role after the alert fades
