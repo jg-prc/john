@@ -28,26 +28,24 @@ form.addEventListener("submit", async (e) => {
 			}
 
 			// Now handle the JSON response
-if (data.status === "success") {
-    Swal.fire({
-        title: "Success",
-        text: "Login successful",
-        icon: "success",
-        timer: 1000, // Display for 2 seconds
-        showConfirmButton: false, // Hide the confirm button
-        willClose: () => {
-            // Redirect based on the role after the alert fades
-            if (data.role === "admin") {
-                window.location.href = "dashboard.php";
-            } else {
-                window.location.href = "user-dashboard.php";
-            }
-        }
-    });
-} else {
-    Swal.fire("Error", data.message, "error");
-}
-
+			if (data.status === "success") {
+				Swal.fire({
+					title: "Success",
+					text: "Login successful",
+					icon: "success",
+					timer: 800,
+					showConfirmButton: false,
+					willClose: () => {
+						if (data.role === "admin") {
+							window.location.href = "dashboard.php";
+						} else {
+							window.location.href = "user-dashboard.php";
+						}
+					}
+				});
+			} else {
+				Swal.fire("Error", data.message, "error");
+			}
 		} catch (error) {
 			console.error("Error during fetch operation:", error);
 			Swal.fire("Error", "Something went wrong!", "error");
