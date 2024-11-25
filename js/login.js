@@ -29,16 +29,20 @@ form.addEventListener("submit", async (e) => {
 
 			// Now handle the JSON response
 if (data.status === "success") {
-    Swal.fire("Success", "Login successful", "success").then(() => {
-        // Delay the redirection by 2 seconds
-        setTimeout(() => {
-            // Redirect based on the role
+    Swal.fire({
+        title: "Success",
+        text: "Login successful",
+        icon: "success",
+        timer: 2000, // Display for 2 seconds
+        showConfirmButton: false, // Hide the confirm button
+        willClose: () => {
+            // Redirect based on the role after the alert fades
             if (data.role === "admin") {
                 window.location.href = "dashboard.php";
             } else {
                 window.location.href = "user-dashboard.php";
             }
-        }, 2000); // 2000 milliseconds = 2 seconds
+        }
     });
 } else {
     Swal.fire("Error", data.message, "error");
