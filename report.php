@@ -161,9 +161,9 @@
 
 						if ($reportResult->num_rows > 0) {
 
-						echo "<div class='card-container'>";
-						echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-						echo "<div class='card-grid'>";
+							echo "<div class='card-container'>";
+							echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
+							echo "<div class='card-grid'>";
 
 							while ($row = $reportResult->fetch_assoc()) {
 								$icon = '';
@@ -193,9 +193,8 @@
 									</a>
 								";
 							}
-						echo "</div></div>";
+							echo "</div></div>";
 						}
-
 					}
 				?>
 			</div>
