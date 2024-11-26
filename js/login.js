@@ -33,7 +33,7 @@ form.addEventListener("submit", async (e) => {
 					title: "Success",
 					text: "Login successful",
 					icon: "success",
-					timer: 300,
+					timer: 500,
 					showConfirmButton: false,
 					willClose: () => {
 						if (data.role === "admin") {
