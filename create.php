@@ -260,7 +260,7 @@
 
 						<label for="password">Password</label>
 
-						<input type="text" name="password" id="password" placeholder="Password">
+						<input type="password" name="password" id="password" placeholder="Password">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
 						<i id="icon" class="fa fa-shuffle" onclick="generatePassword()"></i>
