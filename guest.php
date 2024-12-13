@@ -104,7 +104,7 @@
 							$dateQuery .= " AND ir.CreatedAt = '{$selectedDate}'";
 						}
 
-						$dateQuery .= " AND (ir.ResponseStatus = 'ongoing' OR ir.ResponseStatus = 'resolved')";
+						$dateQuery .= " AND (ir.ResponseStatus = 'pending' OR ir.ResponseStatus = 'resolved')";
 						$dateQuery .= " ORDER BY ir.CreatedTime DESC";
 
 						$result = $conn->query($dateQuery);
