@@ -5,7 +5,7 @@
 	$type = isset($_GET['type']) ? $_GET['type'] : '';
 	$date = isset($_GET['date']) && !empty($_GET['date']) ? $_GET['date'] : date('Y-m-d');
 
-	$statuses = ['ongoing', 'resolved'];
+	$statuses = ['pending', 'resolved'];
 	$incident_data = [
 		'Vehicular' => '',
 		'Fire' => '',
