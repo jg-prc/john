@@ -117,7 +117,7 @@
 								<option value="7">Camagong</option>
 								<option value="8">Catalotoan</option>
 								<option value="9">Danlog</option>
-								<option value="10">Del Carmen (Poblacion)</option>
+								<option value="10">Del Carmen</option>
 								<option value="11">Dolo</option>
 								<option value="12">Kinalansan</option>
 								<option value="13">Mampirao</option>
@@ -128,11 +128,11 @@
 								<option value="18">Pugay</option>
 								<option value="19">Sabang</option>
 								<option value="20">Salogon</option>
-								<option value="21">San Antonio (Poblacion)</option>
-								<option value="22">San Juan (Poblacion)</option>
-								<option value="23">San Vicente (Poblacion)</option>
-								<option value="24">Santa Cruz (Poblacion)</option>
-								<option value="25">Soledad (Poblacion)</option>
+								<option value="21">San Antonio</option>
+								<option value="22">San Juan</option>
+								<option value="23">San Vicente</option>
+								<option value="24">Santa Cruz</option>
+								<option value="25">Soledad</option>
 								<option value="26">Tagas</option>
 								<option value="27">Tambangan</option>
 								<option value="28">Telegrafo</option>

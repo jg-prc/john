@@ -19,6 +19,9 @@
 		<link rel="stylesheet" href="css/report.css">
 		<link rel="icon" href="php/image/logo.png" type="image/png">
 		<title>SAN JOSE INCIDENT RECORD  MANAGEMENT AND MAPPING SYSTEM</title>
+		<style>
+
+		</style>
 	</head>
 	<body>
 		<div class="sidebar close">
@@ -89,6 +92,7 @@
 				<img src="php/image/logo.png" alt="profileImg">
 				<i class="fas fa-folder-open"></i>
 				<i><strong>Reported Incidents</strong></i>
+				<a id="generateLink" href="generate.php" target="_blank">Summarize</a>
 			</div>
 
 			<?php
@@ -97,6 +101,9 @@
 			<div class="card_container">
 				<?php 
 					include_once "php/config.php";
+
+					$dataFound = false;
+
 					$dateQuery = "SELECT DISTINCT CreatedAt FROM incident_report";
 
 					$order_by = 'ORDER BY `CreatedAt` DESC';
@@ -128,7 +135,9 @@
 							FROM incident_report AS ir
 							LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
 							LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-							WHERE ir.CreatedAt = '$formattedDate'";
+							WHERE ir.CreatedAt = '$formattedDate' 
+							AND (ResponseStatus = 'pending' OR ResponseStatus = 'resolved')";
+
 
 						if (!empty($search)) {
 							$search = str_ireplace(['Zone', ','], '', $search);
@@ -160,10 +169,16 @@
 						}
 
 						if ($reportResult->num_rows > 0) {
+							$dataFound = true;
 
-							echo "<div class='card-container'>";
-							echo "<span class='date'>" . htmlspecialchars($eventDate) . "</span>";
-							echo "<div class='card-grid'>";
+							echo "
+								<div class='card-container'>
+								<ul>
+									<input type='checkbox' name='dates[]' value='$formattedDate'>
+									<span class='date'>" . htmlspecialchars($eventDate) . "</span>
+								</ul>
+								<div class='card-grid'>
+							";
 
 							while ($row = $reportResult->fetch_assoc()) {
 								$icon = '';
@@ -196,6 +211,17 @@
 							echo "</div></div>";
 						}
 					}
+					if (!$dataFound) {
+						echo "
+							<div class='card-container'>
+								<div class='card-grid'>
+									<div class='card-nothing'>
+										<span>No Data found</span>
+									</div>
+								</div>
+							</div>
+						";
+					}
 				?>
 			</div>
 		</div>
@@ -204,6 +230,46 @@
 	<script src="js/logout.js"></script>
 	<script src="js/tools-report.js"></script>
 	<script>
+		const checkboxes = document.querySelectorAll("input[type='checkbox']");
+		const generateLink = document.getElementById("generateLink");
 
+		checkboxes.forEach((checkbox) => {
+			checkbox.addEventListener("change", () => {
+				const selectedDates = Array.from(checkboxes)
+					.filter((checkbox) => checkbox.checked)
+					.map((checkbox) => checkbox.value);
+
+				const url = new URL(generateLink.href);
+				url.searchParams.set('dates', selectedDates.join(','));
+				generateLink.href = url.toString();
+
+				updateButtonVisibility();
+			});
+		});
+
+		const radios = document.querySelectorAll('input[type="radio"]');
+		let lastCheckedRadio = null;
+
+		function updateButtonVisibility() {
+			const selectedRadio = document.querySelector('input[type="radio"]:checked');
+			if (selectedRadio || Array.from(checkboxes).some((checkbox) => checkbox.checked)) {
+				generateLink.style.display = 'inline-block';
+			} else {
+				generateLink.style.display = 'none';
+			}
+		}
+
+		radios.forEach(radio => {
+			radio.addEventListener('click', () => {
+				if (radio === lastCheckedRadio) {
+					radio.checked = false;
+					lastCheckedRadio = null;
+				} else {
+					lastCheckedRadio = radio;
+				}
+				updateButtonVisibility();
+			});
+		});
+		updateButtonVisibility();
 	</script>
 </html>

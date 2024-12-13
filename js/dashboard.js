@@ -38,11 +38,14 @@ function showForm(report_id) {
 								<div class="sub-content">
 									<span class="barangay">${data[0].BarangayName}, Zone ${data[0].Zone}<strong>Barangay</strong></span>
 									${data[0].Street ? `<span class="street">${data[0].Street}<strong>Street/Sitio</strong></span>` : ''}
-									<span class="report_by">${data[0].PositionName} ${data[0].FirstName} ${data[0].LastName}<strong>Reported By</strong></span>
+									<span class="report_by" onclick="showReporterDetails(${data[0].OfficialsID})">
+										<span>${data[0].PositionName} ${data[0].FirstName} ${data[0].LastName}</span>
+										<strong>Reported By</strong>
+									</span>
 									${data[0].UpdatedAt !== '0000-00-00 00:00:00' ? `<span class="update">${data[0].UpdatedAt}<strong>Last Update</strong></span>` : ''}
 								</div>
 								<div class="sub-btn">
-									<span class="status ongoing ${disableButtons('ongoing') ? 'disabled' : ''}" ${!disableButtons('ongoing') ? `onclick="confirmStatusChange('${report_id}', 'ongoing')"` : ''}>ongoing</span>
+									<span class="status pending ${disableButtons('pending') ? 'disabled' : ''}" ${!disableButtons('pending') ? `onclick="confirmStatusChange('${report_id}', 'pending')"` : ''}>pending</span>
 									<span class="status resolved ${disableButtons('resolved') ? 'disabled' : ''}" ${!disableButtons('resolved') ? `onclick="confirmStatusChange('${report_id}', 'resolved')"` : ''}>resolved</span>
 									<span class="status duplicated ${disableButtons('duplicated') ? 'disabled' : ''}" ${!disableButtons('duplicated') ? `onclick="confirmStatusChange('${report_id}', 'duplicated')"` : ''}>duplicated</span>
 								</div>
@@ -118,4 +121,89 @@ function confirmStatusChange(report_id, status) {
 			});
 		}
 	});
+}
+
+
+function showReporterDetails(OfficialsID) {
+	console.log("showForm called with ID:", OfficialsID);
+	fetch(`php/get_data_active.php?OfficialsID=${OfficialsID}`)
+		.then(response => response.json())
+		.then(data => {
+
+			Swal.fire({
+				title: '',
+				html: `
+					<div class="swal-content">
+						<div class="swal-header">
+							<i class="fas fa-xmark" onclick="Swal.close()"></i>
+						</div>
+						<div class="swal-body">
+							<div class="image">
+								<img src="php/image/${data.ImageURL}">
+							</div>
+							<div class="input-container" id="row1">
+								<div class="input-box" id="Fname-box">
+									<label for="firstname">First Name</label>
+									<input type="text" value="${data.FirstName}" id="firstname" disabled>
+								</div>
+								<div class="input-box" id="Lname-box">
+									<label for="lastname">Last Name</label>
+									<input type="text" value="${data.LastName}" id="lastname" disabled>
+								</div>
+							</div>
+							<div class="input-container" id="row2">
+								<div class="input-box" id="Mname-box">
+									<label for="middlename">Middle Name</label>
+									<input type="text" value="${data.MiddleName}" id="middlename" disabled>
+								</div>
+								<div class="input-box" id="Ename-box">
+									<label for="extensionname">Extension Name</label>
+									<input type="text" value="${data.ExtensionName}" id="extensionname" disabled>
+								</div>
+							</div>
+							<div class="input-container" id="row3">
+								<div class="input-box" id="Bdate-box">
+									<label for="bdate">Birthdate</label>
+									<input type="text" value="${data.Birthdate}" id="bdate" disabled>
+								</div>
+								<div class="input-box" id="Sex-box">
+									<label for="sex">Sex</label>
+									<input type="text" value="${data.Sex}" id="sex" disabled>
+								</div>
+								<div class="input-box" id="Contact-box">
+									<label for="contact">Contact</label>
+									<input type="text" value="${data.ContactNumber}" id="contact" disabled>
+								</div>
+							</div>
+							<div class="input-container" id="row4">
+								<div class="input-box" id="Barangay-box">
+									<label for="barangay">Barangay</label>
+									<input type="text" value="${data.BarangayName}" id="barangay" disabled>
+								</div>
+								<div class="input-box" id="Zone-box">
+									<label for="zone">Zone</label>
+									<input type="text" value="${data.Zone}" id="zone" disabled>
+								</div>
+								<div class="input-box" id="Position-box">
+									<label for="position">Position</label>
+									<input type="text" value="${data.PositionName}" id="position" disabled>
+								</div>
+							</div>
+							<div class="input-container" id="row5">
+								<div class="input-box" id="Email-box">
+									<label for="email">Email</label>
+									<input type="text" value="${data.EmailAddress}" id="email" disabled>
+								</div>
+							</div>
+						</div>
+					</div>
+				`,
+				showCancelButton: false,
+				showConfirmButton: false,
+				customClass: {
+					popup: 'swal-wide-details',
+				}
+			});
+		})
+		.catch(error => console.error('Error:', error));
 }

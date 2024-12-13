@@ -92,7 +92,7 @@
 
 			$sql = "SELECT ir.IncidentReportID, bo.FirstName, bo.LastName, bo.ExtensionName, p.PositionName,
 					it.IncidentTypeName, b.BarangayName, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt,
-					ir.CreatedTime, ir.UpdatedAt, fr.FolderName, img.ImagesName
+					ir.CreatedTime, ir.Status, ir.UpdatedAt, fr.FolderName, img.ImagesName
 					FROM incident_report AS ir
 					LEFT JOIN barangay_officials AS bo ON ir.OfficialsID = bo.OfficialsID
 					LEFT JOIN position AS p ON bo.PositionID = p.PositionID
@@ -109,14 +109,14 @@
 
 				$statusClass = '';
 				switch ($row[0]['ResponseStatus']) {
-					case 'pending':
-						$statusClass = 'pending';
+					case 'sent':
+						$statusClass = 'sent';
 						break;
 					case 'resolved':
 						$statusClass = 'resolved';
 						break;
-					case 'ongoing':
-						$statusClass = 'ongoing';
+					case 'pending':
+						$statusClass = 'pending';
 						break;
 					case 'duplicated':
 						$statusClass = 'duplicated';
@@ -138,6 +138,11 @@
 						$icon = '<i class="fas fa-hill-rockslide"></i>';
 						break;
 				}
+
+				$createdTime = $row[0]['CreatedTime'];
+				$formattedTimeWithoutSec = date('H:i', strtotime($createdTime));
+
+
 		?>
 		<div class="container">
 			<div class="title">
@@ -205,11 +210,11 @@
 								<?php
 									$barangays = [
 										"Adiangao", "Bagacay", "Bahay", "Boclod", "Calalahan", "Calawit", 
-										"Camagong", "Catalotoan", "Danlog", "Del Carmen (Poblacion)", 
+										"Camagong", "Catalotoan", "Danlog", "Del Carmen", 
 										"Dolo", "Kinalansan", "Mampirao", "Manzana", "Minoro", "Palale", 
-										"Ponglon", "Pugay", "Sabang", "Salogon", "San Antonio (Poblacion)", 
-										"San Juan (Poblacion)", "San Vicente (Poblacion)", "Santa Cruz (Poblacion)", 
-										"Soledad (Poblacion)", "Tagas", "Tambangan", "Telegrafo", "Tominawog"
+										"Ponglon", "Pugay", "Sabang", "Salogon", "San Antonio", 
+										"San Juan", "San Vicente", "Santa Cruz", 
+										"Soledad", "Tagas", "Tambangan", "Telegrafo", "Tominawog"
 									];
 
 									foreach ($barangays as $index => $barangay) {
@@ -251,6 +256,29 @@
 							<input type="text" class="report_by" id="report_by" value="<?php echo htmlspecialchars($row[0]['FirstName'] . ' ' . $row[0]['LastName'] . ' ' . $row[0]['ExtensionName']); ?>" disabled>
 						</div>
 					</div>
+					<div class="input-container" id="row5">
+						<div class="input-box" id="Time-box">
+							<label for="time_at">Time</label>
+							<input type="time" name="time_at" id="time_at" value="<?php echo htmlspecialchars($formattedTimeWithoutSec); ?>">
+						</div>
+						<?php
+							$status = $row[0]['IncidentTypeName'];
+
+							if ($status === 'Flood Incident') {
+						?>
+						<div class="input-box" id="Status-box">
+							<label for="status">Status</label>
+							<select id="status" name="status">
+								<option value="" disabled selected>Status</option>
+								<option value="flooded" <?php echo ($row[0]['Status'] == 'flooded') ? 'selected' : ''; ?>>flooded</option>
+								<option value="subsided" <?php echo ($row[0]['Status'] == 'subsided') ? 'selected' : ''; ?>>subsided</option>
+								<option value="receding" <?php echo ($row[0]['Status'] == 'receding') ? 'selected' : ''; ?>>receding</option>
+							</select>
+						</div>
+						<?php
+							}
+						?>
+					</div>
 				</form>
 			</div>
 		<?php
@@ -291,7 +319,7 @@
 											<div class='message'>Error message</div>
 											<i class='fas fa-exclamation-circle'></i>
 										</div>
-										<div class='input-container' id='row5'>
+										<div class='input-container' id='age_sex'>
 											<div class='input-box' id='Age-box'>
 												<label for='age'>Age</label>
 												<input type='text' name='update_age[]' id='age' placeholder='Age' value='" . htmlspecialchars($row['Age']) . "'>
@@ -367,7 +395,7 @@ document.getElementById('add').addEventListener('click', function() {
 			<div class="message">Error message</div>
 			<i class="fas fa-exclamation-circle"></i>
 		</div>
-		<div class="input-container" id="row5">
+		<div class="input-container" id="age_sex">
 			<div class="input-box" id="Age-box">
 				<label for="age">Age</label>
 				<input type="text" name="age[]" id="age" placeholder="Age">

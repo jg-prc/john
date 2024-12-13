@@ -8,6 +8,13 @@
 	$zone = mysqli_real_escape_string($conn, $_POST['zone']);
 	$street = mysqli_real_escape_string($conn, $_POST['street']);
 	$event_at = mysqli_real_escape_string($conn, $_POST['event_at']);
+	$time_at = mysqli_real_escape_string($conn, $_POST['time_at']);
+
+	if ($incident_type !== '3') {
+		$status = "";
+	} else {
+		$status = isset($_POST['status']) ? mysqli_real_escape_string($conn, $_POST['status']) : "";
+	}
 
 	$sql = "UPDATE incident_report 
 		SET IncidentTypeID = '$incident_type',
@@ -15,6 +22,8 @@
 			Zone = '$zone',
 			Street = '$street',
 			CreatedAt = '$event_at',
+			CreatedTime = '$time_at',
+			Status = '$status',
 			UpdatedAt = CURRENT_TIMESTAMP
 		WHERE IncidentReportID = '$report_id'";
 

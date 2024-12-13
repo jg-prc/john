@@ -188,14 +188,14 @@
 								}
 								$statusClass = '';
 								switch ($row['ResponseStatus']) {
-									case 'pending':
-										$statusClass = 'pending';
+									case 'sent':
+										$statusClass = 'sent';
 										break;
 									case 'resolved':
 										$statusClass = 'resolved';
 										break;
-									case 'ongoing':
-										$statusClass = 'ongoing';
+									case 'pending':
+										$statusClass = 'pending';
 										break;
 									case 'duplicated':
 										$statusClass = 'duplicated';
@@ -204,7 +204,7 @@
 								$eventDateTime = new DateTime($row['CreatedTime']);
 								$formattedTime = $eventDateTime->format('g:i a');
 					?>
-					<li class="splide__slide" onclick="showForm(<?php echo (int) $row['IncidentReportID']; ?>)">
+					<li class="splide__slide" onclick="showForm(<?php echo $row['IncidentReportID']; ?>)">
 						<?php echo $icon; ?>
 						<div class="content">
 							<span class="type"><?php echo htmlspecialchars($row['IncidentTypeName']); ?></span>

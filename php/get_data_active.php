@@ -6,12 +6,13 @@
 	if (isset($_GET['OfficialsID'])) {
 		$user_id = $conn->real_escape_string($_GET['OfficialsID']);
 
-		$sql = "SELECT bo.OfficialsID, bo.UserTypeID, p.PositionName, b.BarangayName, bo.FirstName,
+		$sql = "SELECT bo.OfficialsID, p.PositionName, b.BarangayName, bo.FirstName,
 			bo.MiddleName, bo.LastName, bo.ExtensionName, bo.ContactNumber, bo.Birthdate, bo.Status, bo.Sex,
-			bo.Zone, bo.EmailAddress, bo.Password, bo.ImageURL, bo.CreatedAt
+			bo.Zone, bo.EmailAddress, bo.ImageURL, bo.CreatedAt
 			FROM `barangay_officials` AS bo
 			LEFT JOIN position AS p ON bo.PositionID = p.PositionID
-			LEFT JOIN barangay AS b ON bo.BarangayID = b.BarangayID WHERE OfficialsID = '$user_id' AND Status = 'active'";
+			LEFT JOIN barangay AS b ON bo.BarangayID = b.BarangayID
+			WHERE OfficialsID = '$user_id' AND Status = 'active'";
 		$result = $conn->query($sql);
 
 		if ($result) {

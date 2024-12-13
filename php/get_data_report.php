@@ -13,7 +13,7 @@ if (isset($_GET['IncidentReportID'])) {
 
     $sql = "SELECT 
                 ir.IncidentReportID, ir.ResponseStatus, ir.Zone, ir.Street, ir.UpdatedAt,
-                it.IncidentTypeName, b.BarangayName, o.FirstName, o.LastName, 
+                it.IncidentTypeName, b.BarangayName, ir.OfficialsID, o.FirstName, o.LastName, 
                 p.PositionName, f.FolderName, img.ImagesName
             FROM 
                 incident_report AS ir

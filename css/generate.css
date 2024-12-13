@@ -1,0 +1,154 @@
+			@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: "Poppins", sans-serif;
+			}
+			body::-webkit-scrollbar {
+				display: none;
+			}
+			.container {
+				display: flex;
+				flex-direction: column;
+			}
+			.header-container {
+				width: 100%;
+				height: 100px;
+				display: flex;
+				align-items: center;
+				gap: 20px;
+				position: fixed;
+				z-index: 1;
+				background-color: #88B3DA;
+				color: #ffffff;
+				padding: 0 20px;
+			}
+			.logo-content img {
+				width: 80px;
+			}
+			button {
+				margin-left: 25%;
+				padding: 10px 20px;
+				background-color: #6A8BB4;
+				color: #fff;
+				border: none;
+				border-radius: 20px;
+				cursor: pointer;
+				font-size: 16px;
+				transition: background-color 0.3s, transform 0.2s;
+			}
+			button:hover {
+				transform: translateY(-2px);
+				background-color: #56729A;
+			}
+			.body-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 30px;
+				padding: 140px 20px;
+			}
+			.content {
+				padding: 10px;
+				box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+				border-radius: 20px;
+			}
+			.card {
+				width: 1230px;
+				overflow: hidden;
+			}
+			.header-content {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 35px;
+				border-bottom: 3px solid;
+				padding-bottom: 15px;
+				width: 95%;
+				margin: 0 2.5%;
+			}
+			.logo img {
+				width: 100px;
+			}
+			.details {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			h3 {
+				display: flex;
+				justify-content: center;
+				padding: 30px 0;
+			}
+			.table {
+				height: 545px;
+			}
+			table {
+				border-collapse: collapse;
+				font-size: 11pt;
+				margin: 0 14px 0 14px;
+			}
+			th, td {
+				border: 1px solid;
+				padding: 10px 0;
+			}
+			td {
+				text-align: center;
+			}
+			.barangay,
+			.type,
+			.action,
+			.date,
+			.time,
+			.description,
+			.remarks,
+			.status {
+				border-left: 1px solid transparent;
+			}
+			td.municipality,
+			td.barangay,
+			td.type,
+			td.action,
+			td.date,
+			td.time,
+			td.description,
+			td.remarks,
+			td.status {
+				border-top: 1px solid transparent;
+			}
+			.municipality {
+				width: 160px;
+				max-width: 160px;
+			}
+			.barangay,
+			.type,
+			.action {
+				width: 130px;
+				max-width: 130px;
+			}
+			.date,
+			.time {
+				width: 140px;
+				max-width: 140px;
+			}
+			.description {
+				width: 150px;
+				max-width: 150px;
+			}
+			.remarks {
+				width: 100px;
+				max-width: 100px;
+			}
+			.status {
+				width: 120px;
+				max-width: 120px;
+			}
+			footer {
+				text-align: center;
+				background-color: #1f164f;
+				color: #fff;
+				padding: 5px;
+				font-size: 12px;
+				margin-bottom: 10px;
+			}

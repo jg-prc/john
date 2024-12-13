@@ -101,8 +101,8 @@
 
 					<div class="input-box" id="Fname-box">
 
+						<span class="required">*</span>
 						<label for="firstname">First Name</label>
-
 						<input type="text" name="firstname" id="firstname" placeholder="First Name">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
@@ -110,8 +110,8 @@
 
 					<div class="input-box" id="Lname-box">
 
+						<span class="required">*</span>
 						<label for="lastname">Last Name</label>
-
 						<input type="text" name="lastname" id="lastname" placeholder="Last Name">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
@@ -121,8 +121,8 @@
 
 					<div class="input-box" id="Mname-box">
 
+						<span class="required">*</span>
 						<label for="middlename">Middle Name</label>
-
 						<input type="text" name="middlename" id="middlename" placeholder="Middle Name">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
@@ -142,8 +142,8 @@
 
 					<div class="input-box" id="Bdate-box">
 
+						<span class="required">*</span>
 						<label for="bdate">Brithdate</label>
-
 						<input type="date" name="bdate" id="bdate">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
@@ -151,8 +151,8 @@
 
 					<div class="input-box" id="Sex-box">
 
+						<span class="required">*</span>
 						<label for="sex">Sex</label>
-
 						<select id="sex" name="sex">
 							<option value="" disabled selected>Sex</option>
 							<option value="male">Male</option>
@@ -164,8 +164,8 @@
 
 					<div class="input-box" id="Contact-box">
 
+						<span class="required">*</span>
 						<label for="contact">Contact No.</label>
-
 						<input type="tel" name="contact" id="contact" maxlength="11" placeholder="Contact No." oninput="this.value = this.value.replace(/[^0-9]/g, '');">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
@@ -176,6 +176,7 @@
 
 					<div class="input-box" id="Barangay-box">
 
+						<span class="required">*</span>
 						<label for="barangay">Barangay</label>
 						<select id="barangay" name="barangay">
 							<option value="" disabled selected>Barangay</option>
@@ -215,8 +216,8 @@
 
 					<div class="input-box" id="Zone-box">
 
+						<span class="required">*</span>
 						<label for="zone">Zone</label>
-
 						<select id="zone" name="zone">
 							<option value="" disabled selected>Zone</option>
 							<option value="1">1</option>
@@ -233,8 +234,8 @@
 
 					<div class="input-box" id="Position-box">
 
+						<span class="required">*</span>
 						<label for="position">Position</label>
-
 						<select id="position" name="position">
 							<option value="" disabled selected>Position</option>
 							<option value="1">Brgy. Captain</option>
@@ -249,8 +250,8 @@
 
 					<div class="input-box" id="Email-box">
 
+						<span class="required">*</span>
 						<label for="email">Email</label>
-
 						<input type="email" name="email" id="email" placeholder="Email">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>
@@ -258,8 +259,8 @@
 
 					<div class="input-box" id="Password-box">
 
+						<span class="required">*</span>
 						<label for="password">Password</label>
-
 						<input type="text" name="password" id="password" placeholder="Password">
 						<div class="message">Error message</div>
 						<i class="fas fa-exclamation-circle"></i>

@@ -186,6 +186,7 @@
 				left: 57%;
 				bottom: 300px;
 				width: 550px;
+				cursor: pointer;
 			}
 			#text-slider .splide__slide {
 				display: flex;
@@ -228,7 +229,7 @@
 				text-transform: uppercase;
 				width: 120px;
 			}
-			span.status.ongoing {
+			span.status.pending {
 				background-color: #ff4500;
 				color: white;
 			}
@@ -236,7 +237,7 @@
 				background-color: #28a745;
 				color: white;
 			}
-			span.status.pending {
+			span.status.sent {
 				background-color: #ffc107;
 				color: #333;
 			}
@@ -244,7 +245,7 @@
 				background-color: #5dade2;
 				color: white;
 			}
-			.sub-btn span.status.ongoing:hover {
+			.sub-btn span.status.pending:hover {
 				background-color: #cc3700;
 				transform: translateY(-2px);
 			}
@@ -256,8 +257,8 @@
 				background-color: #1f7a32;
 				transform: translateY(-2px);
 			}
-			span.status.ongoing.disabled,
-			span.status.ongoing.disabled:hover,
+			span.status.pending.disabled,
+			span.status.pending.disabled:hover,
 			span.status.resolved.disabled,
 			span.status.resolved.disabled:hover,
 			span.status.duplicated.disabled,
@@ -276,8 +277,19 @@
 			.sub-content span {
 				display: flex;
 				flex-direction: column;
+				font-size: 29px;
 			}
-
+			.report_by span {
+				text-decoration: underline;
+				color: #5dade2;
+				cursor: pointer;
+			}
+			.report_by span:hover {
+				color: #2E86C1;
+			}
+			.sub-content strong {
+				font-size: 20px;
+			}
 
 			.swal-body {
 				display: flex;
@@ -340,3 +352,102 @@
 				height: 2.2em;
 				width: 2.2em;
 			}
+
+
+			.swal-wide-details {
+				width: 1000px;
+			}
+			.swal-wide-details .swal-body {
+				display: block;
+				height: 600px;
+			}
+
+			.swal-wide-details .swal-content .image {
+				width: 200px;
+				position: relative;
+				left: 7%;
+				top: 45px;
+
+			}
+			.swal-wide-details .swal-content  .image img{
+				width: 200px;
+				height: 200px;
+				object-fit: cover;
+				border-radius: 50%;
+			}
+			.input-container {
+				display: flex;
+				position: relative;
+				bottom: 155px;
+				width: 540px;
+				justify-content: space-between;
+				left: 35%;
+			}
+			.input-container#row3,
+			.input-container#row4,
+			.input-container#row5 {
+				width: 830px;
+				left: 40px;
+			}
+			.swal-content input[type=text] {
+				width: 250px;
+				height: 40px;
+				padding-left: 15px;
+				border: solid 2px;
+				border-radius: 10px;
+				margin: 5px 0 10px 0;
+				background: rgba(255, 255, 255, 0.2);
+				font-size: 16px;
+			}
+			.input-box {
+				width: 250px;
+				height: 110px;
+			}
+			label {
+				padding-left: 10px;
+				position: relative;
+			}
+
+			.input-box label[for="firstname"],
+			.input-box label[for="lastname"] {
+				right: 29%;
+			}
+			.input-box label[for="middlename"] {
+				right: 24%;
+			}
+			.input-box label[for="extensionname"] {
+				right: 19%;
+			}
+			.input-box label[for="bdate"] {
+				right: 32%;
+			}
+			.input-box label[for="sex"] {
+				right: 42%;
+			}
+			.input-box label[for="contact"] {
+				right: 33%;
+			}
+			.input-box label[for="barangay"] {
+				right: 30%;
+			}
+			.input-box label[for="zone"] {
+				right: 39%;
+			}
+			.input-box label[for="position"] {
+				right: 34%;
+			}
+			.input-box label[for="email"] {
+				right: 38%;
+			}
+
+
+
+
+
+
+
+
+
+
+
+

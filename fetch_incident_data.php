@@ -5,8 +5,8 @@
 
 	$type = isset($_GET['type']) ? $_GET['type'] : '';
 	$date = isset($_GET['date']) && !empty($_GET['date']) ? $_GET['date'] : date('Y-m-d');
-	$status = 'pending';
-	$status1 = 'ongoing';
+	$status = 'sent';
+	$status1 = 'pending';
 	$status2 = 'resolved';
 	$status3 = 'duplicated';
 

@@ -38,12 +38,14 @@
 
 			.sub-container1 {
 				display: flex;
-				gap: 50px;
+				flex-wrap: wrap;
+				gap: 0 50px;
 				padding: 20px 0 0 200px;
 			}
 			.image {
 				width: 500px;
 				margin: 20px;
+				padding-top: 30px;
 			}
 			.image img {
 				width: 500px;
@@ -61,9 +63,12 @@
 
 
 
-			form {
+			.victim {
 				padding-top: 20px;
 				padding-bottom: 20px;
+			}
+			.report {
+				padding-top: 20px;
 			}
 			.input-container {
 				display: flex;
@@ -84,7 +89,7 @@
 				text-transform: uppercase;
 				width: 120px;
 			}
-			span.status.ongoing {
+			span.status.pending {
 				background-color: #ff4500;
 				color: white;
 			}
@@ -93,7 +98,7 @@
 				background-color: #28a745;
 				color: white;
 			}
-			span.status.pending {
+			span.status.sent {
 				background-color: #ffc107;
 				color: #333;
 			}
@@ -103,6 +108,7 @@
 			}
 			input[type=text],
 			input[type=date],
+			input[type=time],
 			input[type=tel],
 			#barangay,
 			#street,
@@ -125,14 +131,17 @@
 			.input-box#Zone-box,
 			select#incident_type,
 			.input-box#Event-box,
+			.input-box#Time-box,
 			select#zone,
 			input[type=date],
+			input[type=time],
 			.input-box#Age-box,
 			input[type=text]#age,
 			.input-box#Sex-box,
 			select#sex {
 				width: 200px;
 			}
+			input[type="time"]::-webkit-calendar-picker-indicator,
 			input[type="date"]::-webkit-calendar-picker-indicator {
 				position: relative;
 				right: 5%;
@@ -159,6 +168,13 @@
 			.input-box.error i.fa-exclamation-circle {
 				visibility: visible;
 			}
+
+
+
+
+
+
+
 
 
 
@@ -211,7 +227,7 @@
 			#classification {
 				height: 120px;
 			}
-			.input-container#row5 {
+			.input-container#age_sex {
 				width: 430px;
 			}
 			#Age-box i.fas.fa-exclamation-circle,

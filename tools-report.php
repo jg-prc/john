@@ -41,7 +41,7 @@
 								<option value="Camagong">Camagong</option>
 								<option value="Catalotoan">Catalotoan</option>
 								<option value="Danlog">Danlog</option>
-								<option value="Del Carmen (Poblacion)">Del Carmen (Poblacion)</option>
+								<option value="Del Carmen">Del Carmen</option>
 								<option value="Dolo">Dolo</option>
 								<option value="Kinalansan">Kinalansan</option>
 								<option value="Mampirao">Mampirao</option>
@@ -52,11 +52,11 @@
 								<option value="Pugay">Pugay</option>
 								<option value="Sabang">Sabang</option>
 								<option value="Salogon">Salogon</option>
-								<option value="San Antonio (Poblacion)">San Antonio (Poblacion)</option>
-								<option value="San Juan (Poblacion)">San Juan (Poblacion)</option>
-								<option value="San Vicente (Poblacion)">San Vicente (Poblacion)</option>
-								<option value="Santa Cruz (Poblacion)">Santa Cruz (Poblacion)</option>
-								<option value="Soledad (Poblacion)">Soledad (Poblacion)</option>
+								<option value="San Antonio">San Antonio</option>
+								<option value="San Juan">San Juan</option>
+								<option value="San Vicente">San Vicente</option>
+								<option value="Santa Cruz">Santa Cruz</option>
+								<option value="Soledad">Soledad</option>
 								<option value="Tagas">Tagas</option>
 								<option value="Tambangan">Tambangan</option>
 								<option value="Telegrafo">Telegrafo</option>

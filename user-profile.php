@@ -209,11 +209,11 @@
 								<?php
 									$barangays = [
 										"Adiangao", "Bagacay", "Bahay", "Boclod", "Calalahan", "Calawit", 
-										"Camagong", "Catalotoan", "Danlog", "Del Carmen (Poblacion)", 
+										"Camagong", "Catalotoan", "Danlog", "Del Carmen", 
 										"Dolo", "Kinalansan", "Mampirao", "Manzana", "Minoro", "Palale", 
-										"Ponglon", "Pugay", "Sabang", "Salogon", "San Antonio (Poblacion)", 
-										"San Juan (Poblacion)", "San Vicente (Poblacion)", "Santa Cruz (Poblacion)", 
-										"Soledad (Poblacion)", "Tagas", "Tambangan", "Telegrafo", "Tominawog"
+										"Ponglon", "Pugay", "Sabang", "Salogon", "San Antonio", 
+										"San Juan", "San Vicente", "Santa Cruz", 
+										"Soledad", "Tagas", "Tambangan", "Telegrafo", "Tominawog"
 									];
 
 									foreach ($barangays as $index => $barangay) {
