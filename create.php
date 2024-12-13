@@ -263,6 +263,7 @@
 						<label for="password">Password</label>
 						<input type="text" name="password" id="password" placeholder="Password">
 						<div class="message">Error message</div>
+						<i id="icon" class="fa fa-eye-slash"></i>
 						<i class="fas fa-exclamation-circle"></i>
 						<i id="icon" class="fa fa-shuffle" onclick="generatePassword()"></i>
 					</div>
@@ -279,6 +280,7 @@
 	<script src="js/image.js"></script>
 	<script src="js/create.js"></script>
 	<script src="js/logout.js"></script>
+	<script src="js/single_view-pass.js"></script>
 	<script>
 	</script>
 </html>
