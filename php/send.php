@@ -8,7 +8,7 @@
 	$street = mysqli_real_escape_string($conn, $_POST['street']);
 
 	$unique_id = $_SESSION['unique_id'];
-	$status = "pending";
+	$status = "sent";
 
 	$year = date("Y");
 	$month = date("m");
