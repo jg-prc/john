@@ -134,8 +134,8 @@
 									case 'resolved':
 										$statusClass = 'resolved';
 										break;
-									case 'ongoing':
-										$statusClass = 'ongoing';
+									case 'sent':
+										$statusClass = 'sent';
 										break;
 									case 'duplicated':
 										$statusClass = 'duplicated';
