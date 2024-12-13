@@ -184,14 +184,14 @@
 
 								$statusClass = '';
 								switch ($row['ResponseStatus']) {
-									case 'pending':
-										$statusClass = 'pending';
+									case 'sent':
+										$statusClass = 'sent';
 										break;
 									case 'resolved':
 										$statusClass = 'resolved';
 										break;
-									case 'ongoing':
-										$statusClass = 'ongoing';
+									case 'pending':
+										$statusClass = 'pending';
 										break;
 									case 'duplicated':
 										$statusClass = 'duplicated';
