@@ -86,89 +86,64 @@
 				</li>
 			</ul>
 		</div>
-<?php
-    include_once "php/config.php";
+		<?php
+			include_once "php/config.php";
+			$report_id = isset($_GET['report_id']) ? $_GET['report_id'] : '';
 
-    // Sanitize and validate report_id
-    $report_id = isset($_GET['report_id']) ? intval($_GET['report_id']) : 0; // Converts to integer for safety
+			$sql = "SELECT ir.IncidentReportID, bo.FirstName, bo.LastName, bo.ExtensionName, p.PositionName,
+					it.IncidentTypeName, b.BarangayName, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt,
+					ir.CreatedTime, ir.Status, ir.UpdatedAt, fr.FolderName, img.ImagesName
+					FROM incident_report AS ir
+					LEFT JOIN barangay_officials AS bo ON ir.OfficialsID = bo.OfficialsID
+					LEFT JOIN position AS p ON bo.PositionID = p.PositionID
+					LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
+					LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
+					LEFT JOIN folder_report as fr ON ir.IncidentReportID = fr.FolderID
+					LEFT JOIN images AS img ON fr.ImageID = img.ImagesID
+					WHERE IncidentReportID = $report_id";
 
-    // Ensure the connection is established
-    if (!$conn) {
-        die("Database connection failed: " . mysqli_connect_error());
-    }
+			$result = $conn->query($sql);
 
-    // Prepare the SQL query
-    $sql = "SELECT ir.IncidentReportID, bo.FirstName, bo.LastName, bo.ExtensionName, p.PositionName,
-                   it.IncidentTypeName, b.BarangayName, ir.ResponseStatus, ir.Zone, ir.Street, ir.CreatedAt,
-                   ir.CreatedTime, ir.Status, ir.UpdatedAt, fr.FolderName, img.ImagesName
-            FROM incident_report AS ir
-            LEFT JOIN barangay_officials AS bo ON ir.OfficialsID = bo.OfficialsID
-            LEFT JOIN position AS p ON bo.PositionID = p.PositionID
-            LEFT JOIN incident_type AS it ON ir.IncidentTypeID = it.IncidentTypeID
-            LEFT JOIN barangay AS b ON ir.BarangayID = b.BarangayID
-            LEFT JOIN folder_report AS fr ON ir.IncidentReportID = fr.FolderID
-            LEFT JOIN images AS img ON fr.ImageID = img.ImagesID
-            WHERE ir.IncidentReportID = ?";
+			if ($result && $result->num_rows > 0) {
+				$row = $result->fetch_all(MYSQLI_ASSOC);
 
-    // Prepare and bind the statement
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $report_id); // Bind the report_id as an integer
+				$statusClass = '';
+				switch ($row[0]['ResponseStatus']) {
+					case 'sent':
+						$statusClass = 'sent';
+						break;
+					case 'resolved':
+						$statusClass = 'resolved';
+						break;
+					case 'pending':
+						$statusClass = 'pending';
+						break;
+					case 'duplicated':
+						$statusClass = 'duplicated';
+						break;
+				}
 
-    // Execute the query
-    $stmt->execute();
-    $result = $stmt->get_result();
+				$icon = '';
+				switch ($row[0]['IncidentTypeName']) {
+					case 'Vehicular Accident':
+						$icon = '<i class="fas fa-car-crash"></i>';
+						break;
+					case 'Fire Incident':
+						$icon = '<i class="fas fa-fire"></i>';
+						break;
+					case 'Flood Incident':
+						$icon = '<i class="fas fa-house-flood-water"></i>';
+						break;
+					case 'Landslide Incident':
+						$icon = '<i class="fas fa-hill-rockslide"></i>';
+						break;
+				}
 
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc(); // Fetch a single result
+				$createdTime = $row[0]['CreatedTime'];
+				$formattedTimeWithoutSec = date('H:i', strtotime($createdTime));
 
-        // Determine status class
-        $statusClass = '';
-        switch ($row['ResponseStatus']) {
-            case 'sent':
-                $statusClass = 'sent';
-                break;
-            case 'resolved':
-                $statusClass = 'resolved';
-                break;
-            case 'pending':
-                $statusClass = 'pending';
-                break;
-            case 'duplicated':
-                $statusClass = 'duplicated';
-                break;
-        }
 
-        // Determine icon
-        $icon = '';
-        switch ($row['IncidentTypeName']) {
-            case 'Vehicular Accident':
-                $icon = '<i class="fas fa-car-crash"></i>';
-                break;
-            case 'Fire Incident':
-                $icon = '<i class="fas fa-fire"></i>';
-                break;
-            case 'Flood Incident':
-                $icon = '<i class="fas fa-house-flood-water"></i>';
-                break;
-            case 'Landslide Incident':
-                $icon = '<i class="fas fa-hill-rockslide"></i>';
-                break;
-        }
-
-        // Format time
-        $createdTime = $row['CreatedTime'];
-        $formattedTimeWithoutSec = date('H:i', strtotime($createdTime));
-
-        // Output or further processing...
-    } else {
-        echo "No record found for the provided report ID.";
-    }
-
-    // Close the statement and connection
-    $stmt->close();
-    $conn->close();
-?>
-
+		?>
 		<div class="container">
 			<div class="title">
 				<img src="php/image/logo.png" alt="profileImg">
